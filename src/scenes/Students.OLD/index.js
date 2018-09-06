@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
 
-import StudentsList from './components/StudentsList'
+import MobileUserList from './components/MobileUserList'
 
 import './style.css';
 
 const BACKEND_URL = 'http://localhost:3001';
-const STUDENTS_URL = '/students';
+const MESSAGE_URL = '/message';
 
 class Students extends Component {
 
-    /*
-     Constructor 
-    */
     constructor(props) {
         super(props);
         this.state = {
             value: '',
-            studentList: []
+            mobileUsersList: []
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -24,11 +21,10 @@ class Students extends Component {
     }
 
     componentDidMount() {
-        // List students
-        fetch(BACKEND_URL + STUDENTS_URL)
+        fetch(BACKEND_URL + MESSAGE_URL)
             .then(resp => resp.json())
-            .then(studentList => {
-                this.setState({ studentList: studentList })
+            .then(mobileUsersList => {
+                this.setState({ mobileUsersList: mobileUsersList })
             })
     }
 
@@ -38,9 +34,6 @@ class Students extends Component {
         });
     }
 
-    /* 
-    *   Method called by Submit button
-    */
     handleSubmit(event) {
         event.preventDefault();
         alert('A name was submitted: ' + this.state.value);
@@ -48,7 +41,7 @@ class Students extends Component {
             value: this.state.value
         }
         console.log(data)
-        fetch(BACKEND_URL + STUDENTS_URL, {
+        fetch(BACKEND_URL + MESSAGE_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -72,7 +65,7 @@ class Students extends Component {
     }
 
     render() {
-        const studentList = this.state.studentList;
+        const studentList = this.state.mobileUsersList;
         const isNotEmpty = studentList && studentList.length > 0;
 
         return (
@@ -86,7 +79,7 @@ class Students extends Component {
                 </form>
 
                 {isNotEmpty ?
-                    (<StudentsList studentList={studentList} />)
+                    (<MobileUserList mobileUserList={studentList} />)
                     :
                     (<div> Empty list </div>)
                 }
