@@ -4,7 +4,8 @@ import StudentsList from './components/StudentsList'
 
 import './style.css';
 
-const BACKEND_URL = 'http://localhost:3001';
+var config = require('../../config/config');
+
 const STUDENTS_URL = '/students';
 
 class Students extends Component {
@@ -25,11 +26,15 @@ class Students extends Component {
 
     componentDidMount() {
         // List students
-        fetch(BACKEND_URL + STUDENTS_URL)
+        fetch(config.backend_url + STUDENTS_URL)
             .then(resp => resp.json())
             .then(studentList => {
+                console.log(studentList)
                 this.setState({ studentList: studentList })
             })
+            .catch(function (err) {
+                console.log(err)
+            });
     }
 
     handleChange(event) {
@@ -48,7 +53,7 @@ class Students extends Component {
             value: this.state.value
         }
         console.log(data)
-        fetch(BACKEND_URL + STUDENTS_URL, {
+        fetch(config.backend_url + STUDENTS_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -77,6 +82,7 @@ class Students extends Component {
 
         return (
             <div className='tc'>
+                <div><h2>Students</h2></div>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Name:
