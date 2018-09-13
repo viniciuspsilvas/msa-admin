@@ -8,8 +8,6 @@ import './style.css';
 
 var config = require('../../config/config');
 
-const GROUP_STUDENTS_URL = '/groupStudents';
-
 class GroupStudents extends Component {
 
     /*
@@ -25,7 +23,7 @@ class GroupStudents extends Component {
 
     componentDidMount() {
         // List students
-        fetch(config.backend_url + GROUP_STUDENTS_URL)
+        fetch(config.backend.groupStudents)
             .then(resp => resp.json())
             .then(groupStudentList => {
                 this.setState({ groupStudentList: groupStudentList })
@@ -42,7 +40,7 @@ class GroupStudents extends Component {
         return (
             <div className='tc'>
 
-                <LinkContainer to="/groups/new ">
+                <LinkContainer to="/groups/new">
                     <Button color="primary">New Group</Button>
                 </LinkContainer>
 
