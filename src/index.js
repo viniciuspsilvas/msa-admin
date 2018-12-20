@@ -2,9 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
-import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'tachyons';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+//import TextField from './components/TextField'
+
+import ModalMessage from './container/modalMessage'
+
+ReactDOM.render(<ModalMessage />, document.getElementById('root'));
 registerServiceWorker();

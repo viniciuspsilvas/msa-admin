@@ -6,8 +6,6 @@ import './style.css';
 
 var config = require('../../config/config');
 
-const STUDENTS_URL = '/students';
-
 class Students extends Component {
 
     /*
@@ -20,17 +18,17 @@ class Students extends Component {
             studentList: []
         };
 
-        this.handleChange = this.handleChange.bind(this);
+       // this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
         // List students
-        fetch(config.backend_url + STUDENTS_URL)
+        fetch(config.backend.students)
             .then(resp => resp.json())
             .then(studentList => {
                 console.log(studentList)
-                this.setState({ studentList: studentList })
+                //this.setState({ studentList: studentList })
             })
             .catch(function (err) {
                 console.log(err)
@@ -43,39 +41,6 @@ class Students extends Component {
         });
     }
 
-    /* 
-    *   Method called by Submit button
-    */
-    handleSubmit(event) {
-        event.preventDefault();
-        alert('A name was submitted: ' + this.state.value);
-        var data = {
-            value: this.state.value
-        }
-        console.log(data)
-        fetch(config.backend_url + STUDENTS_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        }).then(function (response) {
-            if (response.status >= 400) {
-                throw new Error("Bad response from server");
-            }
-            return response.json();
-        }).then(function (data) {
-            console.log(data)
-            if (data === "success") {
-                this.refs.msg.show('Some text or component', {
-                    time: 2000,
-                    type: 'success',
-                    icon: <img alt='Img icon' src="path/to/some/img/32x32.png" />
-                })
-            }
-        }).catch(function (err) {
-            console.log(err)
-        });
-    }
-
     render() {
         const studentList = this.state.studentList;
         const isNotEmpty = studentList && studentList.length > 0;
@@ -83,7 +48,7 @@ class Students extends Component {
         return (
             <div className='tc'>
                 <div><h2>Students</h2></div>
-                <form onSubmit={this.handleSubmit}>
+                <form >
                     <label>
                         Name:
                         <input type="text" value={this.state.value} onChange={this.handleChange} />

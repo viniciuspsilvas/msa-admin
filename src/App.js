@@ -21,7 +21,7 @@ const About = () => (<div><h2>About</h2></div>)
 
 const NoMatch = () => (<div><h2>Error 404 </h2></div>)
 
-const BasicExample = () => (
+const App = () => (
     <Router>
         <div>
             <HeaderNav />
@@ -47,4 +47,4 @@ const BasicExample = () => (
 
     </Router>
 )
-export default BasicExample
+export default App
