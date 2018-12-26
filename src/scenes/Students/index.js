@@ -1,12 +1,66 @@
 import React, { Component } from 'react';
-
-import StudentsList from './components/StudentsList'
-
+import BootstrapTable from 'react-bootstrap-table-next';
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+import { Container, Row, Col } from 'reactstrap';
+import { Email, Edit } from '@material-ui/icons';
+import ModalMessage from '../../container/modalMessage'
+import Tooltip from '@material-ui/core/Tooltip';
+import axios from 'axios';
 import './style.css';
 
-var config = require('../../config/config');
+const config = require('../../config/config');
 
 class Students extends Component {
+
+    columns = [{
+        dataField: 'id',
+        text: 'ID',
+        sort: true
+    }, {
+        dataField: 'fullname',
+        text: 'Name',
+        sort: true,
+        align: 'left',
+    }, {
+        dataField: 'email',
+        text: 'Email',
+        sort: true,
+        align: 'left',
+    }, {
+        dataField: 'phone',
+        text: 'Phone',
+        sort: true
+    }, {
+
+        // Column 'Actions' - where the buttons are located.
+        text: '',
+        align: 'center',
+
+        // Apply event to the column
+        events: {
+            onClick: (e, column, columnIndex, row, rowIndex) => {
+                this.openModalMessage(row);
+            },
+        },
+
+        // Column 'Actions'
+        formatter: (cellContent, row) => {
+            return (
+                <div>
+                    <Tooltip title="Edit">
+                        <Edit style={{ cursor: 'pointer' }} />
+                    </Tooltip>
+                    &emsp;
+                    <Tooltip title="Send notification">
+                        <Email style={{ cursor: 'pointer' }} />
+                    </Tooltip>
+                </div>
+            );
+        }
+
+    },
+
+    ];
 
     /*
      Constructor 
@@ -15,27 +69,35 @@ class Students extends Component {
         super(props);
         this.state = {
             value: '',
-            studentList: []
+            studentList: [],
+            studentSelected: ''
         };
 
-       // this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.handleChange = this.handleChange.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
         // List students
-        fetch(config.backend.students)
-            .then(resp => resp.json())
-            .then(studentList => {
-                console.log(studentList)
-                //this.setState({ studentList: studentList })
-            })
-            .catch(function (err) {
-                console.log(err)
-            });
+        axios.get(config.backend.students)
+            .then(result => this.setState({
+                studentList: result.data
+            }))
+            .catch(error => this.setState({
+                error,
+            }));
     }
 
-    handleChange(event) {
+    // Open Modal Message
+    openModalMessage = (studentSelected) => {
+        this.setState({
+            studentSelected: studentSelected,
+            modalOpen: true
+        });
+    }
+
+    handleChange = (event) => {
         this.setState({
             value: event.target.value
         });
@@ -43,25 +105,70 @@ class Students extends Component {
 
     render() {
         const studentList = this.state.studentList;
-        const isNotEmpty = studentList && studentList.length > 0;
+        const defaultSorted = [{
+            dataField: 'name',
+            order: 'desc'
+        }];
+
+
+        const MySearch = (props) => {
+            let input;
+            const handleClick = () => {
+                props.onSearch(input.value);
+            };
+            return (
+                <Row>
+                    <Col>
+                        <input
+                            className="form-control"
+                            ref={n => input = n}
+                            type="text"
+                        />
+                    </Col>
+                    <Col>
+                        <button className="btn btn-info" onClick={handleClick}>Search</button>
+                    </Col>
+                </Row>
+            );
+        };
 
         return (
-            <div className='tc'>
-                <div><h2>Students</h2></div>
-                <form >
-                    <label>
-                        Name:
-                        <input type="text" value={this.state.value} onChange={this.handleChange} />
-                    </label>
-                    <input type="submit" value="Submit" />
-                </form>
 
-                {isNotEmpty ?
-                    (<StudentsList studentList={studentList} />)
-                    :
-                    (<div> Empty list </div>)
-                }
-            </div>
+            <Container>
+
+                <ModalMessage isOpen={this.state.modalOpen} to={this.state.studentSelected} />
+                <Row>
+                    <Col><h1>Students</h1></Col>
+                </Row>
+
+                <ToolkitProvider
+                    keyField="id"
+                    data={studentList}
+                    columns={this.columns}
+                    search>
+                    {
+                        props => (
+                            <div>
+                                <MySearch {...props.searchProps} placeholder="Search students" />
+                                <Row style={{ marginTop: 1 + 'em' }} >
+                                    <Col>
+                                        <BootstrapTable
+                                            {...props.baseProps}
+                                            striped
+                                            hover
+                                            condensed
+                                            bootstrap4
+                                            noDataIndication="Table is Empty"
+                                            defaultSorted={defaultSorted}
+                                           
+                                        />
+                                    </Col>
+                                </Row>
+                            </div>
+                        )
+                    }
+                </ToolkitProvider>
+            </Container>
         );
     }
 }
