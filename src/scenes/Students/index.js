@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Container, Row, Col } from 'reactstrap';
 import { Email, Edit } from '@material-ui/icons';
 import ModalMessage from '../../container/modalMessage'
@@ -31,8 +32,8 @@ class Students extends Component {
         text: 'Phone',
         sort: true
     }, {
-
         // Column 'Actions' - where the buttons are located.
+        dataField: '',
         text: '',
         align: 'center',
 
@@ -103,6 +104,13 @@ class Students extends Component {
         });
     }
 
+    //Toggle Modal Message
+    toggle = () => {
+        this.setState({
+            modalOpen: false
+        });
+    }
+
     render() {
         const studentList = this.state.studentList;
         const defaultSorted = [{
@@ -110,7 +118,7 @@ class Students extends Component {
             order: 'desc'
         }];
 
-
+        // Search field localized on top
         const MySearch = (props) => {
             let input;
             const handleClick = () => {
@@ -136,7 +144,9 @@ class Students extends Component {
 
             <Container>
 
-                <ModalMessage isOpen={this.state.modalOpen} to={this.state.studentSelected} />
+                <ModalMessage isOpen={this.state.modalOpen} 
+                    toggle={this.toggle}
+                    to={this.state.studentSelected} />
                 <Row>
                     <Col><h1>Students</h1></Col>
                 </Row>
@@ -148,7 +158,7 @@ class Students extends Component {
                     search>
                     {
                         props => (
-                            <div>
+                            <Container>
                                 <MySearch {...props.searchProps} placeholder="Search students" />
                                 <Row style={{ marginTop: 1 + 'em' }} >
                                     <Col>
@@ -160,11 +170,11 @@ class Students extends Component {
                                             bootstrap4
                                             noDataIndication="Table is Empty"
                                             defaultSorted={defaultSorted}
-                                           
+                                            pagination={ paginationFactory() }
                                         />
                                     </Col>
                                 </Row>
-                            </div>
+                            </Container>
                         )
                     }
                 </ToolkitProvider>
