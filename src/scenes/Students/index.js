@@ -3,7 +3,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Container, Row, Col } from 'reactstrap';
-import { Email, Edit } from '@material-ui/icons';
+import { Email } from '@material-ui/icons';
 import ModalMessage from '../../container/modalMessage'
 import Tooltip from '@material-ui/core/Tooltip';
 import axios from 'axios';
@@ -40,27 +40,29 @@ class Students extends Component {
         // Apply event to the column
         events: {
             onClick: (e, column, columnIndex, row, rowIndex) => {
-                this.openModalMessage(row);
+                if (row.advices.length > 0) this.openModalMessage(row);
             },
         },
 
         // Column 'Actions'
         formatter: (cellContent, row) => {
+
             return (
                 <div>
-                    <Tooltip title="Edit">
+                    {/*                     <Tooltip title="Edit">
                         <Edit style={{ cursor: 'pointer' }} />
                     </Tooltip>
-                    &emsp;
-                    <Tooltip title="Send notification">
-                        <Email style={{ cursor: 'pointer' }} />
-                    </Tooltip>
+                    &emsp; */}
+
+                    {row.advices.length > 0 &&
+                        <Tooltip title="Send notification">
+                            <Email style={{ cursor: 'pointer' }} />
+                        </Tooltip>
+                    }
                 </div>
             );
         }
-
     },
-
     ];
 
     /*
@@ -81,7 +83,7 @@ class Students extends Component {
 
     componentDidMount() {
         // List students
-        axios.get(config.backend.students)
+        axios.get(config.backend.students, { params: { filter: { include: 'advices' } } })
             .then(result => this.setState({
                 studentList: result.data
             }))
@@ -144,7 +146,7 @@ class Students extends Component {
 
             <Container>
 
-                <ModalMessage isOpen={this.state.modalOpen} 
+                <ModalMessage isOpen={this.state.modalOpen}
                     toggle={this.toggle}
                     to={this.state.studentSelected} />
                 <Row>
@@ -170,7 +172,7 @@ class Students extends Component {
                                             bootstrap4
                                             noDataIndication="Table is Empty"
                                             defaultSorted={defaultSorted}
-                                            pagination={ paginationFactory() }
+                                            pagination={paginationFactory()}
                                         />
                                     </Col>
                                 </Row>

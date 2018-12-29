@@ -9,13 +9,12 @@ import SpinnerModal from '../components/SpinnerModal';
 
 var config = require('../config/config');
 
-
 class ModalMessage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isLoading: false,
+            isLoading: true,
             error: null,
             students: [],
             studentsSelected: [],
@@ -26,9 +25,6 @@ class ModalMessage extends React.Component {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-
-        // preserve the initial state in a new object
-        this.baseState = this.state
     }
 
     componentDidMount() {
@@ -53,7 +49,12 @@ class ModalMessage extends React.Component {
     }
 
     resetForm = () => {
-        this.setState(this.baseState)
+        this.setState({
+            studentsSelected: [],
+            title: '',
+            body: '',
+            severity: '',
+        });
       }
 
     // Called always when a input is changed
