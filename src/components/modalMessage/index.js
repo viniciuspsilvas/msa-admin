@@ -1,22 +1,19 @@
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col, Container, Button } from 'reactstrap';
-import axios from 'axios';
 
 // Import as a module in your JS
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import SpinnerModal from '../components/SpinnerModal';
+import SpinnerModal from '../../components/SpinnerModal';
+import { fetchStudentList, togleModalMessage, sendNotification } from "./actions";
+import { connect } from "react-redux";
 
-var config = require('../config/config');
 
 class ModalMessage extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isLoading: true,
-            error: null,
-            students: [],
             studentsSelected: [],
             title: '',
             body: '',
@@ -29,15 +26,7 @@ class ModalMessage extends React.Component {
 
     componentDidMount() {
         //Load students from backend
-        axios.get(config.backend.students)
-            .then(result => this.setState({
-                students: result.data,
-                isLoading: false,
-
-            }))
-            .catch(error => this.setState({
-                error,
-            }));
+        this.props.fetchStudentList();
     }
 
     componentDidUpdate(prevProps) {
@@ -55,7 +44,7 @@ class ModalMessage extends React.Component {
             body: '',
             severity: '',
         });
-      }
+    }
 
     // Called always when a input is changed
     handleInputChange = (event) => {
@@ -72,57 +61,42 @@ class ModalMessage extends React.Component {
     // Handle of Send button
     handleSubmit = (e) => {
         e.preventDefault();
-        this.setState({ isLoading: true });
 
         // Prepare data to be sent to backend
-        let data = {
-            "title": this.state.title,
-            "body": this.state.body,
-            "severity": this.state.severity,
-            "receivers": this.state.studentsSelected
-        }
+        const { title, body, severity, studentsSelected } = this.state
+        let data = { title, body, severity, "receivers": studentsSelected }
 
-        // Request to backend 
-        axios.post(config.backend.sendMessageBatch, { "data": data })
-            .then(result => this.setState({
-                isLoading: false,
-            }))
-            .catch(error => this.setState({
-                error,
-                isLoading: false
-            }));
-
-        this.props.toggle();
+        this.props.sendNotification(data);
+        this.props.togleModalMessage();
         this.resetForm();
     }
 
     // RENDER
     render() {
-        const { error, isLoading, students, studentsSelected } = this.state;
+        const { error, isLoading, studentList, isOpen } = this.props;
+
+        const { studentsSelected, severity, title, body } = this.state;
 
         if (error) { return <p>{error.message}</p> }
-
         if (isLoading) { return <SpinnerModal loading={isLoading} /> }
 
         const cancelButton = () => {
-            this.props.toggle();
-            this.resetForm();
+            this.props.togleModalMessage();
+            // this.resetForm();
         }
 
         return (
-
             <Container>
-                <Modal isOpen={this.props.isOpen} toggle={this.props.toggle} className={this.props.className}>
-                    <ModalHeader toggle={this.props.toggle}>Quick Message</ModalHeader>
+                <Modal isOpen={isOpen} toggle={this.props.togleModalMessage} className={this.props.className}>
+                    <ModalHeader toggle={this.props.togleModalMessage}>Quick Message</ModalHeader>
                     <ModalBody>
                         <Form>
-
                             <FormGroup>
                                 <Label for="toIpt">To</Label>
 
                                 <Typeahead
                                     labelKey="fullname"
-                                    options={students}
+                                    options={studentList}
                                     selected={studentsSelected}
                                     multiple
                                     onChange={(selected) => this.setState({ studentsSelected: selected })}
@@ -145,7 +119,7 @@ class ModalMessage extends React.Component {
                                         <Input type="select" name="severity"
                                             id="severitySelect"
                                             onChange={this.handleInputChange}
-                                            value={this.state.severity}>
+                                            value={severity}>
                                             <option>1</option>
                                             <option>2</option>
                                             <option>3</option>
@@ -158,14 +132,14 @@ class ModalMessage extends React.Component {
                                 <Label for="titleIpt">Title</Label>
                                 <Input name="title" id="titleIpt"
                                     onChange={this.handleInputChange}
-                                    value={this.state.title} />
+                                    value={title} />
                             </FormGroup>
 
                             <FormGroup>
                                 <Label for="textIpt">Body</Label>
                                 <Input type="textarea" name="body" id="textIpt"
                                     onChange={this.handleInputChange}
-                                    value={this.state.body} />
+                                    value={body} />
                             </FormGroup>
                         </Form>
                     </ModalBody>
@@ -181,4 +155,15 @@ class ModalMessage extends React.Component {
     }
 }
 
-export default ModalMessage;
+//Redux configuration
+const mapStateToProps = state => {
+    return state.modalMessageReducer;
+};
+
+const mapDispatchToProps = dispatch => ({
+    fetchStudentList: () => dispatch(fetchStudentList()),
+    togleModalMessage: () => dispatch(togleModalMessage()),
+    sendNotification: (data) => dispatch(sendNotification(data))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModalMessage);

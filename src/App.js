@@ -12,9 +12,8 @@ import StudentsForm from './scenes/Students/components/StudentsForm'
 import Groups from './scenes/GroupStudents/'
 import GroupsForm from './scenes/GroupStudents/components/GroupStudentsForm'
 
+import Home from './scenes/Home/'
 
-
-const Home = () => (<div><h2>Home</h2></div>)
 const Calendar = () => (<div><h2>Calendar</h2></div>)
 const Notification = () => (<div><h2>Notification</h2></div>)
 const About = () => (<div><h2>About</h2></div>)
