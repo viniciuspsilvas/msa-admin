@@ -46,11 +46,11 @@ class Students extends Component {
 
         return (
             <Container >
+                <h1>Students</h1>
                 <ModalMessage isOpen={modalOpen}
-                    to={studentSelected}
-                />
+                    to={studentSelected}/>
 
-                <StudentList studentList={studentList} openModalMessage={this.openModalMessage} />;
+                <StudentList studentList={studentList} openModalMessage={this.openModalMessage} />
         </Container>
         )
     }

@@ -5,6 +5,9 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Container, Row, Col } from 'reactstrap';
 import { Email } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
+import Paper from '@material-ui/core/Paper';
+
+import SearchBox from '../../../components/SearchBox'
 
 import '../style.css';
 
@@ -32,13 +35,13 @@ const columns = (props) => [{
   text: '',
   align: 'center',
 
-   // Apply event to the column
+  // Apply event to the column
   events: {
     onClick: (e, column, columnIndex, row, rowIndex) => {
       if (row.advices.length > 0) props.openModalMessage(row);
     },
   },
- 
+
   // Column 'Actions'
   formatter: (cellContent, row) => {
     return (
@@ -55,34 +58,13 @@ const columns = (props) => [{
 },
 ];
 
-// Search field localized on top
-const MySearch = (props) => {
-  let input;
-  const handleClick = () => {
-    props.onSearch(input.value);
-  };
-  return (
-    <Row>
-      <Col>
-        <input
-          className="form-control"
-          ref={n => input = n}
-          type="text"
-        />
-      </Col>
-      <Col>
-        <button className="btn btn-info" onClick={handleClick}>Search</button>
-      </Col>
-    </Row>
-  );
-};
-
 const defaultSorted = [{
   dataField: 'name',
   order: 'desc'
 }];
 
 export default props =>
+  <Paper elevation={1} style={{ padding: 1 + 'em' }} >
     <ToolkitProvider
       keyField="id"
       data={props.studentList}
@@ -91,7 +73,8 @@ export default props =>
       {
         props => (
           <Container>
-            <MySearch {...props.searchProps} placeholder="Search students" />
+            <SearchBox {...props.searchProps} placeholder="Search students" />
+          
             <Row style={{ marginTop: 1 + 'em' }} >
               <Col>
                 <BootstrapTable
@@ -103,6 +86,7 @@ export default props =>
                   noDataIndication="Table is Empty"
                   defaultSorted={defaultSorted}
                   pagination={paginationFactory()}
+                  headerClasses="header-class"
                 />
               </Col>
             </Row>
@@ -110,3 +94,4 @@ export default props =>
         )
       }
     </ToolkitProvider>
+  </Paper>

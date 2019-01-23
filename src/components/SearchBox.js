@@ -1,16 +1,25 @@
 import React from 'react';
+import { Row, Col } from 'reactstrap';
 
-const SearchBox = ({ searchfield, searchChange }) => {
+// Search field localized on top
+const SearchBox = (props) => {
+  let input;
+  const handleClick = () => {
+    props.onSearch(input.value);
+  };
   return (
-    <div className='pa2'>
-      <input
-        className='pa3 ba b--green bg-lightest-blue'
-        type='search'
-        placeholder='search robots'
-        onChange={searchChange}
-      />
-    </div>
+    <Row>
+      <Col >
+        <input
+          className="form-control"
+          ref={n => input = n}
+          type="text"
+        />
+      </Col>
+      <Col sm="2">
+        <button className="btn btn-info" onClick={handleClick}>Search</button>
+      </Col>
+    </Row>
   );
-}
-
+};
 export default SearchBox;

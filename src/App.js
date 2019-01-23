@@ -9,8 +9,7 @@ import HeaderNav from './components/HeaderNav/'
 import Students from './scenes/Students/'
 import StudentsForm from './scenes/Students/components/StudentsForm'
 
-import Groups from './scenes/GroupStudents/'
-import GroupsForm from './scenes/GroupStudents/components/GroupStudentsForm'
+import Groups from './scenes/StudentGroups/'
 
 import Home from './scenes/Home/'
 
@@ -36,7 +35,6 @@ const App = () => (
                 <Route path="/students/:studentId" component={StudentsForm} />
 
                 <Route exact path="/groups" component={Groups} />
-                <Route path="/groups/new" component={GroupsForm} />
 
                 <Route path="/about" component={About} />
 
