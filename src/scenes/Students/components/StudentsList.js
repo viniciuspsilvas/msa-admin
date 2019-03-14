@@ -49,7 +49,10 @@ const columns = (props) => [{
         {
           row.advices.length > 0 &&
           <Tooltip title="Send notification">
-            <Email style={{ cursor: 'pointer' }} />
+            <div>
+              <Email style={{ cursor: 'pointer' }} />
+              
+            </div>
           </Tooltip>
         }
       </div>

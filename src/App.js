@@ -8,14 +8,13 @@ import HeaderNav from './components/HeaderNav/'
 
 import Students from './scenes/Students/'
 import StudentsForm from './scenes/Students/components/StudentsForm'
-
 import Groups from './scenes/StudentGroups/'
-
 import Home from './scenes/Home/'
+import Calendar from './scenes/Calendar/'
+import About from './scenes/About/'
 
-const Calendar = () => (<div><h2>Calendar</h2></div>)
 const Notification = () => (<div><h2>Notification</h2></div>)
-const About = () => (<div><h2>About</h2></div>)
+
 
 const NoMatch = () => (<div><h2>Error 404 </h2></div>)
 
