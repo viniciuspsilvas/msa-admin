@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import logo from '../../images/Logo_vert.png';
+import { Jumbotron, Button, Container } from 'reactstrap';
 
 import { connect } from "react-redux";
 //import { fetchStudentList } from "./actions";
@@ -17,15 +19,22 @@ class HomeContainer extends Component {
     componentDidMount() {
         //this.props.actions.fetchStudentList();
 
-       // this.props.dispatch(fetchStudentList());
+        // this.props.dispatch(fetchStudentList());
     }
 
     render() {
 
         return (
-            <div className='tc'>
-                Hello
-                {console.log(this.props.studentList)}
+            <div style={{margin: 50}}>
+                <Jumbotron fluid>
+                    <Container fluid>
+                         <img src={logo} alt='Mindroom Student App'className="rounded mx-auto d-block" />
+                        <p className="lead blockquote text-center">Mindroom Student APP - Administration</p>
+                        <hr className="my-2" />
+                        <p className="blockquote text-center"> Here you can work on maintenance of students, class schedule, notifications and more.</p>
+               
+                    </Container>
+                </Jumbotron>
             </div>
         );
     }
