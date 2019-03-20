@@ -14,9 +14,6 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PropTypes from 'prop-types';
 
-import '../style.css';
-
-
 const columns = [{
   dataField: 'id',
   text: '',

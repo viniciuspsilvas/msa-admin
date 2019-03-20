@@ -9,7 +9,6 @@ import Paper from '@material-ui/core/Paper';
 
 import { createLoadingSelector } from '../../redux/selectors';
 
-import './style.css';
 import { Button } from 'reactstrap';
 
 class StudentGroups extends Component {
