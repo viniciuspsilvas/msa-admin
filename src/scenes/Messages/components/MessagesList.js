@@ -5,46 +5,56 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import { Container } from 'reactstrap';
 import Drafts from '@material-ui/icons/Drafts';
 import Mail from '@material-ui/icons/Mail';
-import { Button } from 'reactstrap';
 import Send from '@material-ui/icons/Send';
-import Edit from '@material-ui/icons/Edit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import AddIcon from '@material-ui/icons/Add';
 
-import DeleteIcon from '@material-ui/icons/Delete';
 import PropTypes from 'prop-types';
 
-const columns = [{
+import './style.css'
+
+const columns = (handleSendNotif) => [{
   dataField: 'id',
   text: '',
-  sort: true
+  sort: true,
+  classes: 'idColumn'
 }, {
   dataField: 'user',
   text: 'To',
   sort: true,
   formatter: toFormatter,
+  classes: 'toColumn'
 }, {
   dataField: 'body',
   text: 'Message',
   sort: true,
   formatter: bodyFormatter,
+  classes: 'bodyColumn'
 }, {
   dataField: 'sentAt',
   text: 'Sent at',
   sort: true,
   formatter: dataFormatter,
+  classes: 'dateColumn',
+  headerAlign: 'center',
+  align: 'center'
 }, {
   dataField: 'isRead',
   text: 'Action',
   sort: true,
   formatter: readIconFormatter,
+  classes: 'actionsColumn',
+  headerAlign: 'center',
+  align: 'center',
+  events: {
+    onClick: (e, column, columnIndex, row, rowIndex) => { handleSendNotif(row)},
+  }
 }];
 
 
 
 function toFormatter(row) {
   return (
-    <span>
+    <span className='toColumn'>
       {row.fullname}
     </span>
   );
@@ -55,12 +65,13 @@ function bodyFormatter(cell, row) {
   return (
     <div>
       <span>
+        {row.isRead ? <Drafts className='bodyTextTable' titleAccess='Read' /> : <Mail titleAccess='Unread' />}
+        {'  '}
         {row.title}
       </span>
       {' - '}
       <span className='bodyTextTable'>
-        {cell.substring(0, 60).concat("... ")}
-        {row.isRead ? <Drafts titleAccess='Read' /> : <Mail titleAccess='Unread' />}
+        {cell.substring(0, 45).concat("... ")}
       </span>
     </div>
   );
@@ -83,10 +94,6 @@ function readIconFormatter(cell, row) {
   return (
     <span>
       <Send titleAccess='Send again' style={{ cursor: 'pointer' }} />
-      {' '}
-      <Edit titleAccess='Edit' />
-      {' '}
-      <DeleteIcon fontSize="small" />
     </span>
   );
 }
@@ -99,27 +106,27 @@ const defaultSorted = [{
 
 const selectRow = {
   mode: 'checkbox',
+  classes: 'selectColumn'
 };
 
 const MessagesList = props => {
-  const { list } = props;
+  const { list, handleSendNotif } = props;
 
   const indication = "Table is Empty";
 
   return (
     <Container>
-      <Button color="primary" className="button">
-        <AddIcon />
-      </Button>
       <BootstrapTable keyField='id'
-        classes='table table-sm'
+        classes='table-sm table-responsive-lg'
         data={list}
-        columns={columns}
+        columns={columns(handleSendNotif)}
+
         noDataIndication={indication}
         striped
         hover
         condensed
         defaultSorted={defaultSorted}
+
         pagination={paginationFactory()}
         selectRow={selectRow}
       />
@@ -129,6 +136,7 @@ const MessagesList = props => {
 
 MessagesList.propTypes = {
   list: PropTypes.array.isRequired,
+  handleSendNotif: PropTypes.func,
 };
 
 export default MessagesList

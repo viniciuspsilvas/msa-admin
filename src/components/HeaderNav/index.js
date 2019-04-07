@@ -34,8 +34,8 @@ export default class Example extends React.Component {
                         <LinkContainer to="/calendar">
                             <NavLink >Calendar</NavLink>
                         </LinkContainer>
-                        <LinkContainer to="/notification">
-                            <NavLink >Notification</NavLink>
+                        <LinkContainer to="/messages">
+                            <NavLink >Messages</NavLink>
                         </LinkContainer>
                         <LinkContainer to="/students">
                             <NavLink >Students</NavLink>

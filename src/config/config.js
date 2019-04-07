@@ -12,8 +12,9 @@ var backend = {
 	messages: FULL_BACKEND_URL + '/api/Messages',
 	sendMessageBatch: FULL_BACKEND_URL + '/api/Messages/sendMessageBatch',
 	
-	login: FULL_BACKEND_URL + '/api/Students/loginMoodle',
 	studentAdvices: FULL_BACKEND_URL + '/api/StudentAdvices',
+	
+	login: FULL_BACKEND_URL + '/api//Users/login',
 	
 }
 

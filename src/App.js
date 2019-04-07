@@ -12,9 +12,9 @@ import Groups from './scenes/StudentGroups/'
 import Home from './scenes/Home/'
 import Calendar from './scenes/Calendar/'
 import About from './scenes/About/'
+import Messages from './scenes/Messages'
 
-const Notification = () => (<div><h2>Notification</h2></div>)
-
+import Login from './scenes/Login'
 
 const NoMatch = () => (<div><h2>Error 404 </h2></div>)
 
@@ -26,8 +26,10 @@ const App = () => (
             <Switch>
                 <Route exact path="/" component={Home} />
 
+                <Route path="/login" component={Login} />
+
                 <Route path="/calendar" component={Calendar} />
-                <Route path="/notification" component={Notification} />
+                <Route path="/messages" component={Messages} />
 
                 <Route exact path="/students" component={Students} />
                 <Route path="/students/new" component={StudentsForm} />

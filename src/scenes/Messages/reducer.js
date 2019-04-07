@@ -1,51 +1,28 @@
 import {
-    FETCH_STUDENTS_GROUP_BEGIN,
-    FETCH_STUDENTS_GROUP_SUCCESS,
-    FETCH_STUDENTS_GROUP_FAILURE,
-
-    CREATE_STUDENTS_GROUP,
-    CREATE_STUDENTS_GROUP_SUCCESS,
-    CREATE_STUDENTS_GROUP_FAILURE,
-    RESET_NEW_STUDENTS_GROUP
+    FETCH_MESSAGE_BEGIN,
+    FETCH_MESSAGE_SUCCESS,
+    FETCH_MESSAGE_FAILURE,
 
 } from './actions';
 
 const initialState = {
-
-    newStudentGroup: {
-        name: '',
-        description: ''
-    },
-
-    studentGroupList: [],
+    messageList: [],
 
     loading: false,
     error: null,
 };
 
-export default function studentGroupReducer(state = initialState, action) {
+export default function messagesReducer(state = initialState, action) {
     const { type, payload } = action;
-    let error;
 
     switch (type) {
 
-        case FETCH_STUDENTS_GROUP_BEGIN:
+        case FETCH_MESSAGE_BEGIN:
             return { ...state, loading: true, error: null };
-        case FETCH_STUDENTS_GROUP_SUCCESS:
-            return { ...state, loading: false, studentGroupList: payload.studentGroups };
-        case FETCH_STUDENTS_GROUP_FAILURE:
-            return { ...state, loading: false, error: payload.error, studentGroupList: [] };
-
-
-        case CREATE_STUDENTS_GROUP:
-            return { ...state, loading: true }
-        case CREATE_STUDENTS_GROUP_SUCCESS:
-            return { ...state, studentGroup: payload, error: null, loading: false }
-        case CREATE_STUDENTS_GROUP_FAILURE:
-            error = payload || { message: payload.message };//2nd one is network or server down errors
-            return { ...state, studentGroup: null, error: error, loading: false }
-        case RESET_NEW_STUDENTS_GROUP:
-            return { ...state, studentGroup: null, error: null, loading: false }
+        case FETCH_MESSAGE_SUCCESS:
+            return { ...state, loading: false, messageList: payload.data};
+        case FETCH_MESSAGE_FAILURE:
+            return { ...state, loading: false, error: payload.error, messageList: [] };
 
         default:
             return state;

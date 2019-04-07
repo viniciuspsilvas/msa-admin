@@ -1,79 +1,83 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { fetchStudentGroupList, createStudentGroup } from "./actions";
+import { fetchMessageList } from "./actions";
 import { Container } from 'reactstrap';
-import StudentGroupsList from './components/StudentGroupsList'
-import StudentGroupsForm from './components/StudentGroupsForm'
-import { SubmissionError } from 'redux-form'
-import Paper from '@material-ui/core/Paper';
 
-import { createLoadingSelector } from '../../redux/selectors';
+import MessagesList from "./components/MessagesList"
+import ConfirmModal from '../../components/ConfirmModal'
 
-import { Button } from 'reactstrap';
+class Messages extends Component {
 
-class StudentGroups extends Component {
-
-    /*
-     Constructor 
-    */
     constructor(props) {
-        super(props);
+        super(props)
 
-        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.state = {
+            isOpen: false,
+            msgResend: {}
+        }
+
+        //this.handleToggleModal = this.handleToggleModal.bind(this);
+        //this.handleConfirm = this.handleConfirm.bind(this);
     }
 
     componentDidMount() {
-        this.props.fetchStudentGroupList();
+        this.props.fetchMessageList();
     }
 
-    handleFormSubmit = (values) => {
-        return new Promise((resolve, reject) => {
-            this.props.createStudentGroup(values)
-        }).catch((error) => {
-            throw new SubmissionError(error);
-        });
+    handleSendNotif = (msg) => {
+        this.handleToggleModal();
+        this.setState({ msgResend: msg })
+    }
+
+    handleToggleModal = () => {
+        this.setState({ 
+            isOpen: !this.state.isOpen ,
+            msgResend: {}
+        })
+    }
+
+    handleConfirm = () => {
+        window.alert("handleConfirm" + this.state.msgResend.id)
+        this.handleToggleModal();
     }
 
     render() {
-        const { error, loading, studentGroupList } = this.props;
+        const { error, loading, messageList } = this.props;
+        const { isOpen } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
         if (loading) { return <div>Loading...</div> }
 
         return (
             <Container >
-                <h1>Group Students</h1>
+                <h1>Messages</h1>
+                <ConfirmModal
+                    isOpen={isOpen}
+                    title="Confirm"
+                    text="Are you sure you want to resend this notification?"
+                    handleToggleModal={this.handleToggleModal}
+                    handleConfirm={this.handleConfirm}
+                />
 
-                {/* <StudentGroupsForm onSubmit={values => this.handleFormSubmit(values)} /> */}
-
-                <Paper elevation={1} style={{ padding: 1 + 'em' }} >
-
-                    <StudentGroupsList list={studentGroupList} >
-                        <Button color="primary">New</Button>
-                    </StudentGroupsList>
-                </Paper>
+                <MessagesList list={messageList} handleSendNotif={(msg) => this.handleSendNotif(msg)} />
 
             </Container>
         );
     }
 }
 
-const loadingSelector = createLoadingSelector(['GET_TODOS']);
 
 //Redux configuration
 const mapStateToProps = state => {
     return {
-        ...state.studentGroupReducer,
-        isFetching: loadingSelector(state)
+        ...state.messagesReducer,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchStudentGroupList: () => dispatch(fetchStudentGroupList()),
-        createStudentGroup: (studentGroup) => dispatch(createStudentGroup(studentGroup)),
-
+        fetchMessageList: () => dispatch(fetchMessageList()),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(StudentGroups);
+export default connect(mapStateToProps, mapDispatchToProps)(Messages);

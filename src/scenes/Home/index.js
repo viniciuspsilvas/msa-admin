@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from '../../images/Logo_vert.png';
-import { Jumbotron, Button, Container } from 'reactstrap';
+import { Jumbotron, Container } from 'reactstrap';
 
 import { connect } from "react-redux";
 //import { fetchStudentList } from "./actions";

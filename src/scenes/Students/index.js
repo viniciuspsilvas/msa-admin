@@ -1,14 +1,55 @@
 import React, { Component } from 'react';
-import { fetchStudentList } from "./actions";
+import { fetchStudentList, sendNotification } from "./actions";
 import { connect } from "react-redux";
 
 import StudentList from './components/StudentsList'
-import ModalMessage from '../../components/modalMessage'
-import { togleModalMessage } from "../../components/modalMessage/actions";
+import ModalMessage from '../../components/ModalMessage'
 
 import { Container } from 'reactstrap';
 
 class Students extends Component {
+
+    // Open Modal Message
+    openModalMessage = (studentSelected) => {
+        // Create a new array with the param studentSelected as the unique element.
+        this.setState({ studentsSelected: [studentSelected] })
+        this.togleModalMessage();
+    }
+
+    // Open or close the modal
+    togleModalMessage = () =>  this.setState({ modalOpen: !this.state.modalOpen });
+
+    // Handle of Send button
+    handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Prepare data to be sent to backend
+        const { title, body, severity, studentsSelected } = this.state
+        let data = { title, body, severity, "receivers": studentsSelected }
+
+        this.props.sendNotification(data);
+        this.togleModalMessage();
+        this.resetForm();
+    }
+
+    // Called always when a input is changed
+    handleInputChange = (event) => {
+
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({[name]: value });
+    }
+
+    resetForm = () => {
+        this.setState({
+            studentsSelected: [],
+            title: '',
+            body: '',
+            severity: '',
+        });
+    }
 
     constructor(props) {
         super(props);
@@ -18,17 +59,14 @@ class Students extends Component {
             title: '',
             body: '',
             severity: '',
+            modalOpen: false
         };
-    }
 
-    // Open Modal Message
-    openModalMessage = (studentSelected) => {
-
-        this.setState({
-            studentSelected: studentSelected
-        });
-
-        this.props.togleModalMessage();
+        //Binds
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.togleModalMessage = this.togleModalMessage.bind(this);
+        this.openModalMessage = this.openModalMessage.bind(this);
     }
 
     componentDidMount() {
@@ -37,9 +75,7 @@ class Students extends Component {
 
     render() {
         const { error, loading, studentList } = this.props;
-        const { modalOpen } = this.props;
-
-        const { studentSelected } = this.state;
+        const { studentsSelected, modalOpen } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
         if (loading) { return <div>Loading...</div> }
@@ -47,30 +83,33 @@ class Students extends Component {
         return (
             <Container >
                 <h1>Students</h1>
-                <ModalMessage isOpen={modalOpen}
-                    to={studentSelected}/>
+
+                <ModalMessage
+                    isOpen={modalOpen}
+                    handleSubmit={this.handleSubmit}
+                    handleCancel={this.togleModalMessage}
+                    studentList={studentList.filter(s => s.advices.length > 0)} // Just who has advice
+                    studentsSelected={studentsSelected}
+                    handleInputChange={this.handleInputChange}
+                />
 
                 <StudentList studentList={studentList} openModalMessage={this.openModalMessage} />
-        </Container>
+            </Container>
         )
     }
 }
 
 //Redux configuration
 const mapStateToProps = state => {
-    return {
+    return ({
         ...state.studentReducer,
-
-    };
+    });
 };
 
-
-// dispatch the DOM changes to call an action. note mapStateToProps returns object, mapDispatchToProps returns function
-// the function returns an object then uses connect to change the data from redecers.
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchStudentList: () => dispatch(fetchStudentList()),
-        togleModalMessage: () => dispatch(togleModalMessage())
+        sendNotification: (data) => dispatch(sendNotification(data))
     }
 }
 

@@ -62,6 +62,6 @@ const list = [
 ];
 
 storiesOf('MessagesList', module)
-.add('default', () => <MessagesList list={list} />)
+.add('default', () => <MessagesList list={list} handleSendNotif={ (msg) => window.alert(msg.id)} />)
 .add('Empty', () => <MessagesList list={[]} />)
 

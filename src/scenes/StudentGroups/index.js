@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { fetchStudentGroupList, createStudentGroup } from "./actions";
 import { Container } from 'reactstrap';
 import StudentGroupsList from './components/StudentGroupsList'
-import StudentGroupsForm from './components/StudentGroupsForm'
 import { SubmissionError } from 'redux-form'
 import Paper from '@material-ui/core/Paper';
 

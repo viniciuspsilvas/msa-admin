@@ -3,30 +3,22 @@ import { Modal, Row } from 'reactstrap';
 import { BounceLoader } from 'react-spinners';
 import './SpinnerModal.css'
 
-class SpinnerModal extends React.Component {
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            loading: this.props.loading,
-        };
-    }
+// RENDER
+const SpinnerModal = () => {
+    const loading= true;
 
-    // RENDER
-    render() {
-        const { loading } = this.state;
+    return (
 
-        return (
-
-            <Modal isOpen={loading} className='modal-dialog modal-dialog-centered modal-sm'
-                contentClassName='modalStyle' >
-                <Row className='d-flex justify-content-center' >
-                    <BounceLoader loading={loading} name='spinnerModal'
-                        color={'red'} />
-                </Row>
-            </Modal>
-        );
-    }
+        <Modal isOpen={loading} className='modal-dialog modal-dialog-centered modal-sm'
+            contentClassName='modalStyle' >
+            <Row className='d-flex justify-content-center' >
+                <BounceLoader loading={loading} name='spinnerModal'
+                    color={'white'} />
+            </Row>
+        </Modal>
+    );
 }
+
 
 export default SpinnerModal;
