@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { login } from "./actions";
 import { bindActionCreators } from 'redux'
 
 import SpinnerModal from '../../components/SpinnerModal';
 import LoginForm from './components/LoginForm'
 
+import { login } from "./actions";
+
+import { Redirect } from 'react-router-dom';
+
 class LoginScreen extends Component {
+
+    constructor(props) {
+        super(props);
+    }
 
     /**
      * Call from the Button
@@ -20,16 +27,15 @@ class LoginScreen extends Component {
     }
 
     render() {
-        const { error, loading, userDetails } = this.props;
+        const { error, isFetching, isAuthenticated } = this.props;
 
         if (error) { return <div>Error! {error.message}</div> }
-        if (loading) { return <SpinnerModal /> }
+        if (isFetching) { return <SpinnerModal /> }
+
+        if (isAuthenticated) {return <Redirect to="/" />}
 
         return (
-            <div>
-                {userDetails && "Token id: " + userDetails.id}
-                <LoginForm onSubmit={this.handleSubmit} />
-            </div>
+            <LoginForm onSubmit={this.handleSubmit} />
         );
     }
 }

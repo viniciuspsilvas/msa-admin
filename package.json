@@ -58,6 +58,7 @@
     "@storybook/addons": "^5.0.6",
     "@storybook/react": "^5.0.6",
     "babel-loader": "^8.0.4",
+    "redux-persist": "^5.10.0",
     "uuid": "^3.3.2"
   }
 }

@@ -8,11 +8,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'tachyons';
 
 import { Provider } from "react-redux";
-import store from './redux/configureStore'
+import {store, persistor} from './redux/configureStore'
+import { PersistGate } from "redux-persist/integration/react";
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <PersistGate loading={null} persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>, document.getElementById('root')
 );
 

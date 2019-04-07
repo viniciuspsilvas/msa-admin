@@ -2,13 +2,15 @@ import {
     FETCH_LOGIN_BEGIN,
     FETCH_LOGIN_SUCCESS,
     FETCH_LOGIN_FAILURE,
+    LOGOUT
 } from './actions';
 
 const initialState = {
-    loading: false,
+    isFetching: false,
     error: null,
-    userDetails: {
 
+    isAuthenticated: false,
+    userDetails: {
         token: {}
     },
 };
@@ -19,17 +21,24 @@ export default function loginReducer(state = initialState, action) {
     switch (type) {
 
         case FETCH_LOGIN_BEGIN:
-            return { ...state, loading: true, error: null };
+            return { ...state, isFetching: true, error: null };
         case FETCH_LOGIN_SUCCESS:
             return {
-                ...state, 
-                loading: false, 
-                
+                ...state,
+                isFetching: false,
+                isAuthenticated: true,
                 userDetails: payload
             };
         case FETCH_LOGIN_FAILURE:
-            return { ...state, loading: false, error: payload.error, userDetails: {} };
-
+            return { ...state, isFetching: false, error: payload.error, userDetails: {} };
+        
+        case LOGOUT:
+            return {
+                ...state,
+                
+                isAuthenticated: false,
+                userDetails: {}
+            };
         default:
             return state;
     }
