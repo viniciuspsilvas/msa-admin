@@ -39,9 +39,10 @@ class HeaderNav extends Component {
                     <img src={logo} alt='Mindroom Student App' />
                 </NavbarBrand>
                 <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-                <Collapse isOpen={!this.state.collapsed} navbar>
-                    {
-                        isAuthenticated &&
+
+                {
+                    isAuthenticated &&
+                    <Collapse isOpen={!this.state.collapsed} navbar>
                         <Nav className="ml-auto" navbar>
                             <LinkContainer exact to="/">
                                 <NavLink >Home</NavLink>
@@ -61,10 +62,14 @@ class HeaderNav extends Component {
                             <LinkContainer to="/about">
                                 <NavLink >About</NavLink>
                             </LinkContainer>
+                        </Nav>
+
+                        <Nav className="ml-auto navbar-right" navbar >
                             <Button color="link" onClick={this.props.logout}>Logout</Button>
                         </Nav>
-                    }
-                </Collapse>
+
+                    </Collapse>
+                }
             </Navbar>
         );
     }

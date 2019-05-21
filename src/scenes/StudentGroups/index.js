@@ -7,6 +7,7 @@ import { SubmissionError } from 'redux-form'
 import Paper from '@material-ui/core/Paper';
 
 import { createLoadingSelector } from '../../redux/selectors';
+import SpinnerModal from '../../components/SpinnerModal';
 
 import './style.css';
 import { Button } from 'reactstrap';
@@ -38,7 +39,7 @@ class StudentGroups extends Component {
         const { error, loading, studentGroupList } = this.props;
 
         if (error) { return <div>Error! {error.message}</div> }
-        if (loading) { return <div>Loading...</div> }
+        if (loading) { return <SpinnerModal /> }
 
         return (
             <Container >

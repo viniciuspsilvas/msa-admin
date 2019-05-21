@@ -9,6 +9,7 @@ import 'tachyons';
 
 import { Provider } from "react-redux";
 import {store, persistor} from './redux/configureStore'
+
 import { PersistGate } from "redux-persist/integration/react";
 
 ReactDOM.render(

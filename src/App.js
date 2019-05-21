@@ -31,6 +31,8 @@ const App = () => (
             <Switch>
                 <Route path="/login" component={Login} />
 
+                <Route path="/logout" component={Login} />
+
                 <PrivateRoute exact path="/" component={Home} />
                 <PrivateRoute path="/calendar" component={Calendar} />
                 <PrivateRoute path="/messages" component={Messages} />

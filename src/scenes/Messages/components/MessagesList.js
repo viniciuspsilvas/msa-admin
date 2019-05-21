@@ -2,7 +2,7 @@ import React from 'react';
 import Moment from 'react-moment';
 
 import BootstrapTable from 'react-bootstrap-table-next';
-import { Container } from 'reactstrap';
+import Paper from '@material-ui/core/Paper';
 import Drafts from '@material-ui/icons/Drafts';
 import Mail from '@material-ui/icons/Mail';
 import Send from '@material-ui/icons/Send';
@@ -115,7 +115,7 @@ const MessagesList = props => {
   const indication = "Table is Empty";
 
   return (
-    <Container>
+           <Paper elevation={1} style={{ padding: 1 + 'em' }} >
       <BootstrapTable keyField='id'
         classes='table-sm table-responsive-lg'
         data={list}
@@ -130,7 +130,7 @@ const MessagesList = props => {
         pagination={paginationFactory()}
         selectRow={selectRow}
       />
-    </Container>
+    </Paper>
   )
 }
 

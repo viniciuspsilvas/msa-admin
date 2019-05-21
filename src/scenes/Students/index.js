@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import StudentList from './components/StudentsList'
 import ModalMessage from '../../components/ModalMessage'
+import SpinnerModal from '../../components/SpinnerModal';
 
 import { Container } from 'reactstrap';
 
@@ -78,11 +79,13 @@ class Students extends Component {
         const { studentsSelected, modalOpen } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
-        if (loading) { return <div>Loading...</div> }
+        if (loading) { return <SpinnerModal /> }
 
         return (
             <Container >
                 <h1>Students</h1>
+
+                <StudentList studentList={studentList} openModalMessage={this.openModalMessage} />
 
                 <ModalMessage
                     isOpen={modalOpen}
@@ -93,7 +96,6 @@ class Students extends Component {
                     handleInputChange={this.handleInputChange}
                 />
 
-                <StudentList studentList={studentList} openModalMessage={this.openModalMessage} />
             </Container>
         )
     }

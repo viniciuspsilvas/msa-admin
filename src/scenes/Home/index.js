@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../../images/Logo_vert.png';
-import { Jumbotron, Container } from 'reactstrap';
-
+import {  Container } from 'reactstrap';
+import Paper from '@material-ui/core/Paper';
 import { connect } from "react-redux";
 //import { fetchStudentList } from "./actions";
 
@@ -25,17 +25,15 @@ class HomeContainer extends Component {
     render() {
 
         return (
-            <div style={{margin: 50}}>
-                <Jumbotron fluid>
-                    <Container fluid>
-                         <img src={logo} alt='Mindroom Student App'className="rounded mx-auto d-block" />
+            <Container >
+                <Paper elevation={1} style={{ padding: 1 + 'em' }} >
+                <img src={logo} alt='Mindroom Student App' className="rounded mx-auto d-block" />
                         <p className="lead blockquote text-center">Mindroom Student APP - Administration</p>
                         <hr className="my-2" />
                         <p className="blockquote text-center"> Here you can work on maintenance of students, class schedule, notifications and more.</p>
-               
-                    </Container>
-                </Jumbotron>
-            </div>
+
+                </Paper>
+            </Container>
         );
     }
 }

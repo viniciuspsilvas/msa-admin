@@ -5,14 +5,15 @@ import { bindActionCreators } from 'redux'
 import SpinnerModal from '../../components/SpinnerModal';
 import LoginForm from './components/LoginForm'
 
-import { login } from "./actions";
+import { login, logout } from "./actions";
 
 import { Redirect } from 'react-router-dom';
+import AlertBox from '../../components/AlertBox';
 
 class LoginScreen extends Component {
 
-    constructor(props) {
-        super(props);
+    componentWillMount() {
+        this.props.logout()
     }
 
     /**
@@ -28,30 +29,22 @@ class LoginScreen extends Component {
 
     render() {
         const { error, isFetching, isAuthenticated } = this.props;
+        if (isAuthenticated) { return <Redirect to="/" /> }
 
-        if (error) { return <div>Error! {error.message}</div> }
         if (isFetching) { return <SpinnerModal /> }
-
-        if (isAuthenticated) {return <Redirect to="/" />}
-
         return (
-            <LoginForm onSubmit={this.handleSubmit} />
+
+            <div>
+                <AlertBox error={error} />
+                <LoginForm onSubmit={this.handleSubmit} />
+            </div>
         );
     }
 }
 
 //Redux configuration
-const mapStateToProps = state => {
-    return {
-        ...state.loginReducer
-    };
-};
+const mapStateToProps = state => ({ ...state.loginReducer });
 
-const mapDispatchToProps = dispatch => bindActionCreators(
-    {
-        login
-    },
-    dispatch,
-)
+const mapDispatchToProps = dispatch => bindActionCreators({ login, logout }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

@@ -5,6 +5,7 @@ import { Container } from 'reactstrap';
 
 import MessagesList from "./components/MessagesList"
 import ConfirmModal from '../../components/ConfirmModal'
+import SpinnerModal from '../../components/SpinnerModal';
 
 class Messages extends Component {
 
@@ -46,11 +47,14 @@ class Messages extends Component {
         const { isOpen } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
-        if (loading) { return <div>Loading...</div> }
+
+        if (loading) { return <SpinnerModal /> }
 
         return (
             <Container >
                 <h1>Messages</h1>
+                <MessagesList list={messageList} handleSendNotif={(msg) => this.handleSendNotif(msg)} />
+               
                 <ConfirmModal
                     isOpen={isOpen}
                     title="Confirm"
@@ -59,7 +63,6 @@ class Messages extends Component {
                     handleConfirm={this.handleConfirm}
                 />
 
-                <MessagesList list={messageList} handleSendNotif={(msg) => this.handleSendNotif(msg)} />
 
             </Container>
         );

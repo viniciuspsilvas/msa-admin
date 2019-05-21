@@ -10,9 +10,9 @@ const logger = createLogger();
 /* Persis the redux store 
 */
 const persistConfig = {
-    key: "root",
-    storage: storage,
-   // whitelist: ["loginReducer"]
+    key: "msa-admin",
+    storage,
+    whitelist: ["loginReducer"]
 };
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

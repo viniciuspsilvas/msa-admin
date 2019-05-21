@@ -14,7 +14,7 @@ import './style.css';
 const LoginForm = ({ handleSubmit, handleChange, value, /* pristine, reset, */ submitting }) => {
 
     return (
-        <Paper className='container' elevation={1} >
+        <Paper className='loginContainer' elevation={1} >
 
             <img src={logo} alt='Mindroom Student App' className="rounded mx-auto d-block" width='200' />
             <Form style={{ margin: 20 }} onSubmit={handleSubmit} >
@@ -36,6 +36,7 @@ const LoginForm = ({ handleSubmit, handleChange, value, /* pristine, reset, */ s
                     validate={[required]}
                     onChange={handleChange}
                     value={value}
+                    type="password"
                 />
 
                 <Button variant="primary"
