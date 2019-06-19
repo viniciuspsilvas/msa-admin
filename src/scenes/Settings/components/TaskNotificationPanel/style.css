@@ -1,0 +1,24 @@
+.selectColumn{
+    
+    
+    width: 20px
+    
+    
+}
+
+.idColumn {
+    width: 20px
+}
+.toColumn {
+    width: 20%
+}
+
+.bodyColumn {
+    width: 55%
+}
+.dateColumn {
+    width: 100px
+}
+.actionsColumn {
+    width: 100px
+}

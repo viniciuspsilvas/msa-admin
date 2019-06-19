@@ -7,7 +7,8 @@ var backend = {
 	messages: BACKEND_URL + '/api/Messages',
 	sendMessageBatch: BACKEND_URL + '/api/Messages/sendMessageBatch',
 	studentAdvices: BACKEND_URL + '/api/StudentAdvices',
-	
+	taskScheduler: BACKEND_URL + '/api/TaskScheduler',
+
 	login: BACKEND_URL + '/api/Users/login',
 }
 

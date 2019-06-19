@@ -8,6 +8,18 @@ import { Provider } from "react-redux";
 
 addDecorator((story, context) => withInfo(context.kind)(story)(context))
 
+/* const store = {
+  getState: () => {
+    return {
+      loginReducer: {
+        loading: false
+      }
+    };
+  },
+  subscribe: () => 0,
+  dispatch: action('dispatch'),
+};
+ */
 
 /**
  * Add support to Redux
@@ -17,7 +29,7 @@ const withProvider = (story) => (
     {story()}
   </Provider>
 )
-addDecorator(withProvider)
+//addDecorator(withProvider)
 
 /**
  * Decorator responsable to center all the stories

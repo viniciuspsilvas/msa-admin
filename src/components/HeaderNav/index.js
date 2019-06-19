@@ -1,93 +1,54 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { bindActionCreators } from 'redux'
+import React from 'react';
 
 import logo from './logo_msa.png';
 import { LinkContainer } from 'react-router-bootstrap'
-
-import { logout } from "../../scenes/Login/actions";
+import LogoutButton from '../LogoutButton'
 
 import {
-    Collapse, Navbar, NavbarToggler,
-    NavbarBrand, Nav, NavLink, Button
+    Collapse, Navbar, NavbarToggler, NavItem,
+    NavbarBrand, Nav, Button, NavLink
 } from 'reactstrap';
 
-class HeaderNav extends Component {
-    constructor(props) {
-        super(props);
+import './style.css';
 
-        this.toggleNavbar = this.toggleNavbar.bind(this);
-        this.state = {
-            collapsed: true
-        };
-    }
+const HeaderNav = (props) => {
 
-    toggleNavbar() {
-        this.setState({
-            collapsed: !this.state.collapsed
-        });
-    }
-    render() {
+    const { isAuthenticated } = props;
+    return (
+        <Navbar color="light" light expand="md">
+            <NavbarBrand href="/">
+                <img src={logo} alt='Mindroom Student App' />
+            </NavbarBrand>
 
-        const { isAuthenticated } = this.props;
+            {
+                isAuthenticated &&
+                <Nav className="ml-auto" navbar>
+                    <LinkContainer exact to="/">
+                        <NavLink >Home</NavLink>
+                    </LinkContainer>
+           {/*          <LinkContainer to="/calendar">
+                        <NavLink>Calendar</NavLink>
+                    </LinkContainer> */}
+                    <LinkContainer to="/messages" >
+                        <NavLink>Messages</NavLink>
+                    </LinkContainer>
+                    <LinkContainer to="/students">
+                        <NavLink >Students</NavLink>
+                    </LinkContainer>
+                    <LinkContainer to="/groups">
+                        <NavLink >Groups</NavLink>
+                    </LinkContainer>
+                    <LinkContainer to="/about">
+                        <NavLink >About</NavLink>
+                    </LinkContainer>
 
-        return (
-
-            <Navbar color="light" light expand="md">
-
-                <NavbarBrand href="/">
-                    <img src={logo} alt='Mindroom Student App' />
-                </NavbarBrand>
-                <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-
-                {
-                    isAuthenticated &&
-                    <Collapse isOpen={!this.state.collapsed} navbar>
-                        <Nav className="ml-auto" navbar>
-                            <LinkContainer exact to="/">
-                                <NavLink >Home</NavLink>
-                            </LinkContainer>
-                            <LinkContainer to="/calendar">
-                                <NavLink >Calendar</NavLink>
-                            </LinkContainer>
-                            <LinkContainer to="/messages">
-                                <NavLink >Messages</NavLink>
-                            </LinkContainer>
-                            <LinkContainer to="/students">
-                                <NavLink >Students</NavLink>
-                            </LinkContainer>
-                            <LinkContainer to="/groups">
-                                <NavLink >Groups</NavLink>
-                            </LinkContainer>
-                            <LinkContainer to="/about">
-                                <NavLink >About</NavLink>
-                            </LinkContainer>
-                        </Nav>
-
-                        <Nav className="ml-auto navbar-right" navbar >
-                            <Button color="link" onClick={this.props.logout}>Logout</Button>
-                        </Nav>
-
-                    </Collapse>
-                }
-            </Navbar>
-        );
-    }
+                    <Nav className="ml-auto navbar-right" navbar >
+                        <LogoutButton />
+                    </Nav>
+                </Nav>
+            }
+        </Navbar>
+    );
 }
 
-
-//Redux configuration
-const mapStateToProps = state => {
-    return {
-        ...state.loginReducer
-    };
-};
-
-const mapDispatchToProps = dispatch => bindActionCreators(
-    {
-        logout
-    },
-    dispatch,
-)
-
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderNav);
+export default HeaderNav;
