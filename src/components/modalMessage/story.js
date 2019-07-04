@@ -20,7 +20,7 @@ const studentList = [
   }
 ]
 
-const studentsSelected = [
+const receivers = [
   {
     "studentId": "2",
     "firstname": 'Rodrigo',
@@ -31,19 +31,22 @@ const studentsSelected = [
 ]
 
 storiesOf('Components/ModalMessage', module)
-.add('default', () =>
-<ModalMessage
-  isOpen={true}
-  handleSubmit={action('sendButton-click')}
-  handleCancel={action('cancelButton-click')}
-  studentList={studentList} />)
-    .add('with `TO` filled', () =>
+  .add('default', () =>
     <ModalMessage
+      datetime={Date.now()}
+      isSendNow={false}
       isOpen={true}
       handleSubmit={action('sendButton-click')}
       handleCancel={action('cancelButton-click')}
-      studentsSelected={studentsSelected} 
-      studentList={studentList} 
+      studentList={studentList} />)
+  .add('with `TO` filled', () =>
+    <ModalMessage
+      isSendNow={true}
+      isOpen={true}
+      handleSubmit={action('sendButton-click')}
+      handleCancel={action('cancelButton-click')}
+      receivers={receivers}
+      studentList={studentList}
       handleInputChange={action('Input-change')}
-      />)
+    />)
 

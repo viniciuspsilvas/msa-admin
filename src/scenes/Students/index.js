@@ -13,20 +13,22 @@ class Students extends Component {
     // Open Modal Message
     openModalMessage = (studentSelected) => {
         // Create a new array with the param studentSelected as the unique element.
-        this.setState({ studentsSelected: [studentSelected] })
+        this.setState({ receivers: [studentSelected] })
         this.togleModalMessage();
     }
 
     // Open or close the modal
-    togleModalMessage = () =>  this.setState({ modalOpen: !this.state.modalOpen });
+    togleModalMessage = () => this.setState({ modalOpen: !this.state.modalOpen });
 
     // Handle of Send button
     handleSubmit = (e) => {
         e.preventDefault();
 
         // Prepare data to be sent to backend
-        const { title, body, severity, studentsSelected } = this.state
-        let data = { title, body, severity, "receivers": studentsSelected }
+        var { title, body, severity, receivers, datetime, isSendNow } = this.state
+
+        if (isSendNow) datetime = null;
+        let data = { title, body, severity, receivers, datetime }
 
         this.props.sendNotification(data);
         this.togleModalMessage();
@@ -40,15 +42,20 @@ class Students extends Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        this.setState({[name]: value });
+        this.setState({ [name]: value });
+    }
+
+    handleChangeDate = (selectedDates) => {
+        this.setState({ datetime: selectedDates });
     }
 
     resetForm = () => {
         this.setState({
-            studentsSelected: [],
+            receivers: [],
             title: '',
             body: '',
             severity: '',
+            datetime: null
         });
     }
 
@@ -56,16 +63,19 @@ class Students extends Component {
         super(props);
 
         this.state = {
-            studentsSelected: [],
+            receivers: [],
             title: '',
             body: '',
             severity: '',
-            modalOpen: false
+            modalOpen: false,
+            isSendNow: true,
+            datetime: null
         };
 
         //Binds
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleChangeDate = this.handleChangeDate.bind(this);
         this.togleModalMessage = this.togleModalMessage.bind(this);
         this.openModalMessage = this.openModalMessage.bind(this);
     }
@@ -76,7 +86,7 @@ class Students extends Component {
 
     render() {
         const { error, loading, studentList } = this.props;
-        const { studentsSelected, modalOpen } = this.state;
+        const { receivers, modalOpen, isSendNow } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
         if (loading) { return <SpinnerModal /> }
@@ -89,11 +99,14 @@ class Students extends Component {
 
                 <ModalMessage
                     isOpen={modalOpen}
+                    isSendNow={isSendNow}
                     handleSubmit={this.handleSubmit}
                     handleCancel={this.togleModalMessage}
-                    studentList={studentList.filter(s => s.advices.length > 0)} // Just who has advice
-                    studentsSelected={studentsSelected}
+                    studentList={studentList.filter(s => s.advices.length > 0)}
+                    receivers={receivers}
                     handleInputChange={this.handleInputChange}
+                    handleChangeDate={this.handleChangeDate}
+
                 />
 
             </Container>

@@ -6,3 +6,7 @@
 .button {
     margin-bottom: 15px;
 }
+
+.form-control-readonly:disabled, .form-control-readonly[readonly] {
+    background-color: white !important;
+  }
