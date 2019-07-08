@@ -17,7 +17,6 @@ const ModalMessage = props => {
         studentList = [],
         groupList = [],
         receivers = [],
-        severity,
         datetime,
         isSendNow,
         title,
@@ -27,9 +26,6 @@ const ModalMessage = props => {
         handleCancel,
         handleChangeDate
     } = props;
-
-    var dateNow = new Date();
-    dateNow.setMinutes(dateNow.getMinutes() - 1);
 
     return (
         <Container>
@@ -77,7 +73,6 @@ const ModalMessage = props => {
                                                 onChange={handleChangeDate}
                                                 options={{
                                                     dateFormat: 'd/m/Y H:i',
-                                                    minDate: dateNow
                                                 }}
                                             />
                                         )}
@@ -87,7 +82,7 @@ const ModalMessage = props => {
 
                             <Col md={2}>
                                 <div style={{ marginTop: '35px' }}>
-                                    <Input  
+                                    <Input  id="isSendNow"
                                         name="isSendNow"
                                         onChange={handleInputChange}
                                         type="checkbox"
@@ -99,19 +94,6 @@ const ModalMessage = props => {
                                 </div>
                             </Col>
 
-                            <Col md={5}>
-                                <FormGroup>
-                                    <Label for="severitySelect">Severity</Label>
-                                    <Input type="select" name="severity"
-                                        id="severitySelect"
-                                        onChange={handleInputChange}
-                                        value={severity}>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                    </Input>
-                                </FormGroup>
-                            </Col>
                         </Row>
 
                         <FormGroup>

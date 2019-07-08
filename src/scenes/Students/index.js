@@ -10,6 +10,31 @@ import { Container } from 'reactstrap';
 
 class Students extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            receivers: [],
+            title: '',
+            body: '',
+            severity: '',
+            modalOpen: false,
+            isSendNow: true,
+            datetime: null
+        };
+
+        //Binds
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleChangeDate = this.handleChangeDate.bind(this);
+        this.togleModalMessage = this.togleModalMessage.bind(this);
+        this.openModalMessage = this.openModalMessage.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.fetchStudentList();
+    }
+
     // Open Modal Message
     openModalMessage = (studentSelected) => {
         // Create a new array with the param studentSelected as the unique element.
@@ -27,7 +52,7 @@ class Students extends Component {
         // Prepare data to be sent to backend
         var { title, body, severity, receivers, datetime, isSendNow } = this.state
 
-        if (isSendNow) datetime = null;
+        if (isSendNow) datetime = null; // Don't send datetime
         let data = { title, body, severity, receivers, datetime }
 
         this.props.sendNotification(data);
@@ -59,30 +84,6 @@ class Students extends Component {
         });
     }
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            receivers: [],
-            title: '',
-            body: '',
-            severity: '',
-            modalOpen: false,
-            isSendNow: true,
-            datetime: null
-        };
-
-        //Binds
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleChangeDate = this.handleChangeDate.bind(this);
-        this.togleModalMessage = this.togleModalMessage.bind(this);
-        this.openModalMessage = this.openModalMessage.bind(this);
-    }
-
-    componentDidMount() {
-        this.props.fetchStudentList();
-    }
 
     render() {
         const { error, loading, studentList } = this.props;
