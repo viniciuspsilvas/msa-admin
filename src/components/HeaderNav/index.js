@@ -34,8 +34,8 @@ const HeaderNav = (props) => {
                     <LinkContainer to="/students">
                         <NavLink >Students</NavLink>
                     </LinkContainer>
-                    <LinkContainer to="/groups">
-                        <NavLink >Groups</NavLink>
+                    <LinkContainer to="/courses">
+                        <NavLink >Courses</NavLink>
                     </LinkContainer>
                     <LinkContainer to="/about">
                         <NavLink >About</NavLink>

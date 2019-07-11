@@ -39,7 +39,7 @@ const NoMatch = () => (<div><h2>Error 404 </h2></div>)
                         <PrivateRoute exact path="/students" component={Students} />
                         <PrivateRoute path="/students/new" component={StudentsForm} />
                         <PrivateRoute path="/students/:studentId" component={StudentsForm} />
-                        <PrivateRoute exact path="/groups" component={Groups} />
+                        <PrivateRoute exact path="/courses" component={Groups} />
                         {/* <PrivateRoute exact path="/settings" component={Settings} /> */}
                         <PrivateRoute path="/about" component={About} />
 

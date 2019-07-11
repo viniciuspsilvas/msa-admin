@@ -37,7 +37,8 @@ class StudentGroups extends Component {
             body: '',
             severity: '',
             isSendNow: true,
-            datetime: null
+            datetime: null,
+            isEditing: false
         }
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -68,7 +69,8 @@ class StudentGroups extends Component {
             body: '',
             severity: '',
             isSendNow: true,
-            datetime: null
+            datetime: null,
+            isEditing: false
         });
     }
 
@@ -91,8 +93,8 @@ class StudentGroups extends Component {
         this.setState({ confirmOpen: !this.state.confirmOpen })
     }
 
-     // Open Modal Message
-     openModalMessage = (groupSelected) => {
+    // Open Modal Message
+    openModalMessage = (groupSelected) => {
         // Create a new array with the param studentSelected as the unique element.
         this.setState({ receivers: [groupSelected] })
         this.togleModalMessage();
@@ -116,7 +118,7 @@ class StudentGroups extends Component {
 
     openEditModal = ({ id, name, description }) => {
         this.togleModal();
-        this.setState({ id, name, description });
+        this.setState({ id, name, description, isEditing: true });
     };
 
     handleFormSubmit = async (e) => {
@@ -147,7 +149,7 @@ class StudentGroups extends Component {
 
     render() {
         const { error, loading, studentGroupList } = this.props;
-        const { modalOpen, name, description, editing, confirmOpen } = this.state;
+        const { modalOpen, name, description, isEditing, confirmOpen } = this.state;
         const { receivers, modalMessageOpen, isSendNow } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
@@ -155,7 +157,7 @@ class StudentGroups extends Component {
 
         return (
             <Container >
-                <h1>Group Students</h1>
+                <h1>Courses </h1>
 
                 <GroupFormModal handleSubmit={this.handleFormSubmit}
                     handleChange={this.handleInputChange}
@@ -163,7 +165,7 @@ class StudentGroups extends Component {
                     isOpen={modalOpen}
                     name={name}
                     description={description}
-                    isEditing={editing}
+                    isEditing={isEditing}
                 />
 
                 <ConfirmModal

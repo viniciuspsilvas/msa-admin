@@ -3,31 +3,66 @@ import { connect } from "react-redux";
 import { bindActionCreators } from 'redux'
 
 import Paper from '@material-ui/core/Paper';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, Input, Button, Form } from 'reactstrap';
 import profileIcon from '../../user_icon.png';
 
-import { fetchStudentById } from "../../actions";
+import { fetchStudentById, saveStudent } from "../../actions";
 
-import { fetchStudentById } from "../../../StudentGroups/actions";
-
+import { fetchStudentGroupList } from "../../../StudentGroups/actions";
 
 class StudentsForm extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      student: {}
+      student: {},
+      id: null,
+      fullname: "",
+      phone: "",
+      email: "",
+      course: "",
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   async componentDidMount() {
     const studentId = this.props.match.params.studentId;
     await this.props.fetchStudentById(studentId);
+    await this.props.fetchStudentGroupList();
+
+    const { studentDetails } = this.props
+    const { id, fullname, email, phone } = studentDetails
+
+    this.setState({
+      id, fullname, email, phone
+    })
+  }
+
+  handleSubmit = async () => {
+
+
+    const { id, fullname, email, phone } = this.state
+
+    await this.props.saveStudent({ id, fullname, email, phone });
+  }
+
+  handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({ [name]: value });
   }
 
   render() {
-    const { studentDetails } = this.props
-    const { fullname, email, phone } = studentDetails
+    const { studentGroupList = [] } = this.props
+    const { fullname, email, phone } = this.state
+
+    const groupList = studentGroupList.map((group) =>
+      <option key={group.id}>{group.name}</option>
+    );
 
     return (
       <Container >
@@ -40,52 +75,55 @@ class StudentsForm extends Component {
             </Col>
 
             <Col xs="6">
-              <form className="form-horizontal" onSubmit={this.handleSubmit}>
+              <Form className="form-horizontal" >
                 <fieldset>
                   <div className="form-group">
                     <label className="control-label" htmlFor="txtName">Name</label>
                     < div >
-                      <input id="txtName" name="txtName" type="text" placeholder="" className="form-control input-md" required=""
-                        value={fullname} onChange={this.handleChange} />
+                      <input id="txtName" name="fullname" type="text" placeholder="" className="form-control input-md"
+                        value={fullname} onChange={this.handleInputChange} />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="control-label" htmlFor="txtPhone">Phone</label>
                     <div>
-                      <input id="txtPhone" name="txtPhone" type="text" placeholder="" className="form-control input-md"
-                        value={phone} onChange={this.handleChange} />
+                      <input id="txtPhone" name="phone" type="text" placeholder="" className="form-control input-md"
+                        value={phone} onChange={this.handleInputChange} />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="control-label" htmlFor="txtEmail">Email</label>
                     <div>
-                      <input id="txtEmail" name="txtEmail" type="text" placeholder="" className="form-control input-md"
-                        value={email} onChange={this.handleChange} />
+                      <input id="txtEmail" name="email" type="text" placeholder="" className="form-control input-md"
+                        value={email} onChange={this.handleInputChange} />
                     </div>
                   </div>
 
                   <div className="form-group">
-                    <label className="control-label" htmlFor="sltGroup">Couses</label>
+                    <label className="control-label" htmlFor="sltGroup">Course</label>
                     <div >
-                      <select id="sltGroup" name="sltGroup" className="form-control">
-                        <option value="1">UA60315 – Advanced Diploma of Graphic Design</option>
-                        <option value="2">CT50615 – Diploma of Website Development</option>
-                      </select>
+                      <Input type="select" name="group" id="sltGroup" onChange={this.handleInputChange}>
+                        {groupList}
+                      </Input>
                     </div>
                   </div>
 
-                  <Row style={{ marginRight: 7 }} >
+                  <Row >
                     <Col style={{ textAlign: "right" }} >
-                      <button id="btnCancel" name="btnCancel" className="btn btn-danger">Cancel</button>
+                      <Button id="btnCancel" name="btnCancel" color="secondary">Back</Button>
                     </Col>
                     <Col xs="2" style={{ textAlign: "right" }} >
-                      <button id="btnSave" name="btnSave" className="btn btn-primary">Save</button>
+                      <Button id="btnSave"
+                        onClick={this.handleSubmit}
+                        name="btnSave" color="primary">
+                        Save
+                        </Button>
                     </Col>
                   </Row>
                 </fieldset>
-              </form>
+              </Form>
             </Col>
           </Row>
         </Paper >
@@ -95,9 +133,9 @@ class StudentsForm extends Component {
 }
 
 //Redux configuration
-const mapStateToProps = state => ({ ...state.studentReducer });
+const mapStateToProps = state => ({ ...state.studentReducer, studentGroupList: state.studentGroupReducer.studentGroupList });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchStudentById }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchStudentById, saveStudent, fetchStudentGroupList }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentsForm);
 

@@ -19,7 +19,7 @@ const GroupFormModal = props => {
     return (
         <Container>
             <Modal isOpen={isOpen} id='modalMsg' toggle={handleToggleModal} >
-                <ModalHeader>{isEditing ? "Edit" : "Add"} Group</ModalHeader>
+                <ModalHeader>{isEditing ? "Edit" : "Add"} Course</ModalHeader>
                 <Form onSubmit={handleSubmit}>
                     <ModalBody>
                         <FormGroup >
