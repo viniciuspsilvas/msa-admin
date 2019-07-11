@@ -8,13 +8,14 @@ import { connect } from "react-redux";
 
 import HeaderNav from './components/HeaderNav'
 import Students from './scenes/Students/'
-import StudentsForm from './scenes/Students/components/StudentsForm'
+import StudentsForm from './scenes/Students/components/StudentForm'
 import Groups from './scenes/StudentGroups/'
 import Home from './scenes/Home/'
 import Calendar from './scenes/Calendar/'
 import About from './scenes/About/'
 import Messages from './scenes/Messages'
 import Login from './scenes/Login'
+//import Settings from './scenes/Settings'
 import PrivateRoute from './components/PrivateRoute';
 
 const NoMatch = () => (<div><h2>Error 404 </h2></div>)
@@ -39,6 +40,7 @@ const NoMatch = () => (<div><h2>Error 404 </h2></div>)
                         <PrivateRoute path="/students/new" component={StudentsForm} />
                         <PrivateRoute path="/students/:studentId" component={StudentsForm} />
                         <PrivateRoute exact path="/groups" component={Groups} />
+                        {/* <PrivateRoute exact path="/settings" component={Settings} /> */}
                         <PrivateRoute path="/about" component={About} />
 
                         <Route component={NoMatch} />

@@ -10,6 +10,8 @@ export const CREATE_STUDENTS_GROUP_SUCCESS = 'CREATE_STUDENTS_GROUP_SUCCESS';
 export const CREATE_STUDENTS_GROUP_FAILURE = 'CREATE_STUDENTS_GROUP_FAILURE';
 export const RESET_NEW_STUDENTS_GROUP = 'RESET_NEW_STUDENTS_GROUP';
 
+export const DELETE_STUDENTS_GROUP_SUCCESS = 'DELETE_STUDENTS_GROUP_SUCCESS';
+
 // Action
 export const fetchStudentGroupsBegin = () => ({
     type: FETCH_STUDENTS_GROUP_BEGIN
@@ -30,7 +32,7 @@ export const fetchStudentGroupsFailure = error => ({
 export function fetchStudentGroupList() {
     return dispatch => {
         dispatch(fetchStudentGroupsBegin());
-        return axios.get(config.backend.studentGroups)
+        return axios.get(config.backend.studentGroups, { params: { filter: { include: 'enrollments' } } })
             .then(({ data }) => {
                 dispatch(fetchStudentGroupsSuccess(data));
                 return data;
@@ -39,19 +41,43 @@ export function fetchStudentGroupList() {
     };
 }
 
-
-
-// Action creator
 export function createStudentGroup(newStudentGroup) {
-    return dispatch => {
-        dispatch(createStudentGroupBegin());
-        return axios.post(config.backend.studentGroups, newStudentGroup)
-            .then(({ data }) => {
-                dispatch(createStudentGroupSuccess(data));
-                return data;
-            })
-            .catch(error => dispatch(createStudentGroupFailure(error)));
-    };
+    return async dispatch => {
+        try {
+            dispatch(createStudentGroupBegin());
+
+            // fetch data from a url endpoint
+            var data
+            if (newStudentGroup.id) {
+                data = await axios.put(config.backend.studentGroups, newStudentGroup);
+            } else {
+                data = await axios.post(config.backend.studentGroups, newStudentGroup);
+            }
+
+            dispatch(createStudentGroupSuccess(data));
+            return data;
+
+        } catch (error) {
+            dispatch(createStudentGroupFailure(error))
+        }
+    }
+}
+
+
+export function deleteStudentGroup(id) {
+    return async dispatch => {
+        try {
+            dispatch(createStudentGroupBegin());
+
+            // fetch data from a url endpoint
+            var data = await axios.delete(config.backend.studentGroups + "/" + id);
+            dispatch({ type: DELETE_STUDENTS_GROUP_SUCCESS });
+
+            return data;
+        } catch (error) {
+            dispatch(createStudentGroupFailure(error))
+        }
+    }
 }
 
 // Action

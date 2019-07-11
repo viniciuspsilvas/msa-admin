@@ -3,9 +3,11 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Container, Row, Col } from 'reactstrap';
-import { Email } from '@material-ui/icons';
+import { Email, Visibility } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
+
+import { LinkContainer } from 'react-router-bootstrap'
 
 import SearchBox from '../../../components/SearchBox'
 
@@ -35,26 +37,29 @@ const columns = (props) => [{
   text: '',
   align: 'center',
 
-  // Apply event to the column
-  events: {
-    onClick: (e, column, columnIndex, row, rowIndex) => {
-      if (row.advices.length > 0) props.openModalMessage(row);
-    },
-  },
 
   // Column 'Actions'
   formatter: (cellContent, row) => {
     return (
       <div>
-        {
-          row.advices.length > 0 &&
-          <Tooltip title="Send notification">
-            <div>
-              <Email style={{ cursor: 'pointer' }} />
-              
-            </div>
+        <span  >
+
+          {row.advices.length > 0 ? (
+            <Tooltip title="Send notification">
+              <Email style={{ cursor: 'pointer' }} onClick={() => props.openModalMessage(row)} />
+            </Tooltip>
+          ) : (
+              <Email style={{ fillOpacity: "0.1" }} />
+            )}
+        </span>
+
+        <span style={{ marginLeft: 5 }}>
+          <Tooltip title="Details">
+            <LinkContainer to={"/students/" + row.id} style={{ cursor: 'pointer' }}>
+              <Visibility />
+            </LinkContainer>
           </Tooltip>
-        }
+        </span>
       </div>
     );
   }
@@ -77,7 +82,7 @@ export default props =>
         props => (
           <Container>
             <SearchBox {...props.searchProps} placeholder="Search students" />
-          
+
             <Row style={{ marginTop: 1 + 'em' }} >
               <Col>
                 <BootstrapTable

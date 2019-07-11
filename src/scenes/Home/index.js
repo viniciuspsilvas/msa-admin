@@ -3,7 +3,6 @@ import logo from '../../images/Logo_vert.png';
 import {  Container } from 'reactstrap';
 import Paper from '@material-ui/core/Paper';
 import { connect } from "react-redux";
-//import { fetchStudentList } from "./actions";
 
 class HomeContainer extends Component {
 
@@ -17,9 +16,6 @@ class HomeContainer extends Component {
     }
 
     componentDidMount() {
-        //this.props.actions.fetchStudentList();
-
-        // this.props.dispatch(fetchStudentList());
     }
 
     render() {

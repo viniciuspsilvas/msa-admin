@@ -5,8 +5,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import LogoutButton from '../LogoutButton'
 
 import {
-    Collapse, Navbar, NavbarToggler, NavItem,
-    NavbarBrand, Nav, Button, NavLink
+    Navbar, NavbarBrand, Nav, NavLink
 } from 'reactstrap';
 
 import './style.css';
@@ -26,7 +25,7 @@ const HeaderNav = (props) => {
                     <LinkContainer exact to="/">
                         <NavLink >Home</NavLink>
                     </LinkContainer>
-           {/*          <LinkContainer to="/calendar">
+                    {/*          <LinkContainer to="/calendar">
                         <NavLink>Calendar</NavLink>
                     </LinkContainer> */}
                     <LinkContainer to="/messages" >

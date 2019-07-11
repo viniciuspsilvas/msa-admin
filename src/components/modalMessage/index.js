@@ -122,11 +122,10 @@ const ModalMessage = props => {
     );
 }
 
-
-
-
 ModalMessage.propTypes = {
-    studentList: PropTypes.array.isRequired
+    studentList: PropTypes.array,
+    groupList: PropTypes.array
+    
 };
 
 export default ModalMessage;

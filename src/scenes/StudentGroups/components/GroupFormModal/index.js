@@ -1,57 +1,54 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col, Container, Button } from 'reactstrap';
-import { Field, reduxForm } from 'redux-form'
-import { required, email } from "../../../../util/validators"
-
-import { inputLabeled } from "../../../../components/InputLabeled"
+//import PropTypes from 'prop-types';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Container, Button } from 'reactstrap';
 
 // Import as a module in your JS
-import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { Typeahead } from 'react-bootstrap-typeahead';
 
 import './style.css';
 
 const GroupFormModal = props => {
     const {
         isOpen = true,
-        handleSubmit, pristine, reset, submitting, onSubmit
+        handleSubmit, pristine, submitting,
+        handleChange, handleToggleModal,
+        name,
+        description,
+        isEditing = false
     } = props;
 
     return (
         <Container>
-            <Modal isOpen={isOpen} id='modalMsg' >
-                <ModalHeader>Group</ModalHeader>
-                <ModalBody>
-                    <Form onSubmit={handleSubmit(onSubmit)}>
-                        <Field
-                            name="name"
-                            label="Name"
-                            component={inputLabeled}
-                            placeholder="First name..."
-                            validate={[required]}
-                        />
+            <Modal isOpen={isOpen} id='modalMsg' toggle={handleToggleModal} >
+                <ModalHeader>{isEditing ? "Edit" : "Add"} Group</ModalHeader>
+                <Form onSubmit={handleSubmit}>
+                    <ModalBody>
+                        <FormGroup >
+                            <Label>Name*</Label>
+                            <Input name="name" id="name"
+                                onChange={handleChange}
+                                value={name} />
+                        </FormGroup>
 
-                        <Field
-                            name="description"
-                            label="Email"
-                            component={inputLabeled}
-                            placeholder="user@domain.com"
-                            validate={[required, email]}
-                        />
-                    </Form>
-                </ModalBody>
-                <ModalFooter>
-                    <Button type="button" disabled={pristine || submitting} onClick={reset}>Clear</Button>{' '}
-                    <Button color="primary" className="float-right" type="submit" disabled={pristine || submitting}>Submit</Button>
-                </ModalFooter>
+                        <FormGroup >
+                            <Label>Description*</Label>
+                            <Input name="description" id="description"
+                                onChange={handleChange}
+                                type="textarea"
+                                value={description} />
+                        </FormGroup>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button type="button" onClick={handleToggleModal}>Clear</Button>{' '}
+                        <Button color="primary" className="float-right" type="submit" disabled={pristine || submitting}>Submit</Button>
+                    </ModalFooter>
+                </Form>
             </Modal>
         </Container>
     );
 }
 
-
-
+export default GroupFormModal;
+/*
 
 GroupFormModal.propTypes = {
     studentList: PropTypes.array.isRequired
@@ -59,4 +56,4 @@ GroupFormModal.propTypes = {
 
 export default reduxForm({
     form: 'GroupFormModal',// a unique identifier for this form
-})(GroupFormModal)
+})(GroupFormModal) */

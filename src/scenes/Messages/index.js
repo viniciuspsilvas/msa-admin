@@ -63,7 +63,6 @@ class Messages extends Component {
                     handleConfirm={this.handleConfirm}
                 />
 
-
             </Container>
         );
     }

@@ -2,6 +2,7 @@ import {
     FETCH_STUDENTS_BEGIN,
     FETCH_STUDENTS_SUCCESS,
     FETCH_STUDENTS_FAILURE,
+    FETCH_STUDENT_DETAIL_SUCCESS,
 } from './actions';
 
 const initialState = {
@@ -10,7 +11,9 @@ const initialState = {
     error: null,
 
     modalOpen: false,
-    studentSelected: {}
+    studentSelected: {},
+
+    studentDetails: {}
 
 
 };
@@ -55,6 +58,12 @@ export default function studentReducer(state = initialState, action) {
                 loading: false,
                 error: payload.error,
                 studentList: []
+            };
+
+        case FETCH_STUDENT_DETAIL_SUCCESS:
+
+            return {
+                ...state, loading: false, studentDetails: payload
             };
 
         default:

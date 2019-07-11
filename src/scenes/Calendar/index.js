@@ -48,9 +48,6 @@ class CalendarContainer extends Component {
     }
 
     componentDidMount() {
-        //this.props.actions.fetchStudentList();
-
-        // this.props.dispatch(fetchStudentList());
     }
 
     render() {
@@ -66,7 +63,6 @@ class CalendarContainer extends Component {
 //Redux configuration
 function mapStateToProps(state) {
     return {
-        //    studentList: state.studentReducer.studentList 
     }
 }
 
