@@ -7,6 +7,7 @@ import { Container, Row, Col, Input, Button, Form } from 'reactstrap';
 import profileIcon from '../../user_icon.png';
 
 import { fetchStudentById, saveStudent } from "../../actions";
+import { LinkContainer } from 'react-router-bootstrap'
 
 import { fetchStudentGroupList } from "../../../StudentGroups/actions";
 
@@ -20,7 +21,7 @@ class StudentsForm extends Component {
       fullname: "",
       phone: "",
       email: "",
-      course: "",
+      group: "",
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -35,34 +36,54 @@ class StudentsForm extends Component {
     const { studentDetails } = this.props
     const { id, fullname, email, phone } = studentDetails
 
+    const group = studentDetails.studentGroups && studentDetails.studentGroups.length > 0 ? studentDetails.studentGroups[0].id : ""
+
+    console.log("@@@@ componentDidMount", group)
+
     this.setState({
-      id, fullname, email, phone
+      id, fullname, email, phone, group
     })
   }
 
   handleSubmit = async () => {
+    const { id, fullname, email, phone, group } = this.state
+    console.log('#### group', group)
 
-
-    const { id, fullname, email, phone } = this.state
-
-    await this.props.saveStudent({ id, fullname, email, phone });
+    await this.props.saveStudent({ id, fullname, email, phone, studentGroup: {id : group} }); // TODO check
   }
 
-  handleInputChange = (event) => {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
+  handleInputChange = (e) => {
+    const target = e.target;
+    const { studentGroupList = [] } = this.props
 
+    let value;
+    switch (target.type) {
+      case 'checkbox':
+        value = target.checked
+        break;
+      case 'select-one':
+        value = studentGroupList.find(s => s.id == target.value).id
+        break;
+      default:
+        value = target.value
+    }
+
+    const name = target.name;
+    console.log("### value", name , value, target.value)
     this.setState({ [name]: value });
   }
 
   render() {
     const { studentGroupList = [] } = this.props
-    const { fullname, email, phone } = this.state
+    const { fullname, email, phone, group } = this.state
 
-    const groupList = studentGroupList.map((group) =>
-      <option key={group.id}>{group.name}</option>
+    const groupList = [];
+    groupList.push(<option key="firstOpt" value=""> - SELECT - </option>)
+
+    const list = studentGroupList.map((group) =>
+      <option key={group.id} value={group.id}>{group.name}</option>
     );
+    groupList.push(list)
 
     return (
       <Container >
@@ -104,7 +125,7 @@ class StudentsForm extends Component {
                   <div className="form-group">
                     <label className="control-label" htmlFor="sltGroup">Course</label>
                     <div >
-                      <Input type="select" name="group" id="sltGroup" onChange={this.handleInputChange}>
+                      <Input type="select" name="group" id="sltGroup" onChange={this.handleInputChange} value={group}>
                         {groupList}
                       </Input>
                     </div>
@@ -112,7 +133,10 @@ class StudentsForm extends Component {
 
                   <Row >
                     <Col style={{ textAlign: "right" }} >
-                      <Button id="btnCancel" name="btnCancel" color="secondary">Back</Button>
+                      <LinkContainer to="/students">
+                        <Button id="btnCancel" name="btnCancel" color="secondary" >Back</Button>
+                      </LinkContainer>
+
                     </Col>
                     <Col xs="2" style={{ textAlign: "right" }} >
                       <Button id="btnSave"

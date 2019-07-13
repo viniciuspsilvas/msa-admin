@@ -32,7 +32,7 @@ export const fetchStudentGroupsFailure = error => ({
 export function fetchStudentGroupList() {
     return dispatch => {
         dispatch(fetchStudentGroupsBegin());
-        return axios.get(config.backend.studentGroups, { params: { filter: { include: 'enrollments' } } })
+        return axios.get(config.backend.studentGroups, { params: { filter: { include: 'students' } } })
             .then(({ data }) => {
                 dispatch(fetchStudentGroupsSuccess(data));
                 return data;

@@ -41,7 +41,7 @@ export function fetchStudentById(id) {
 
         try {
             dispatch({ type: FETCH_STUDENTS_BEGIN });
-            const params = { params: { filter: { include: ['enrollments', 'advices'] } } }
+            const params = { params: { filter: { include: ['studentGroups', 'advices'] } } }
 
             // fetch data from a url endpoint
             var data = await axios.get(`${config.backend.students}/${id}`, params)
@@ -66,10 +66,22 @@ export function saveStudent(student) {
     return async dispatch => {
         try {
             dispatch({ type: FETCH_STUDENTS_BEGIN });
+            var data = await axios.put(config.backend.students, student);
 
-            console.log("&&&", config.backend.students,  student)
+            // verificar se ja existe 
+            // consultar todos os enroll do student
+            // se nao encontrar a relacao entao chamar o post pra criar uma nova
+            const filter = { params: { filter: `{"where":{"studentId":"` + student.id + `", "studentGroupId":"` + student.studentGroup.id + `"}}` } }
+            var result = await axios.get(config.backend.enrollments, filter);
 
-            var data = axios.put(config.backend.students, student);
+            if (result.data.length == 0) {
+                const enroll = {
+                    date: Date.now(),
+                    studentGroupId: student.studentGroup.id,
+                    studentId: student.id
+                }
+                await axios.post(config.backend.enrollments, enroll);
+            }
 
             dispatch({ type: UPDATE_STUDENT_DETAIL_SUCCESS, payload: data.data });
             return data;
