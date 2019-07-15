@@ -38,8 +38,6 @@ class StudentsForm extends Component {
 
     const group = studentDetails.studentGroups && studentDetails.studentGroups.length > 0 ? studentDetails.studentGroups[0].id : ""
 
-    console.log("@@@@ componentDidMount", group)
-
     this.setState({
       id, fullname, email, phone, group
     })
@@ -47,7 +45,6 @@ class StudentsForm extends Component {
 
   handleSubmit = async () => {
     const { id, fullname, email, phone, group } = this.state
-    console.log('#### group', group)
 
     await this.props.saveStudent({ id, fullname, email, phone, studentGroup: {id : group} }); // TODO check
   }
@@ -69,7 +66,6 @@ class StudentsForm extends Component {
     }
 
     const name = target.name;
-    console.log("### value", name , value, target.value)
     this.setState({ [name]: value });
   }
 

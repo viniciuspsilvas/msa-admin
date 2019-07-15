@@ -3,6 +3,7 @@ const BACKEND_URL= process.env.REACT_APP_SERVER_URL;
 var backend = {
 	students: BACKEND_URL + '/api/Students',
 	studentGroups: BACKEND_URL + '/api/StudentGroups',
+	enrollments: BACKEND_URL + '/api/Enrollments',
 
 	messages: BACKEND_URL + '/api/Messages',
 	sendMessageBatch: BACKEND_URL + '/api/Messages/sendMessageBatch',

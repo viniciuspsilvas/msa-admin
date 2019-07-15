@@ -2,6 +2,14 @@
 .bodyTextTable {
     color: #999999;
 }
+
+
+.error {
+    color: #E54236;
+    font-size: 12px
+}
+
+
   
 .button {
     margin-bottom: 15px;

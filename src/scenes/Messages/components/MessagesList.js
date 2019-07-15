@@ -18,7 +18,7 @@ const columns = (handleSendNotif) => [{
   sort: true,
   classes: 'idColumn'
 }, {
-  dataField: 'user',
+  dataField: 'student',
   text: 'To',
   sort: true,
   formatter: toFormatter,

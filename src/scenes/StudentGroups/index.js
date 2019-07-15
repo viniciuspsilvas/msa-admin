@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { fetchStudentGroupList, createStudentGroup, deleteStudentGroup } from "./actions";
+import { sendNotification } from "../Students/actions";
+
 import { Container } from 'reactstrap';
 
+import AlertBox from '../../components/AlertBox'
 import StudentGroupsList from './components/StudentGroupsList'
 import GroupFormModal from './components/GroupFormModal'
 import ConfirmModal from '../../components/ConfirmModal'
@@ -38,7 +41,14 @@ class StudentGroups extends Component {
             severity: '',
             isSendNow: true,
             datetime: null,
-            isEditing: false
+            isEditing: false,
+
+            errors: {
+                title: 'Required!',
+                body: 'Required!',
+                receivers: '',
+                message: ''
+            }
         }
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -70,18 +80,61 @@ class StudentGroups extends Component {
             severity: '',
             isSendNow: true,
             datetime: null,
-            isEditing: false
+            isEditing: false,
+
+            errors: {
+                title: 'Required!',
+                body: 'Required!',
+                receivers: '',
+                message: ''
+            }
         });
     }
 
 
-    handleMessageSubmit = () => {
+    handleMessageSubmit = (e) => {
+        e.preventDefault();
 
-        // TODO continuar do envio de messagem
-        // front sera responsavel por montar a lista de student de todos os grupos antes de enviar para o backend
-        // Consultar todos os estudantes do grupo selecionado
-        console.log("### handleMessageSubmit")
+        if (this.validateForm(this.state.errors)) {
+            // Prepare data to be sent to backend
+            var { title, body, severity, receivers, datetime, isSendNow } = this.state
 
+            var studentsList = []
+            receivers.forEach(group => {
+                if (group.students.length > 0) {
+                    studentsList = studentsList.concat(group.students.map(s => s))
+                }
+            });
+
+            if (isSendNow) datetime = null; // Don't send datetime
+            let data = { title, body, severity, receivers: studentsList, datetime }
+
+            this.setState({ errors: { message: '' } })
+            if (studentsList && studentsList.length > 0) {
+                this.props.sendNotification(data);
+            } else {
+                this.setState({ errors: { message: "There is no student in this group." } })
+            }
+
+            this.togleModalMessage();
+            this.resetForm();
+        } else {
+            alert('ATTENTION: \rRequired fields must be filled in.')
+        }
+    }
+
+    validateForm = (errors) => {
+        let valid = true;
+        errors.receivers =
+            this.state.receivers.length == 0
+                ? 'At least one receiver must be selected.'
+                : '';
+
+        Object.values(errors).forEach(
+            // if we have an error string set valid to false
+            (val) => val.length > 0 && (valid = false)
+        );
+        return valid;
     }
 
     openConfirmModal = ({ id }) => {
@@ -101,8 +154,6 @@ class StudentGroups extends Component {
     }
 
     handleConfirmDelete = async () => {
-        console.log("##### handleConfirmDelete ", this.state.idDelete)
-
         await this.props.deleteStudentGroup(this.state.idDelete)
         this.setState({ idDelete: null })
         this.togleConfirmModal();
@@ -138,11 +189,32 @@ class StudentGroups extends Component {
     }
 
     handleInputChange = (event) => {
+        event.preventDefault();
+
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        this.setState({ [name]: value });
+        let errors = this.state.errors;
+
+        switch (name) {
+            case 'title':
+                errors.title =
+                    value.length < 5
+                        ? 'Title must be 5 characters long!'
+                        : '';
+                break;
+            case 'body':
+                errors.body =
+                    value.length < 5
+                        ? 'Body must be 5 characters long!'
+                        : '';
+                break;
+            default:
+                break;
+        }
+
+        this.setState({ errors, [name]: value });
     }
 
     togleModalMessage = () => this.setState({ modalMessageOpen: !this.state.modalMessageOpen });
@@ -150,9 +222,11 @@ class StudentGroups extends Component {
     render() {
         const { error, loading, studentGroupList } = this.props;
         const { modalOpen, name, description, isEditing, confirmOpen } = this.state;
-        const { receivers, modalMessageOpen, isSendNow } = this.state;
+        const { receivers, modalMessageOpen, isSendNow, errors /*  <= Erro de validacao */ } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
+        if (errors.message) return <AlertBox error={errors} />
+
         if (loading) { return <SpinnerModal /> }
 
         return (
@@ -185,7 +259,7 @@ class StudentGroups extends Component {
                     receivers={receivers}
                     handleInputChange={this.handleInputChange}
                     handleChangeDate={this.handleChangeDate}
-
+                    errors={errors}
                 />
 
                 <Paper elevation={1} style={{ padding: 1 + 'em' }} >
@@ -194,7 +268,10 @@ class StudentGroups extends Component {
                         openEditModal={this.openEditModal}
                         openConfirmModal={this.openConfirmModal} />
 
-                    <Button color="primary" onClick={this.togleModal}>New</Button>
+                    <div style={{textAlign: 'right', marginRight: 19 }} >
+                        <Button color="primary"onClick={this.togleModal}>New</Button>
+                    </div>
+
                 </Paper>
 
             </Container>
@@ -217,6 +294,7 @@ const mapDispatchToProps = (dispatch) => {
         fetchStudentGroupList: () => dispatch(fetchStudentGroupList()),
         createStudentGroup: (studentGroup) => dispatch(createStudentGroup(studentGroup)),
         deleteStudentGroup: (id) => dispatch(deleteStudentGroup(id)),
+        sendNotification: (data) => dispatch(sendNotification(data))
     }
 }
 

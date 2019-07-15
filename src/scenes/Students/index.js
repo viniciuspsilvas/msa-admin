@@ -8,6 +8,8 @@ import SpinnerModal from '../../components/SpinnerModal';
 
 import { Container } from 'reactstrap';
 
+//const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+
 class Students extends Component {
 
     constructor(props) {
@@ -17,10 +19,15 @@ class Students extends Component {
             receivers: [],
             title: '',
             body: '',
-            severity: '',
             modalOpen: false,
             isSendNow: true,
-            datetime: null
+            datetime: null,
+
+            errors: {
+                title: 'Required!',
+                body: 'Required!',
+                receivers: ''
+            }
         };
 
         //Binds
@@ -49,29 +56,64 @@ class Students extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
-        // Prepare data to be sent to backend
-        var { title, body, severity, receivers, datetime, isSendNow } = this.state
+        if (this.validateForm(this.state.errors)) {
+            // Prepare data to be sent to backend
+            var { title, body, receivers, datetime, isSendNow } = this.state
 
-        if (isSendNow) datetime = null; // Don't send datetime
-        let data = { title, body, severity, receivers, datetime }
+            if (isSendNow) datetime = null; // Don't send datetime
+            let data = { title, body, receivers, datetime }
 
-        this.props.sendNotification(data);
-        this.togleModalMessage();
-        this.resetForm();
+            this.props.sendNotification(data);
+            this.togleModalMessage();
+            this.resetForm();
+        } else {
+            alert('ATTENTION: \rRequired fields must be filled in.')
+        }
+
+    }
+
+    validateForm = (errors) => {
+        let valid = true;
+
+        errors.receivers =
+            this.state.receivers.length == 0
+                ? 'At least one receiver must be selected.'
+                : '';
+        Object.values(errors).forEach(
+            // if we have an error string set valid to false
+            (val) => val.length > 0 && (valid = false)
+        );
+
+        return valid;
     }
 
     // Called always when a input is changed
     handleInputChange = (event) => {
+        event.preventDefault();
+        const { name, value } = event.target;
+        let errors = this.state.errors;
 
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
+        switch (name) {
+            case 'title':
+                errors.title =
+                    value.length < 5
+                        ? 'Title must be 5 characters long!' : '';
+                break;
+            case 'body':
+                errors.body =
+                    value.length < 5
+                        ? 'Body must be 5 characters long!' : '';
+                break;
+            default:
+                break;
+        }
 
-        this.setState({ [name]: value });
+        this.setState({ errors, [name]: value });
     }
 
+
     handleChangeDate = (selectedDates) => {
-        this.setState({ datetime: selectedDates });
+        this.setState({ datetime: selectedDates }); // TODO adicionar validacao de data aqui
     }
 
     resetForm = () => {
@@ -79,15 +121,21 @@ class Students extends Component {
             receivers: [],
             title: '',
             body: '',
-            severity: '',
-            datetime: null
+            modalOpen: false,
+            isSendNow: true,
+            datetime: null,
+
+            errors: {
+                title: '',
+                body: '',
+                receivers: ''
+            }
         });
     }
 
-
     render() {
         const { error, loading, studentList } = this.props;
-        const { receivers, modalOpen, isSendNow } = this.state;
+        const { receivers, modalOpen, isSendNow, errors } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
         if (loading) { return <SpinnerModal /> }
@@ -107,7 +155,7 @@ class Students extends Component {
                     receivers={receivers}
                     handleInputChange={this.handleInputChange}
                     handleChangeDate={this.handleChangeDate}
-
+                    errors={errors}
                 />
 
             </Container>

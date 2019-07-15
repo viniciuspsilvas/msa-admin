@@ -12,7 +12,7 @@ export function fetchMessageList() {
 
         dispatch({ type: FETCH_MESSAGE_BEGIN });
 
-        return axios.get(config.backend.messages, { params: { filter: { include: 'user' } } })
+        return axios.get(config.backend.messages, { params: { filter: { include: 'student' } } })
             .then(({ data }) => {
                 dispatch({ type: FETCH_MESSAGE_SUCCESS, payload: { data } });
                 return data;

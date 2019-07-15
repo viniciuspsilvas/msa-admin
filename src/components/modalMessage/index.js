@@ -24,7 +24,8 @@ const ModalMessage = props => {
         handleInputChange,
         handleSubmit,
         handleCancel,
-        handleChangeDate
+        handleChangeDate,
+        errors
     } = props;
 
     return (
@@ -42,7 +43,9 @@ const ModalMessage = props => {
                                     options={studentList}
                                     selected={receivers}
                                     multiple
-                                    onChange={(selected) => receivers.push(selected)}
+                                    onChange={(selected) => {
+                                        receivers.length = 0
+                                        if (selected.length > 0 ) receivers.push(selected) }}
                                     placeholder="Choose a receiver..." />
                             }
 
@@ -52,10 +55,14 @@ const ModalMessage = props => {
                                     options={groupList}
                                     selected={receivers}
                                     multiple
-                                    onChange={(selected) => receivers.push(selected)}
+                                    onChange={(selected) => {
+                                        receivers.length = 0
+                                        if (selected.length > 0 ) receivers.push(selected) }}
                                     placeholder="Choose a receiver..." />
                             }
 
+                            {errors.receivers.length > 0 &&
+                                <span className='error'>{errors.receivers}</span>}
                         </FormGroup>
 
                         <Row >
@@ -82,7 +89,7 @@ const ModalMessage = props => {
 
                             <Col md={2}>
                                 <div style={{ marginTop: '35px' }}>
-                                    <Input  id="isSendNow"
+                                    <Input id="isSendNow"
                                         name="isSendNow"
                                         onChange={handleInputChange}
                                         type="checkbox"
@@ -97,17 +104,23 @@ const ModalMessage = props => {
                         </Row>
 
                         <FormGroup>
-                            <Label for="titleIpt">Title</Label>
-                            <Input name="title" id="titleIpt"
+                            <Label for="titleIpt">Title*</Label>
+                            <Input name="title" id="titleIpt" maxLength='50'
                                 onChange={handleInputChange}
                                 value={title} />
+                            {errors.title.length > 0 &&
+                                <span className='error'>{errors.title}</span>}
                         </FormGroup>
 
                         <FormGroup>
-                            <Label for="textIpt">Body</Label>
+                            <Label for="textIpt">Body*</Label>
                             <Input type="textarea" name="body" id="textIpt"
+                                maxLength='300'
                                 onChange={handleInputChange}
                                 value={body} />
+
+                            {errors.body.length > 0 &&
+                                <span className='error'>{errors.body}</span>}
                         </FormGroup>
                     </Form>
                 </ModalBody>
@@ -125,7 +138,7 @@ const ModalMessage = props => {
 ModalMessage.propTypes = {
     studentList: PropTypes.array,
     groupList: PropTypes.array
-    
+
 };
 
 export default ModalMessage;
