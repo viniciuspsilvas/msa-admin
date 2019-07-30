@@ -6,8 +6,12 @@ import Paper from '@material-ui/core/Paper';
 import { Container, Row, Col, Input, Button, Form } from 'reactstrap';
 import profileIcon from '../../user_icon.png';
 
-import { fetchStudentById, saveStudent } from "../../actions";
+import { Delete } from '@material-ui/icons';
+
+import { fetchStudentById, makeEnrollment, deleteEnrollment } from "../../actions";
 import { LinkContainer } from 'react-router-bootstrap'
+
+import ConfirmModal from '../../../../components/ConfirmModal'
 
 import { fetchStudentGroupList } from "../../../StudentGroups/actions";
 
@@ -22,6 +26,9 @@ class StudentsForm extends Component {
       phone: "",
       email: "",
       group: "",
+
+      isConfirmModalOpened: false,
+      idGroupDelete: null,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -29,8 +36,7 @@ class StudentsForm extends Component {
   }
 
   async componentDidMount() {
-    const studentId = this.props.match.params.studentId;
-    await this.props.fetchStudentById(studentId);
+    await this.fetchStudent()
     await this.props.fetchStudentGroupList();
 
     const { studentDetails } = this.props
@@ -43,10 +49,24 @@ class StudentsForm extends Component {
     })
   }
 
-  handleSubmit = async () => {
-    const { id, fullname, email, phone, group } = this.state
 
-    await this.props.saveStudent({ id, fullname, email, phone, studentGroup: {id : group} }); // TODO check
+  fetchStudent = async () => {
+    const studentId = this.props.match.params.studentId;
+    await this.props.fetchStudentById(studentId);
+  }
+
+  handleSubmit = async () => {
+    const { id, group } = this.state
+
+    var student = { id }
+    var studentGroup = { id: group }
+
+    await this.props.makeEnrollment(student, studentGroup);
+    this.fetchStudent();
+
+    this.setState({
+      group: "",
+    })
   }
 
   handleInputChange = (e) => {
@@ -69,20 +89,65 @@ class StudentsForm extends Component {
     this.setState({ [name]: value });
   }
 
+  handleConfirmDelete = async () => {
+    await this.props.deleteEnrollment(this.state.idGroupDelete, this.state.id)
+    this.setState({ idGroupDelete: null })
+    this.togleConfirmModal();
+
+    this.fetchStudent();
+  }
+
+  openConfirmModal = (group) => {
+    this.setState({ idGroupDelete: group.id })
+    this.togleConfirmModal();
+  }
+
+  togleConfirmModal = () => {
+    this.setState({ isConfirmModalOpened: !this.state.isConfirmModalOpened })
+  }
+
   render() {
-    const { studentGroupList = [] } = this.props
-    const { fullname, email, phone, group } = this.state
+    const { studentDetails, studentGroupList = [] } = this.props
+    const { fullname, email, phone, group, isConfirmModalOpened } = this.state
+    const { studentGroups } = studentDetails;
+
+    var groupsFiltered = []
+    let groupTable;
 
     const groupList = [];
     groupList.push(<option key="firstOpt" value=""> - SELECT - </option>)
 
-    const list = studentGroupList.map((group) =>
-      <option key={group.id} value={group.id}>{group.name}</option>
-    );
-    groupList.push(list)
+    if (studentGroups && studentGroups.length > 0) {
+      groupTable = studentGroups.map((g) =>
+        <Row key={g.id}>
+          <Col xs="10">
+            {g.name}
+          </Col>
+          <Col>
+            <Delete style={{ cursor: 'pointer', marginLeft: 10 }} onClick={() => this.openConfirmModal(g)} />
+          </Col>
+        </Row>
+      );
+
+      groupsFiltered = studentGroupList.filter(groupList => studentGroups.find(groupStudent => groupStudent.id === groupList.id) == null);
+      groupsFiltered.forEach(gf => groupList.push(<option key={gf.id} value={gf.id}>{gf.name}</option>));
+
+    } else {
+     
+      studentGroupList.forEach(gf => groupList.push(<option key={gf.id} value={gf.id}>{gf.name}</option>));
+    }
 
     return (
       <Container >
+
+        <ConfirmModal
+          isOpen={isConfirmModalOpened}
+          title="Confirm"
+          text="Are you sure you want to remove this course?"
+          handleToggleModal={this.togleConfirmModal}
+          handleConfirm={this.handleConfirmDelete}
+        />
+
         <h1>Student Details</h1>
 
         <Paper elevation={1} style={{ padding: 1 + 'em' }} >
@@ -98,7 +163,7 @@ class StudentsForm extends Component {
                     <label className="control-label" htmlFor="txtName">Name</label>
                     < div >
                       <input id="txtName" name="fullname" type="text" placeholder="" className="form-control input-md"
-                        value={fullname} onChange={this.handleInputChange} />
+                        value={fullname} readOnly />
                     </div>
                   </div>
 
@@ -106,7 +171,7 @@ class StudentsForm extends Component {
                     <label className="control-label" htmlFor="txtPhone">Phone</label>
                     <div>
                       <input id="txtPhone" name="phone" type="text" placeholder="" className="form-control input-md"
-                        value={phone} onChange={this.handleInputChange} />
+                        value={phone} readOnly />
                     </div>
                   </div>
 
@@ -114,33 +179,43 @@ class StudentsForm extends Component {
                     <label className="control-label" htmlFor="txtEmail">Email</label>
                     <div>
                       <input id="txtEmail" name="email" type="text" placeholder="" className="form-control input-md"
-                        value={email} onChange={this.handleInputChange} />
+                        value={email} readOnly />
                     </div>
                   </div>
 
                   <div className="form-group">
                     <label className="control-label" htmlFor="sltGroup">Course</label>
                     <div >
-                      <Input type="select" name="group" id="sltGroup" onChange={this.handleInputChange} value={group}>
-                        {groupList}
-                      </Input>
+
+                      <Row>
+                        <Col xs="10" >
+                          <Input type="select" name="group" id="sltGroup" onChange={this.handleInputChange} value={group}>
+                            {groupList}
+                          </Input>
+                        </Col>
+                        <Col xs="2"  >
+                          <Button id="btnSave"
+                            onClick={this.handleSubmit}
+                            name="btnSave" color="primary">
+                            +
+                            </Button>
+                        </Col>
+                      </Row>
                     </div>
                   </div>
 
+                  <div className="form-group">
+                    {groupTable}
+                  </div>
+
                   <Row >
-                    <Col style={{ textAlign: "right" }} >
+                    <Col>
                       <LinkContainer to="/students">
                         <Button id="btnCancel" name="btnCancel" color="secondary" >Back</Button>
                       </LinkContainer>
 
                     </Col>
-                    <Col xs="2" style={{ textAlign: "right" }} >
-                      <Button id="btnSave"
-                        onClick={this.handleSubmit}
-                        name="btnSave" color="primary">
-                        Save
-                        </Button>
-                    </Col>
+
                   </Row>
                 </fieldset>
               </Form>
@@ -155,7 +230,7 @@ class StudentsForm extends Component {
 //Redux configuration
 const mapStateToProps = state => ({ ...state.studentReducer, studentGroupList: state.studentGroupReducer.studentGroupList });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchStudentById, saveStudent, fetchStudentGroupList }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchStudentById, makeEnrollment, deleteEnrollment, fetchStudentGroupList }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentsForm);
 

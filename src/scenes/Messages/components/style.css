@@ -1,23 +1,19 @@
 .selectColumn{
-    
-    
-    width: 20px
-    
-    
+    width: 10px
 }
 
 .idColumn {
     width: 20px
 }
 .toColumn {
-    width: 20%
+    width: 30%
 }
 
 .bodyColumn {
     width: 55%
 }
 .dateColumn {
-    width: 100px
+    width: 150px
 }
 .actionsColumn {
     width: 100px

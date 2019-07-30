@@ -37,17 +37,6 @@ const columns = (handleSendNotif) => [{
   classes: 'dateColumn',
   headerAlign: 'center',
   align: 'center'
-}, {
-  dataField: 'isRead',
-  text: 'Action',
-  sort: true,
-  formatter: readIconFormatter,
-  classes: 'actionsColumn',
-  headerAlign: 'center',
-  align: 'center',
-  events: {
-    onClick: (e, column, columnIndex, row, rowIndex) => { handleSendNotif(row)},
-  }
 }];
 
 
@@ -81,7 +70,7 @@ function dataFormatter(cell) {
   return (
     <span>
 
-      <Moment titleFormat="LLLL" withTitle format="DD/MM/YY">
+      <Moment titleFormat="LLLL" withTitle format="DD/MM/YY HH:mm">
         {cell}
       </Moment>
 
@@ -112,10 +101,10 @@ const selectRow = {
 const MessagesList = props => {
   const { list, handleSendNotif } = props;
 
-  const indication = "Table is Empty";
+  const indication = "There is no message created.";
 
   return (
-           <Paper elevation={1} style={{ padding: 1 + 'em' }} >
+    <Paper elevation={1} style={{ padding: 1 + 'em' }} >
       <BootstrapTable keyField='id'
         classes='table-sm table-responsive-lg'
         data={list}

@@ -91,7 +91,7 @@ export default props =>
                   hover
                   condensed
                   bootstrap4
-                  noDataIndication="Table is Empty"
+                  noDataIndication="There is no student added."
                   defaultSorted={defaultSorted}
                   pagination={paginationFactory()}
                   headerClasses="header-class"

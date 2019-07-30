@@ -12,12 +12,15 @@ export const SEND_NOTIFICATION_FAILURE = 'SEND_NOTIFICATION_FAILURE';
 export const FETCH_STUDENT_DETAIL_SUCCESS = 'FETCH_STUDENT_DETAIL_SUCCESS';
 export const UPDATE_STUDENT_DETAIL_SUCCESS = 'UPDATE_STUDENT_DETAIL_SUCCESS';
 
+export const ENROLLMENT_DELETED_BEGIN = 'ENROLLMENT_DELETED_BEGIN'
+export const ENROLLMENT_DELETED_SUCCESS = 'ENROLLMENT_DELETED_SUCCESS'
+export const ENROLLMENT_DELETED_FAILURE = 'ENROLLMENT_DELETED_FAILURE'
+
 // Action
 const fetchStudentsSuccess = students => ({
     type: FETCH_STUDENTS_SUCCESS,
     payload: { students }
 });
-
 
 // Action creator
 export function fetchStudentList() {
@@ -61,33 +64,50 @@ export const sendNotification = (data) => (dispatch) => {
         .catch(error => dispatch({ type: SEND_NOTIFICATION_FAILURE, payload: error }))
 }
 
-
-export function saveStudent(student) {
+export function makeEnrollment(student, studentGroup) {
     return async dispatch => {
         try {
             dispatch({ type: FETCH_STUDENTS_BEGIN });
-            var data = await axios.put(config.backend.students, student);
 
             // verificar se ja existe 
             // consultar todos os enroll do student
             // se nao encontrar a relacao entao chamar o post pra criar uma nova
-            const filter = { params: { filter: `{"where":{"studentId":"` + student.id + `", "studentGroupId":"` + student.studentGroup.id + `"}}` } }
+            const filter = { params: { filter: `{"where":{"studentId":"` + student.id + `", "studentGroupId":"` + studentGroup.id + `"}}` } }
             var result = await axios.get(config.backend.enrollments, filter);
 
             if (result.data.length == 0) {
                 const enroll = {
                     date: Date.now(),
-                    studentGroupId: student.studentGroup.id,
+                    studentGroupId: studentGroup.id,
                     studentId: student.id
                 }
                 await axios.post(config.backend.enrollments, enroll);
             }
 
-            dispatch({ type: UPDATE_STUDENT_DETAIL_SUCCESS, payload: data.data });
-            return data;
+            dispatch({ type: UPDATE_STUDENT_DETAIL_SUCCESS});
 
         } catch (error) {
             dispatch({ type: FETCH_STUDENTS_FAILURE, payload: { error } });
+        }
+    }
+}
+
+export function deleteEnrollment(idGroup, idStudent) {
+    return async dispatch => {
+        try {
+            dispatch({ type: ENROLLMENT_DELETED_BEGIN });
+
+            const enroll = {
+                idGroup : idGroup, 
+                idStudent: idStudent
+            }
+            var result = await axios.delete(config.backend.enrollments+'/deleteEnrollment', {data : enroll});
+
+
+            dispatch({ type: ENROLLMENT_DELETED_SUCCESS, payload:result});
+
+        } catch (error) {
+            dispatch({ type: ENROLLMENT_DELETED_FAILURE, payload: { error } });
         }
     }
 }
