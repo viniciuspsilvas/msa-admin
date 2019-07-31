@@ -8,6 +8,8 @@ import SpinnerModal from '../../components/SpinnerModal';
 
 import { Container } from 'reactstrap';
 
+import moment from 'moment'
+
 //const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
 
 class Students extends Component {
@@ -21,7 +23,7 @@ class Students extends Component {
             body: '',
             modalOpen: false,
             isSendNow: true,
-            datetime: null,
+            datetime: Date.now(),
 
             errors: {
                 title: 'Required!',
@@ -90,7 +92,11 @@ class Students extends Component {
     // Called always when a input is changed
     handleInputChange = (event) => {
         event.preventDefault();
-        const { name, value } = event.target;
+
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
         let errors = this.state.errors;
 
         switch (name) {
@@ -113,6 +119,10 @@ class Students extends Component {
 
 
     handleChangeDate = (selectedDates) => {
+
+        console.log("### selectedDates",selectedDates)
+        //moment.tz TODO implementar timezone
+
         this.setState({ datetime: selectedDates }); // TODO adicionar validacao de data aqui
     }
 
@@ -123,7 +133,7 @@ class Students extends Component {
             body: '',
             modalOpen: false,
             isSendNow: true,
-            datetime: null,
+            datetime: Date.now(),
 
             errors: {
                 title: '',
@@ -135,7 +145,7 @@ class Students extends Component {
 
     render() {
         const { error, loading, studentList } = this.props;
-        const { receivers, modalOpen, isSendNow, errors } = this.state;
+        const { receivers, modalOpen, isSendNow, errors, datetime } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
         if (loading) { return <SpinnerModal /> }
@@ -147,6 +157,7 @@ class Students extends Component {
                 <StudentList studentList={studentList} openModalMessage={this.openModalMessage} />
 
                 <ModalMessage
+                    datetime={datetime}
                     isOpen={modalOpen}
                     isSendNow={isSendNow}
                     handleSubmit={this.handleSubmit}

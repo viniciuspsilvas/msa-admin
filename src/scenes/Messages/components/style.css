@@ -10,10 +10,12 @@
 }
 
 .bodyColumn {
-    width: 55%
+    width: 35%
 }
 .dateColumn {
-    width: 150px
+    width: 350px;
+    font-size: 12px
+    
 }
 .actionsColumn {
     width: 100px

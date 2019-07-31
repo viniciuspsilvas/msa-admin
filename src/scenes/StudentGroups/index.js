@@ -16,6 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import { createLoadingSelector } from '../../redux/selectors';
 import SpinnerModal from '../../components/SpinnerModal';
 
+
 import './style.css';
 import { Button } from 'reactstrap';
 
@@ -40,7 +41,7 @@ class StudentGroups extends Component {
             body: '',
             severity: '',
             isSendNow: true,
-            datetime: null,
+            datetime: Date.now(),
             isEditing: false,
 
             errors: {
@@ -79,7 +80,7 @@ class StudentGroups extends Component {
             body: '',
             severity: '',
             isSendNow: true,
-            datetime: null,
+            datetime: Date.now(),
             isEditing: false,
 
             errors: {
@@ -185,6 +186,7 @@ class StudentGroups extends Component {
     }
 
     handleChangeDate = (selectedDates) => {
+
         this.setState({ datetime: selectedDates });
     }
 
@@ -222,7 +224,7 @@ class StudentGroups extends Component {
     render() {
         const { error, loading, studentGroupList } = this.props;
         const { modalOpen, name, description, isEditing, confirmOpen } = this.state;
-        const { receivers, modalMessageOpen, isSendNow, errors /*  <= Erro de validacao */ } = this.state;
+        const { datetime, receivers, modalMessageOpen, isSendNow, errors /*  <= Erro de validacao */ } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
         if (errors.message) return <AlertBox error={errors} />
@@ -251,6 +253,7 @@ class StudentGroups extends Component {
                 />
 
                 <ModalMessage
+                    datetime={datetime}
                     isOpen={modalMessageOpen}
                     isSendNow={isSendNow}
                     handleSubmit={this.handleMessageSubmit}
