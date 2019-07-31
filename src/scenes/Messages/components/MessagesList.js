@@ -30,8 +30,26 @@ const columns = (handleSendNotif) => [{
   formatter: bodyFormatter,
   classes: 'bodyColumn'
 }, {
+  dataField: 'createdAt',
+  text: 'Created',
+  sort: true,
+  formatter: dataFormatter,
+  classes: 'dateColumn',
+  headerAlign: 'center',
+  align: 'center'
+}
+, {
   dataField: 'sentAt',
-  text: 'Sent at',
+  text: 'Sent',
+  sort: true,
+  formatter: dataFormatter,
+  classes: 'dateColumn',
+  headerAlign: 'center',
+  align: 'center'
+}
+, {
+  dataField: 'scheduledFor',
+  text: 'Scheduled',
   sort: true,
   formatter: dataFormatter,
   classes: 'dateColumn',
@@ -70,9 +88,14 @@ function dataFormatter(cell) {
   return (
     <span>
 
-      <Moment titleFormat="LLLL" withTitle format="DD/MM/YY HH:mm">
-        {cell}
-      </Moment>
+      {cell &&
+
+        <Moment titleFormat="LLLL" withTitle format="DD/MM/YY HH:mm">
+          {cell}
+        </Moment>
+
+      }
+
 
     </span>
   );
