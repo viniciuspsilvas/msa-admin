@@ -10,6 +10,7 @@ import StudentGroupsList from './components/StudentGroupsList'
 import GroupFormModal from './components/GroupFormModal'
 import ConfirmModal from '../../components/ConfirmModal'
 import ModalMessage from '../../components/ModalMessage'
+import ListStudentsModal from './components/ListStudentsModal'
 
 import Paper from '@material-ui/core/Paper';
 
@@ -20,6 +21,38 @@ import SpinnerModal from '../../components/SpinnerModal';
 import './style.css';
 import { Button } from 'reactstrap';
 
+
+
+const INITIAL_STATE = {
+    id: null,
+    name: '',
+    description: '',
+    modalOpen: false,
+    confirmOpen: false,
+    isListStudentsModalOpen: false,
+
+    modalMessageOpen: false,
+    receivers: [],
+    title: '',
+    body: '',
+    severity: '',
+    isSendNow: true,
+    datetime: Date.now(),
+    isEditing: false,
+
+    groupSelected: {
+        students: [],
+        description: ""
+    },
+
+    errors: {
+        title: 'Required!',
+        body: 'Required!',
+        receivers: '',
+        message: ''
+    }
+}
+
 class StudentGroups extends Component {
 
     /*
@@ -28,29 +61,7 @@ class StudentGroups extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            id: null,
-            name: '',
-            description: '',
-            modalOpen: false,
-            confirmOpen: false,
-
-            modalMessageOpen: false,
-            receivers: [],
-            title: '',
-            body: '',
-            severity: '',
-            isSendNow: true,
-            datetime: Date.now(),
-            isEditing: false,
-
-            errors: {
-                title: 'Required!',
-                body: 'Required!',
-                receivers: '',
-                message: ''
-            }
-        }
+        this.state = INITIAL_STATE
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -60,6 +71,7 @@ class StudentGroups extends Component {
         this.handleChangeDate = this.handleChangeDate.bind(this);
         this.openModalMessage = this.openModalMessage.bind(this);
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
+        this.openListStudentsModal = this.openListStudentsModal.bind(this);
     }
 
     componentDidMount() {
@@ -67,31 +79,8 @@ class StudentGroups extends Component {
     }
 
     resetForm = () => {
-        this.setState({
-            id: null,
-            name: '',
-            description: '',
-            modalOpen: false,
-            confirmOpen: false,
-
-            modalMessageOpen: false,
-            receivers: [],
-            title: '',
-            body: '',
-            severity: '',
-            isSendNow: true,
-            datetime: Date.now(),
-            isEditing: false,
-
-            errors: {
-                title: 'Required!',
-                body: 'Required!',
-                receivers: '',
-                message: ''
-            }
-        });
+        this.setState(INITIAL_STATE);
     }
-
 
     handleMessageSubmit = (e) => {
         e.preventDefault();
@@ -147,11 +136,21 @@ class StudentGroups extends Component {
         this.setState({ confirmOpen: !this.state.confirmOpen })
     }
 
+
+    togleListStudentsModal = () => {
+        this.setState({ isListStudentsModalOpen: !this.state.isListStudentsModalOpen })
+    }
+
     // Open Modal Message
     openModalMessage = (groupSelected) => {
         // Create a new array with the param studentSelected as the unique element.
         this.setState({ receivers: [groupSelected] })
         this.togleModalMessage();
+    }
+
+    openListStudentsModal = (groupSelected) => {
+        this.setState({ groupSelected: groupSelected })
+        this.togleListStudentsModal();
     }
 
     handleConfirmDelete = async () => {
@@ -223,8 +222,10 @@ class StudentGroups extends Component {
 
     render() {
         const { error, loading, studentGroupList } = this.props;
-        const { modalOpen, name, description, isEditing, confirmOpen } = this.state;
-        const { datetime, receivers, modalMessageOpen, isSendNow, errors /*  <= Erro de validacao */ } = this.state;
+        const { modalOpen, name, description, isEditing,
+            confirmOpen, isListStudentsModalOpen, groupSelected } = this.state;
+        const { datetime, receivers, modalMessageOpen, isSendNow,
+            errors /*  <= Error validation */ } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
         if (errors.message) return <AlertBox error={errors} />
@@ -243,6 +244,11 @@ class StudentGroups extends Component {
                     description={description}
                     isEditing={isEditing}
                 />
+
+                <ListStudentsModal course={groupSelected.description}
+                    isOpen={isListStudentsModalOpen}
+                    handleToggleModal={this.togleListStudentsModal}
+                    studentList={groupSelected.students} />
 
                 <ConfirmModal
                     isOpen={confirmOpen}
@@ -269,10 +275,11 @@ class StudentGroups extends Component {
                     <StudentGroupsList list={studentGroupList}
                         openModalMessage={this.openModalMessage}
                         openEditModal={this.openEditModal}
-                        openConfirmModal={this.openConfirmModal} />
+                        openConfirmModal={this.openConfirmModal}
+                        openListStudentsModal={this.openListStudentsModal} />
 
-                    <div style={{textAlign: 'right', marginRight: 19 }} >
-                        <Button color="primary"onClick={this.togleModal}>New</Button>
+                    <div style={{ textAlign: 'right', marginRight: 19 }} >
+                        <Button color="primary" onClick={this.togleModal}>New</Button>
                     </div>
 
                 </Paper>

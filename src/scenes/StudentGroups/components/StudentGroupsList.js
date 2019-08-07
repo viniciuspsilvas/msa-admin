@@ -5,7 +5,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Container, Row, Col } from 'reactstrap';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import { Edit, Delete, Email } from '@material-ui/icons';
+import { Edit, Delete, Email, SupervisorAccount } from '@material-ui/icons';
 
 import SearchBox from '../../../components/SearchBox'
 
@@ -33,21 +33,27 @@ const columns = (props) => [{
   formatter: (cellContent, row) => {
     return (
       <div>
-        <span>
+        <span className="iconColumn">
+          <Tooltip title="List students">
+            <SupervisorAccount style={{ cursor: 'pointer' }} onClick={() => props.openListStudentsModal(row)} />
+          </Tooltip>
+        </span>
+        <span className="iconColumn">
+          <Tooltip title="Send notification">
+            <Email style={{ cursor: 'pointer' }} onClick={() => props.openModalMessage(row)} />
+          </Tooltip>
+        </span>
+        <span className="iconColumn">
           <Tooltip title="Edit">
             <Edit style={{ cursor: 'pointer' }} onClick={() => props.openEditModal(row)} />
           </Tooltip>
         </span>
-        <span>
+        <span className="iconColumn">
           <Tooltip title="Delete">
             <Delete style={{ cursor: 'pointer' }} onClick={() => props.openConfirmModal(row)} />
           </Tooltip>
         </span>
-        <span>
-          <Tooltip title="Send notification">
-          <Email style={{ cursor: 'pointer' }} onClick={() => props.openModalMessage(row)} />
-          </Tooltip>
-        </span>
+
       </div>
     );
   }
