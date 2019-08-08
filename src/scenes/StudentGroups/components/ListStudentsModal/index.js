@@ -21,7 +21,7 @@ const ListStudentsModal = props => {
 
 
     const listItems = studentList.map((student) =>
-        <div className="container" key={student.id} >
+        <div className="contain" key={student.id} >
             <div className="headerList">{student.fullname}</div>
             <div className="bodyList">
                 <span style={{ display: '-webkit-inline-box', width: 300 }}>
