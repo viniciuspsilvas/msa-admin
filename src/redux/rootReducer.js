@@ -6,11 +6,13 @@ import studentGroupReducer from "../scenes/StudentGroups/reducer";
 import messagesReducer from "../scenes/Messages/reducer";
 
 import loginReducer from "../scenes/Login/reducer";
+import alertAppReducer from "../components/AlertApp/reducer";
 
 export default combineReducers({
     form: formReducer,
     studentReducer, 
     studentGroupReducer,
     messagesReducer,
-    loginReducer
+    loginReducer,
+    alertAppReducer
 });

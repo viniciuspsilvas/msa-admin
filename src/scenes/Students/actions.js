@@ -75,7 +75,7 @@ export function makeEnrollment(student, studentGroup) {
             const filter = { params: { filter: `{"where":{"studentId":"` + student.id + `", "studentGroupId":"` + studentGroup.id + `"}}` } }
             var result = await axios.get(config.backend.enrollments, filter);
 
-            if (result.data.length == 0) {
+            if (result.data.length === 0) {
                 const enroll = {
                     date: Date.now(),
                     studentGroupId: studentGroup.id,

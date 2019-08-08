@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import { bindActionCreators } from 'redux'
+
 import { fetchStudentGroupList, createStudentGroup, deleteStudentGroup } from "./actions";
 import { sendNotification } from "../Students/actions";
+
+import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
 import { Container } from 'reactstrap';
 
@@ -17,11 +21,8 @@ import Paper from '@material-ui/core/Paper';
 import { createLoadingSelector } from '../../redux/selectors';
 import SpinnerModal from '../../components/SpinnerModal';
 
-
 import './style.css';
 import { Button } from 'reactstrap';
-
-
 
 const INITIAL_STATE = {
     id: null,
@@ -102,6 +103,7 @@ class StudentGroups extends Component {
             this.setState({ errors: { message: '' } })
             if (studentsList && studentsList.length > 0) {
                 this.props.sendNotification(data);
+                this.props.showSuccess(`Message successfully sent.`)
             } else {
                 this.setState({ errors: { message: "There is no student in this group." } })
             }
@@ -116,7 +118,7 @@ class StudentGroups extends Component {
     validateForm = (errors) => {
         let valid = true;
         errors.receivers =
-            this.state.receivers.length == 0
+            this.state.receivers.length === 0
                 ? 'At least one receiver must be selected.'
                 : '';
 
@@ -158,6 +160,7 @@ class StudentGroups extends Component {
         this.setState({ idDelete: null })
         this.togleConfirmModal();
 
+        this.props.showSuccess(`Course successfully deleted.`)
         this.props.fetchStudentGroupList();
     }
 
@@ -179,6 +182,7 @@ class StudentGroups extends Component {
         var { name, description, id } = this.state
         await this.props.createStudentGroup({ name, description, id })
 
+        this.props.showSuccess(`${name} successfully saved.`)
         this.togleModal();
         this.resetForm();
         this.props.fetchStudentGroupList();
@@ -299,13 +303,9 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchStudentGroupList: () => dispatch(fetchStudentGroupList()),
-        createStudentGroup: (studentGroup) => dispatch(createStudentGroup(studentGroup)),
-        deleteStudentGroup: (id) => dispatch(deleteStudentGroup(id)),
-        sendNotification: (data) => dispatch(sendNotification(data))
-    }
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+    fetchStudentGroupList, createStudentGroup, deleteStudentGroup, sendNotification,
+    showError, showWarning, showInfo, showSuccess
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentGroups);

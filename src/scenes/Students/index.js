@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { fetchStudentList, sendNotification } from "./actions";
 import { connect } from "react-redux";
+import { bindActionCreators } from 'redux'
+
+import { Container } from 'reactstrap';
+import { fetchStudentList, sendNotification } from "./actions";
 
 import StudentList from './components/StudentsList'
 import ModalMessage from '../../components/ModalMessage'
 import SpinnerModal from '../../components/SpinnerModal';
 
-import { Container } from 'reactstrap';
-
-import moment from 'moment'
-
-//const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
 class Students extends Component {
 
@@ -66,6 +65,8 @@ class Students extends Component {
             let data = { title, body, receivers, datetime }
 
             this.props.sendNotification(data);
+
+            this.props.showSuccess(`Message successfully sent.`)
             this.togleModalMessage();
             this.resetForm();
         } else {
@@ -78,7 +79,7 @@ class Students extends Component {
         let valid = true;
 
         errors.receivers =
-            this.state.receivers.length == 0
+            this.state.receivers.length === 0
                 ? 'At least one receiver must be selected.'
                 : '';
         Object.values(errors).forEach(
@@ -181,11 +182,9 @@ const mapStateToProps = state => {
     });
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchStudentList: () => dispatch(fetchStudentList()),
-        sendNotification: (data) => dispatch(sendNotification(data))
-    }
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+    fetchStudentList,sendNotification ,
+    showError, showWarning, showInfo, showSuccess
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Students);

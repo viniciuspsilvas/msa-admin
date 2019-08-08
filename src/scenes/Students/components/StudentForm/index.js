@@ -12,6 +12,7 @@ import { fetchStudentById, makeEnrollment, deleteEnrollment } from "../../action
 import { LinkContainer } from 'react-router-bootstrap'
 
 import ConfirmModal from '../../../../components/ConfirmModal'
+import { showError, showWarning, showInfo, showSuccess } from "../../../../components/AlertApp/actions"
 
 import { fetchStudentGroupList } from "../../../StudentGroups/actions";
 
@@ -62,6 +63,7 @@ class StudentsForm extends Component {
     var studentGroup = { id: group }
 
     await this.props.makeEnrollment(student, studentGroup);
+    this.props.showSuccess(`Enrollment successfully created.`)
     this.fetchStudent();
 
     this.setState({
@@ -91,6 +93,7 @@ class StudentsForm extends Component {
 
   handleConfirmDelete = async () => {
     await this.props.deleteEnrollment(this.state.idGroupDelete, this.state.id)
+    this.props.showSuccess(`Enrollment successfully removed.`)
     this.setState({ idGroupDelete: null })
     this.togleConfirmModal();
 
@@ -133,7 +136,7 @@ class StudentsForm extends Component {
       groupsFiltered.forEach(gf => groupList.push(<option key={gf.id} value={gf.id}>{gf.name}</option>));
 
     } else {
-     
+
       studentGroupList.forEach(gf => groupList.push(<option key={gf.id} value={gf.id}>{gf.name}</option>));
     }
 
@@ -230,7 +233,10 @@ class StudentsForm extends Component {
 //Redux configuration
 const mapStateToProps = state => ({ ...state.studentReducer, studentGroupList: state.studentGroupReducer.studentGroupList });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchStudentById, makeEnrollment, deleteEnrollment, fetchStudentGroupList }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchStudentById, makeEnrollment, deleteEnrollment, fetchStudentGroupList,
+  showError, showWarning, showInfo, showSuccess
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentsForm);
 

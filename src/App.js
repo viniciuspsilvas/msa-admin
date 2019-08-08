@@ -7,6 +7,7 @@ import {
 import { connect } from "react-redux";
 
 import HeaderNav from './components/HeaderNav'
+import AlertApp from './components/AlertApp'
 import Students from './scenes/Students/'
 import StudentsForm from './scenes/Students/components/StudentForm'
 import Groups from './scenes/StudentGroups/'
@@ -28,6 +29,7 @@ const NoMatch = () => (<div><h2>Error 404 </h2></div>)
             <Router>
                 <div>
                     <HeaderNav isAuthenticated={isAuthenticated} />
+                    <AlertApp />
 
                     <Switch>
                         <Route path="/login" component={Login} />
