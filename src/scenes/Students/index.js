@@ -121,10 +121,11 @@ class Students extends Component {
 
     handleChangeDate = (selectedDates) => {
 
-        console.log("### selectedDates",selectedDates)
-        //moment.tz TODO implementar timezone
-
         this.setState({ datetime: selectedDates }); // TODO adicionar validacao de data aqui
+    }
+
+    handleChangeReceiver = (selected) => {
+        this.setState({ receivers: selected });
     }
 
     resetForm = () => {
@@ -167,6 +168,7 @@ class Students extends Component {
                     receivers={receivers}
                     handleInputChange={this.handleInputChange}
                     handleChangeDate={this.handleChangeDate}
+                    handleChangeReceiver={this.handleChangeReceiver}
                     errors={errors}
                 />
 
@@ -183,7 +185,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    fetchStudentList,sendNotification ,
+    fetchStudentList, sendNotification,
     showError, showWarning, showInfo, showSuccess
 }, dispatch)
 

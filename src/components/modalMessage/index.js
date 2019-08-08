@@ -25,6 +25,7 @@ const ModalMessage = props => {
         handleSubmit,
         handleCancel,
         handleChangeDate,
+        handleChangeReceiver,
         errors
     } = props;
 
@@ -43,9 +44,7 @@ const ModalMessage = props => {
                                     options={studentList}
                                     selected={receivers}
                                     multiple
-                                    onChange={(selected) => {
-                                        receivers.length = 0
-                                        if (selected.length > 0 ) receivers.push(selected) }}
+                                    onChange={handleChangeReceiver}
                                     placeholder="Choose a receiver..." />
                             }
 
@@ -55,9 +54,7 @@ const ModalMessage = props => {
                                     options={groupList}
                                     selected={receivers}
                                     multiple
-                                    onChange={(selected) => {
-                                        receivers.length = 0
-                                        if (selected.length > 0 ) receivers.push(selected) }}
+                                    onChange={handleChangeReceiver}
                                     placeholder="Choose a receiver..." />
                             }
 

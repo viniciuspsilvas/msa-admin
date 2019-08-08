@@ -193,6 +193,10 @@ class StudentGroups extends Component {
         this.setState({ datetime: selectedDates });
     }
 
+    handleChangeReceiver = (selected) => {
+        this.setState({ receivers: selected });
+    }
+
     handleInputChange = (event) => {
         event.preventDefault();
 
@@ -272,6 +276,7 @@ class StudentGroups extends Component {
                     receivers={receivers}
                     handleInputChange={this.handleInputChange}
                     handleChangeDate={this.handleChangeDate}
+                    handleChangeReceiver={this.handleChangeReceiver}
                     errors={errors}
                 />
 

@@ -140,7 +140,6 @@ const MessagesList = props => {
         defaultSorted={defaultSorted}
 
         pagination={paginationFactory()}
-        selectRow={selectRow}
       />
     </Paper>
   )
