@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../../util/apiClient';
 import config from '../../config/config'
 
 export const FETCH_SETTINGS_BEGIN = 'FETCH_SETTINGS_BEGIN';
@@ -12,7 +12,7 @@ export function fetchConfigList() {
 
         dispatch({ type: FETCH_SETTINGS_BEGIN });
 
-        return axios.get(config.backend.taskScheduler)
+        return apiClient.get(config.backend.taskScheduler)
             .then(({ data }) => {
                 dispatch({ type: FETCH_SETTINGS_SUCCESS, payload: { data } });
                 return data;

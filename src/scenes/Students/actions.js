@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../../util/apiClient';
 import config from '../../config/config'
 
 export const FETCH_STUDENTS_BEGIN = 'FETCH_STUDENTS_BEGIN';
@@ -29,7 +29,7 @@ export function fetchStudentList() {
         dispatch({ type: FETCH_STUDENTS_BEGIN });
         const params = { params: { filter: { include: 'advices' } } }
 
-        return axios.get(config.backend.students, params)
+        return apiClient.get(config.backend.students, params)
             .then(({ data }) => {
                 dispatch(fetchStudentsSuccess(data));
                 return data;
@@ -47,7 +47,7 @@ export function fetchStudentById(id) {
             const params = { params: { filter: { include: ['studentGroups', 'advices'] } } }
 
             // fetch data from a url endpoint
-            var data = await axios.get(`${config.backend.students}/${id}`, params)
+            var data = await apiClient.get(`${config.backend.students}/${id}`, params)
 
             dispatch({ type: FETCH_STUDENT_DETAIL_SUCCESS, payload: data.data });
             return data;
@@ -59,7 +59,7 @@ export function fetchStudentById(id) {
 }
 
 export const sendNotification = (data) => (dispatch) => {
-    axios.post(config.backend.sendMessageBatch, { "data": data })
+    apiClient.post(config.backend.sendMessageBatch, { "data": data })
         .then(resp => dispatch({ type: SEND_NOTIFICATION_SUCCESS, payload: resp }))
         .catch(error => dispatch({ type: SEND_NOTIFICATION_FAILURE, payload: error }))
 }
@@ -73,7 +73,7 @@ export function makeEnrollment(student, studentGroup) {
             // consultar todos os enroll do student
             // se nao encontrar a relacao entao chamar o post pra criar uma nova
             const filter = { params: { filter: `{"where":{"studentId":"` + student.id + `", "studentGroupId":"` + studentGroup.id + `"}}` } }
-            var result = await axios.get(config.backend.enrollments, filter);
+            var result = await apiClient.get(config.backend.enrollments, filter);
 
             if (result.data.length === 0) {
                 const enroll = {
@@ -81,7 +81,7 @@ export function makeEnrollment(student, studentGroup) {
                     studentGroupId: studentGroup.id,
                     studentId: student.id
                 }
-                await axios.post(config.backend.enrollments, enroll);
+                await apiClient.post(config.backend.enrollments, enroll);
             }
 
             dispatch({ type: UPDATE_STUDENT_DETAIL_SUCCESS});
@@ -101,7 +101,7 @@ export function deleteEnrollment(idGroup, idStudent) {
                 idGroup : idGroup, 
                 idStudent: idStudent
             }
-            var result = await axios.delete(config.backend.enrollments+'/deleteEnrollment', {data : enroll});
+            var result = await apiClient.delete(config.backend.enrollments+'/deleteEnrollment', {data : enroll});
 
 
             dispatch({ type: ENROLLMENT_DELETED_SUCCESS, payload:result});

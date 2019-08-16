@@ -1,16 +1,16 @@
 const BACKEND_URL= process.env.REACT_APP_SERVER_URL;
  
 var backend = {
-	students: BACKEND_URL + '/api/Students',
-	studentGroups: BACKEND_URL + '/api/StudentGroups',
-	enrollments: BACKEND_URL + '/api/Enrollments',
+	students: '/api/Students',
+	studentGroups: '/api/StudentGroups',
+	enrollments: '/api/Enrollments',
 
-	messages: BACKEND_URL + '/api/Messages',
-	sendMessageBatch: BACKEND_URL + '/api/Messages/sendMessageBatch',
-	studentAdvices: BACKEND_URL + '/api/StudentAdvices',
-	taskScheduler: BACKEND_URL + '/api/TaskScheduler',
+	messages: '/api/Messages',
+	sendMessageBatch: '/api/Messages/sendMessageBatch',
+	studentAdvices: '/api/StudentAdvices',
+	taskScheduler: '/api/TaskScheduler',
 
-	login: BACKEND_URL + '/api/Users/login',
+	login: '/api/Users/login',
 }
 
 var config = {

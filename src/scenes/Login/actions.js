@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../../util/apiClient';
 import config from '../../config/config'
 
 export const FETCH_LOGIN_BEGIN = 'FETCH_LOGIN_BEGIN';
@@ -9,7 +9,7 @@ export const LOGOUT = 'LOGOUT';
 
 export const login = (userDetails) => (dispatch) => {
     dispatch({ type: FETCH_LOGIN_BEGIN })
-    axios.post(config.backend.login, userDetails)
+    apiClient.post(config.backend.login, userDetails)
         .then(resp => {
 
             const token = resp.data;

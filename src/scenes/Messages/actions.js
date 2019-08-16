@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../../util/apiClient';
 import config from '../../config/config'
 
 export const FETCH_MESSAGE_BEGIN = 'FETCH_MESSAGE_BEGIN';
@@ -12,7 +12,7 @@ export function fetchMessageList() {
 
         dispatch({ type: FETCH_MESSAGE_BEGIN });
 
-        return axios.get(config.backend.messages, { params: { filter: { include: 'student' } } })
+        return apiClient.get(config.backend.messages, { params: { filter: { include: 'student' } } })
             .then(({ data }) => {
                 dispatch({ type: FETCH_MESSAGE_SUCCESS, payload: { data } });
                 return data;

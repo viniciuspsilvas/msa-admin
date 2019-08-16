@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../../util/apiClient';
 import config from '../../config/config'
 
 export const FETCH_STUDENTS_GROUP_BEGIN = 'FETCH_STUDENTS_GROUP_BEGIN';
@@ -32,7 +32,7 @@ export const fetchStudentGroupsFailure = error => ({
 export function fetchStudentGroupList() {
     return dispatch => {
         dispatch(fetchStudentGroupsBegin());
-        return axios.get(config.backend.studentGroups, { params: { filter: { include: 'students' } } })
+        return apiClient.get(config.backend.studentGroups, { params: { filter: { include: 'students' } } })
             .then(({ data }) => {
                 dispatch(fetchStudentGroupsSuccess(data));
                 return data;
@@ -49,9 +49,9 @@ export function createStudentGroup(newStudentGroup) {
             // fetch data from a url endpoint
             var data
             if (newStudentGroup.id) {
-                data = await axios.put(config.backend.studentGroups, newStudentGroup);
+                data = await apiClient.put(config.backend.studentGroups, newStudentGroup);
             } else {
-                data = await axios.post(config.backend.studentGroups, newStudentGroup);
+                data = await apiClient.post(config.backend.studentGroups, newStudentGroup);
             }
 
             dispatch(createStudentGroupSuccess(data));
@@ -70,7 +70,7 @@ export function deleteStudentGroup(id) {
             dispatch(createStudentGroupBegin());
 
             // fetch data from a url endpoint
-            var data = await axios.delete(config.backend.studentGroups + "/" + id);
+            var data = await apiClient.delete(config.backend.studentGroups + "/" + id);
             dispatch({ type: DELETE_STUDENTS_GROUP_SUCCESS });
 
             return data;
@@ -107,7 +107,7 @@ export function resetNewStudentGroup() {
 
 
 /* export function createStudentGroup(props, tokenFromStorage) {
-    const request = axios({
+    const request = apiClient({
       method: 'post',
       data: props,
       //url: `${ROOT_URL}/posts`,
