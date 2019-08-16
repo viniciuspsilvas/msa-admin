@@ -25,9 +25,6 @@ const HeaderNav = (props) => {
                     <LinkContainer exact to="/">
                         <NavLink >Home</NavLink>
                     </LinkContainer>
-                    {/*          <LinkContainer to="/calendar">
-                        <NavLink>Calendar</NavLink>
-                    </LinkContainer> */}
                     <LinkContainer to="/messages" >
                         <NavLink>Messages</NavLink>
                     </LinkContainer>
