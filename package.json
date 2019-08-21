@@ -60,6 +60,5 @@
     "@storybook/react": "^5.0.6",
     "redux-persist": "^5.10.0",
     "uuid": "^3.3.2"
-  },
-  "proxy": "http://phpstack-209922-714883.cloudwaysapps.com"
+  }
 }
