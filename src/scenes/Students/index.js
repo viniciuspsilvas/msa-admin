@@ -11,25 +11,27 @@ import SpinnerModal from '../../components/SpinnerModal';
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
+const initialState = {
+    receivers: [],
+    title: '',
+    body: '',
+    modalOpen: false,
+    isSendNow: true,
+    datetime: Date.now(),
+    listSelectedStudents: [],
+    errors: {
+        title: 'Required!',
+        body: 'Required!',
+        receivers: ''
+    }
+}
+
 class Students extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            receivers: [],
-            title: '',
-            body: '',
-            modalOpen: false,
-            isSendNow: true,
-            datetime: Date.now(),
-
-            errors: {
-                title: 'Required!',
-                body: 'Required!',
-                receivers: ''
-            }
-        };
+        this.state = initialState;
 
         //Binds
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -37,6 +39,7 @@ class Students extends Component {
         this.handleChangeDate = this.handleChangeDate.bind(this);
         this.togleModalMessage = this.togleModalMessage.bind(this);
         this.openModalMessage = this.openModalMessage.bind(this);
+        this.handleSelectActionChange = this.handleSelectActionChange.bind(this);
     }
 
     componentDidMount() {
@@ -118,9 +121,7 @@ class Students extends Component {
         this.setState({ errors, [name]: value });
     }
 
-
     handleChangeDate = (selectedDates) => {
-
         this.setState({ datetime: selectedDates }); // TODO adicionar validacao de data aqui
     }
 
@@ -128,21 +129,57 @@ class Students extends Component {
         this.setState({ receivers: selected });
     }
 
-    resetForm = () => {
-        this.setState({
-            receivers: [],
-            title: '',
-            body: '',
-            modalOpen: false,
-            isSendNow: true,
-            datetime: Date.now(),
+    handleSelectActionChange = (event) => {
+        switch (event.target.value) {
+            case "MAKE_ENROLLMENT":
+                this.makeEnrollment();
+                break;
+            case "ACTIVE_STUDENTS":
+            case "INACTIVE_STUDENTS":
+                this.toggleStudentsActive();
+                break;
+        }
+    }
 
-            errors: {
-                title: '',
-                body: '',
-                receivers: ''
-            }
-        });
+    makeEnrollment = () => {
+        console.log("makeEnrollment total: ", this.state.listSelectedStudents.length);
+
+        // TODO continuar aqui - Exibir popup de confirmacao e selecao do curso.
+    }
+
+    toggleStudentsActive = () => {
+        console.log("toggleStudentsActive total: ", this.state.listSelectedStudents.length);
+
+        // TODO continuar aqui - Exibir popup de confirmacao
+    }
+
+    handleOnSelect = (row, isSelect) => {
+        if (isSelect) {
+            this.setState(() => ({
+                listSelectedStudents: [...this.state.listSelectedStudents, row.id]
+            }));
+        } else {
+            this.setState(() => ({
+                listSelectedStudents: this.state.listSelectedStudents.filter(x => x !== row.id)
+            }));
+        }
+    }
+
+    handleOnSelectAll = (isSelect, rows) => {
+        const ids = rows.map(r => r.id);
+        if (isSelect) {
+            this.setState(() => ({
+                listSelectedStudents: ids
+            }));
+        } else {
+            this.setState(() => ({
+                listSelectedStudents: []
+            }));
+        }
+    }
+
+    resetForm = () => {
+        this.setState(initialState);
     }
 
     render() {
@@ -156,7 +193,13 @@ class Students extends Component {
             <Container >
                 <h1>Students</h1>
 
-                <StudentList studentList={studentList} openModalMessage={this.openModalMessage} />
+                <StudentList studentList={studentList}
+                    openModalMessage={this.openModalMessage}
+                    handleSelectActionChange={this.handleSelectActionChange}
+                    handleOnSelect={this.handleOnSelect}
+                    listSelectedStudents={this.state.listSelectedStudents}
+                    handleOnSelectAll={this.handleOnSelectAll}
+                />
 
                 <ModalMessage
                     datetime={datetime}
