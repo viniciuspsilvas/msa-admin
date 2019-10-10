@@ -12,10 +12,6 @@ import SearchBox from '../../../components/SearchBox'
 import '../style.css';
 
 const columns = (props) => [{
-  dataField: 'id',
-  text: 'ID',
-  sort: true
-}, {
   dataField: 'name',
   text: 'Name',
   sort: true,

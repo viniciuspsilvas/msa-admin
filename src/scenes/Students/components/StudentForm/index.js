@@ -9,7 +9,7 @@ import profileIcon from '../../user_icon.png';
 import { Delete } from '@material-ui/icons';
 
 import { fetchStudentById, makeEnrollment, deleteEnrollment } from "../../actions";
-import { LinkContainer } from 'react-router-bootstrap'
+import { Link } from 'react-router-dom'
 
 import ConfirmModal from '../../../../components/ConfirmModal'
 import { showError, showWarning, showInfo, showSuccess } from "../../../../components/AlertApp/actions"
@@ -213,9 +213,10 @@ class StudentsForm extends Component {
 
                   <Row >
                     <Col>
-                      <LinkContainer to="/students">
+
+                      <Link to="/students">
                         <Button id="btnCancel" name="btnCancel" color="secondary" >Back</Button>
-                      </LinkContainer>
+                      </Link>
 
                     </Col>
 

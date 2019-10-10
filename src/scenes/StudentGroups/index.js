@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux'
 
-import { fetchStudentGroupList, createStudentGroup, deleteStudentGroup } from "./actions";
+import { fetchStudentGroupList, createStudentGroup, deleteStudentGroup, resetStudentGroup } from "./actions";
 import { sendNotification } from "../Students/actions";
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
@@ -18,7 +18,6 @@ import ListStudentsModal from './components/ListStudentsModal'
 
 import Paper from '@material-ui/core/Paper';
 
-import { createLoadingSelector } from '../../redux/selectors';
 import SpinnerModal from '../../components/SpinnerModal';
 
 import './style.css';
@@ -77,6 +76,13 @@ class StudentGroups extends Component {
 
     componentDidMount() {
         this.props.fetchStudentGroupList();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.error === null && this.props.studentGroup.id !== null) {
+            this.props.fetchStudentGroupList();
+            this.props.resetStudentGroup();
+        }
     }
 
     resetForm = () => {
@@ -185,7 +191,6 @@ class StudentGroups extends Component {
         this.props.showSuccess(`${name} successfully saved.`)
         this.togleModal();
         this.resetForm();
-        this.props.fetchStudentGroupList();
     }
 
     handleChangeDate = (selectedDates) => {
@@ -298,19 +303,17 @@ class StudentGroups extends Component {
     }
 }
 
-const loadingSelector = createLoadingSelector(['GET_TODOS']);
 
 //Redux configuration
 const mapStateToProps = state => {
     return {
         ...state.studentGroupReducer,
-        isFetching: loadingSelector(state)
     };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     fetchStudentGroupList, createStudentGroup, deleteStudentGroup, sendNotification,
-    showError, showWarning, showInfo, showSuccess
+    showError, showWarning, showInfo, showSuccess, resetStudentGroup
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentGroups);

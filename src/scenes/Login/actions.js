@@ -26,7 +26,7 @@ export const login = (userDetails) => (dispatch) => {
                 }
             )
         })
-        .catch(error => dispatch({ type: FETCH_LOGIN_FAILURE, payload: error.response.data }))
+        .catch(error => dispatch({ type: FETCH_LOGIN_FAILURE, payload: error.response }))
 }
 
 export const logout = () => (dispatch) => { dispatch({ type: LOGOUT }) }

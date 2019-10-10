@@ -41,17 +41,17 @@ export function fetchStudentGroupList() {
     };
 }
 
-export function createStudentGroup(newStudentGroup) {
+export function createStudentGroup(studentGroup) {
     return async dispatch => {
         try {
             dispatch(createStudentGroupBegin());
 
             // fetch data from a url endpoint
             var data
-            if (newStudentGroup.id) {
-                data = await apiClient.put(config.backend.studentGroups, newStudentGroup);
+            if (studentGroup.id) {
+                data = await apiClient.put(config.backend.studentGroups, studentGroup);
             } else {
-                data = await apiClient.post(config.backend.studentGroups, newStudentGroup);
+                data = await apiClient.post(config.backend.studentGroups, studentGroup);
             }
 
             dispatch(createStudentGroupSuccess(data));
@@ -99,7 +99,7 @@ export function createStudentGroupFailure(error) {
     };
 }
 
-export function resetNewStudentGroup() {
+export function resetStudentGroup() {
     return {
         type: RESET_NEW_STUDENTS_GROUP
     }

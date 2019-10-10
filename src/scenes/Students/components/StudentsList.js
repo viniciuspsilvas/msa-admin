@@ -7,7 +7,7 @@ import { Email, Visibility, ToggleOn, ToggleOff } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
 
-import { LinkContainer } from 'react-router-bootstrap'
+import { Link } from 'react-router-dom'
 
 import SearchBox from '../../../components/SearchBox'
 
@@ -51,17 +51,17 @@ const columns = (props) => [{
 
         <span style={{ marginLeft: 5 }}>
           <Tooltip title="Details">
-            <LinkContainer to={"/students/" + row.id} style={{ cursor: 'pointer' }}>
+            <Link to={"/students/" + row.id} style={{ cursor: 'pointer' }}>
               <Visibility />
-            </LinkContainer>
+            </Link>
           </Tooltip>
         </span>
 
         <span style={{ marginLeft: 5 }}>
           <Tooltip title="Active">
-            <LinkContainer to={"/students/" + row.id} style={{ cursor: 'pointer' }}>
+            <Link to={"/students/" + row.id} style={{ cursor: 'pointer' }}>
               {row.isActive ? <ToggleOn /> : <ToggleOff />}
-            </LinkContainer>
+            </Link>
           </Tooltip>
         </span>
 

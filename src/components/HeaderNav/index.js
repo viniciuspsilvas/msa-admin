@@ -1,12 +1,13 @@
 import React from 'react';
 
 import logo from './logo_msa.png';
-import { LinkContainer } from 'react-router-bootstrap'
 import LogoutButton from '../LogoutButton'
 
 import {
-    Navbar, NavbarBrand, Nav, NavLink
+    Navbar, NavbarBrand, Nav
 } from 'reactstrap';
+
+import { NavLink } from 'react-router-dom'
 
 import './style.css';
 
@@ -22,21 +23,11 @@ const HeaderNav = (props) => {
             {
                 isAuthenticated &&
                 <Nav className="ml-auto" navbar>
-                    <LinkContainer exact to="/">
-                        <NavLink >Home</NavLink>
-                    </LinkContainer>
-                    <LinkContainer to="/messages" >
-                        <NavLink>Messages</NavLink>
-                    </LinkContainer>
-                    <LinkContainer to="/students">
-                        <NavLink >Students</NavLink>
-                    </LinkContainer>
-                    <LinkContainer to="/courses">
-                        <NavLink >Courses</NavLink>
-                    </LinkContainer>
-                    <LinkContainer to="/about">
-                        <NavLink >About</NavLink>
-                    </LinkContainer>
+                    <NavLink className="nav-link" activeClassName="active" exact to="/">Home</NavLink>
+                    <NavLink className="nav-link" activeClassName="active" to="/messages">Messages</NavLink>
+                    <NavLink className="nav-link" activeClassName="active" to="/students">Students</NavLink>
+                    <NavLink className="nav-link" activeClassName="active" to="/courses">Courses</NavLink>
+                    <NavLink className="nav-link" activeClassName="active" to="/about">About</NavLink>
 
                     <Nav className="ml-auto navbar-right" navbar >
                         <LogoutButton />
