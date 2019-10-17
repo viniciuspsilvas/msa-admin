@@ -81,7 +81,7 @@ class StudentsForm extends Component {
         value = target.checked
         break;
       case 'select-one':
-        value = studentGroupList.find(s => s.id == target.value).id
+        value = studentGroupList.find(s => s.id === target.value).id
         break;
       default:
         value = target.value

@@ -32,7 +32,7 @@ export default function studentGroupReducer(state = initialState, action) {
         case FETCH_STUDENTS_GROUP_BEGIN:
             return { ...state, loading: true, error: null };
         case FETCH_STUDENTS_GROUP_SUCCESS:
-            return { ...state, loading: false, studentGroupList: payload.studentGroups };
+            return { ...state, loading: false, studentGroupList: payload.courses };
         case FETCH_STUDENTS_GROUP_FAILURE:
             return { ...state, loading: false, error: payload.error, studentGroupList: [] };
 

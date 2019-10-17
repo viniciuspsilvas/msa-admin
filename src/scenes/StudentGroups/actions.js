@@ -18,9 +18,9 @@ export const fetchStudentGroupsBegin = () => ({
 });
 
 // Action
-export const fetchStudentGroupsSuccess = studentGroups => ({
+export const fetchStudentGroupsSuccess = courses => ({
     type: FETCH_STUDENTS_GROUP_SUCCESS,
-    payload: { studentGroups }
+    payload: { courses }
 });
 
 export const fetchStudentGroupsFailure = error => ({
@@ -28,14 +28,34 @@ export const fetchStudentGroupsFailure = error => ({
     payload: { error }
 });
 
+
 // Action creator
 export function fetchStudentGroupList() {
     return dispatch => {
         dispatch(fetchStudentGroupsBegin());
-        return apiClient.get(config.backend.studentGroups, { params: { filter: { include: 'students' } } })
+
+        const GET_COURSES = {
+            query: `
+                query getCourses {
+                    courses {
+                        _id
+                        name
+                        description
+                        enrollments {
+                            student {
+                                name
+                            }
+                         }
+                    }
+                }
+            `
+        }
+
+        return apiClient.post("/graphql", GET_COURSES)
             .then(({ data }) => {
-                dispatch(fetchStudentGroupsSuccess(data));
-                return data;
+
+                dispatch(fetchStudentGroupsSuccess(data.data.courses));
+                return data.data.courses;
             })
             .catch(error => dispatch(fetchStudentGroupsFailure(error)));
     };

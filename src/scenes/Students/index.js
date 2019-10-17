@@ -130,6 +130,7 @@ class Students extends Component {
     }
 
     handleSelectActionChange = (event) => {
+
         switch (event.target.value) {
             case "MAKE_ENROLLMENT":
                 this.makeEnrollment();
@@ -138,6 +139,8 @@ class Students extends Component {
             case "INACTIVE_STUDENTS":
                 this.toggleStudentsActive();
                 break;
+            default:
+                return;
         }
     }
 
