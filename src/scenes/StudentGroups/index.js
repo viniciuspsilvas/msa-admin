@@ -41,7 +41,7 @@ const INITIAL_STATE = {
     isEditing: false,
 
     groupSelected: {
-        students: [],
+        enrollments: [],
         description: ""
     },
 
@@ -98,8 +98,8 @@ class StudentGroups extends Component {
 
             var studentsList = []
             receivers.forEach(group => {
-                if (group.students.length > 0) {
-                    studentsList = studentsList.concat(group.students.map(s => s))
+                if (group.enrollments.length > 0) {
+                    studentsList = studentsList.concat(group.enrollments.map(s => s))
                 }
             });
 
@@ -135,8 +135,8 @@ class StudentGroups extends Component {
         return valid;
     }
 
-    openConfirmModal = ({ id }) => {
-        this.setState({ idDelete: id })
+    openConfirmModal = ({ _id }) => {
+        this.setState({ idDelete: _id })
         this.togleConfirmModal();
     }
 
@@ -176,17 +176,17 @@ class StudentGroups extends Component {
         this.setState({ modalOpen: !this.state.modalOpen })
     };
 
-    openEditModal = ({ id, name, description }) => {
+    openEditModal = ({ _id, name, description }) => {
         this.togleModal();
-        this.setState({ id, name, description, isEditing: true });
+        this.setState({ _id, name, description, isEditing: true });
     };
 
     handleFormSubmit = async (e) => {
         e.preventDefault();
 
         // Prepare data to be sent to backend
-        var { name, description, id } = this.state
-        await this.props.createStudentGroup({ name, description, id })
+        var { name, description, _id } = this.state
+        await this.props.createStudentGroup({ name, description, _id: _id })
 
         this.props.showSuccess(`${name} successfully saved.`)
         this.togleModal();
@@ -234,7 +234,7 @@ class StudentGroups extends Component {
     togleModalMessage = () => this.setState({ modalMessageOpen: !this.state.modalMessageOpen });
 
     render() {
-        const { error, loading, studentGroupList } = this.props;
+        const { error, loading, studentGroupList } = this.props; // TODO change studentGroupList to enrollments
         const { modalOpen, name, description, isEditing,
             confirmOpen, isListStudentsModalOpen, groupSelected } = this.state;
         const { datetime, receivers, modalMessageOpen, isSendNow,
@@ -261,7 +261,7 @@ class StudentGroups extends Component {
                 <ListStudentsModal course={groupSelected.description}
                     isOpen={isListStudentsModalOpen}
                     handleToggleModal={this.togleListStudentsModal}
-                    studentList={groupSelected.students} />
+                    studentList={groupSelected.enrollments} />
 
                 <ConfirmModal
                     isOpen={confirmOpen}

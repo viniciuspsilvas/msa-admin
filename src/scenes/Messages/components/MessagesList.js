@@ -5,7 +5,6 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import Paper from '@material-ui/core/Paper';
 import Drafts from '@material-ui/icons/Drafts';
 import Mail from '@material-ui/icons/Mail';
-import Send from '@material-ui/icons/Send';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import PropTypes from 'prop-types';
@@ -100,7 +99,7 @@ function dataFormatter(cell) {
     </span>
   );
 }
-
+/* 
 function readIconFormatter(cell, row) {
   //row.done
   return (
@@ -108,7 +107,7 @@ function readIconFormatter(cell, row) {
       <Send titleAccess='Send again' style={{ cursor: 'pointer' }} />
     </span>
   );
-}
+} */
 
 
 const defaultSorted = [{
@@ -116,11 +115,11 @@ const defaultSorted = [{
   order: 'asc'
 }];
 
-const selectRow = {
+/* const selectRow = {
   mode: 'checkbox',
   classes: 'selectColumn'
 };
-
+ */
 const MessagesList = props => {
   const { list, handleSendNotif } = props;
 
