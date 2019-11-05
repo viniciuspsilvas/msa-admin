@@ -1,7 +1,4 @@
 import apiClient from '../../util/apiClient';
-import config from '../../config/config'
-import { print } from 'graphql';
-import gql from 'graphql-tag';
 
 export const FETCH_STUDENTS_GROUP_BEGIN = 'FETCH_STUDENTS_GROUP_BEGIN';
 export const FETCH_STUDENTS_GROUP_SUCCESS = 'FETCH_STUDENTS_GROUP_SUCCESS';
@@ -140,8 +137,6 @@ export function deleteStudentGroup(id) {
         try {
             dispatch(createStudentGroupBegin());
             
-            console.log("+> $id", id)
-
             // fetch data from a url endpoint
             var {data} = await apiClient
                 .post("/graphql", {
@@ -151,11 +146,9 @@ export function deleteStudentGroup(id) {
                     },
                 })
 
-            console.log("+> data" , data)
-
             /// tratar erro
             if (data.errors){
-                dispatch(createStudentGroupFailure(data.errors[0]))
+                dispatch(createStudentGroupFailure(data.errors[0].message))
             } else {
 
                 dispatch({ type: DELETE_STUDENTS_GROUP_SUCCESS });

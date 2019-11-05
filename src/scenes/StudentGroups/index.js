@@ -65,7 +65,7 @@ class StudentGroups extends Component {
 
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.togleModal = this.togleModal.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
         this.openEditModal = this.openEditModal.bind(this);
         this.openConfirmModal = this.openConfirmModal.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
@@ -78,12 +78,12 @@ class StudentGroups extends Component {
         this.props.fetchStudentGroupList();
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props.error === null && this.props.studentGroup.id !== null) {
-            this.props.fetchStudentGroupList();
-            this.props.resetStudentGroup();
-        }
-    }
+    /*     componentDidUpdate(prevProps, prevState) {
+            if (this.props.error === null && this.props.studentGroup._id !== null) {
+                this.props.fetchStudentGroupList();
+                this.props.resetStudentGroup();
+            }
+        } */
 
     resetForm = () => {
         this.setState(INITIAL_STATE);
@@ -114,7 +114,7 @@ class StudentGroups extends Component {
                 this.setState({ errors: { message: "There is no student in this group." } })
             }
 
-            this.togleModalMessage();
+            this.toggleModalMessage();
             this.resetForm();
         } else {
             alert('ATTENTION: \rRequired fields must be filled in.')
@@ -137,15 +137,15 @@ class StudentGroups extends Component {
 
     openConfirmModal = ({ _id }) => {
         this.setState({ idDelete: _id })
-        this.togleConfirmModal();
+        this.toggleConfirmModal();
     }
 
-    togleConfirmModal = () => {
+    toggleConfirmModal = () => {
         this.setState({ confirmOpen: !this.state.confirmOpen })
     }
 
 
-    togleListStudentsModal = () => {
+    toggleListStudentsModal = () => {
         this.setState({ isListStudentsModalOpen: !this.state.isListStudentsModalOpen })
     }
 
@@ -153,31 +153,34 @@ class StudentGroups extends Component {
     openModalMessage = (groupSelected) => {
         // Create a new array with the param studentSelected as the unique element.
         this.setState({ receivers: [groupSelected] })
-        this.togleModalMessage();
+        this.toggleModalMessage();
     }
 
     openListStudentsModal = (groupSelected) => {
         this.setState({ groupSelected: groupSelected })
-        this.togleListStudentsModal();
+        this.toggleListStudentsModal();
     }
 
     handleConfirmDelete = async () => {
-        await this.props.deleteStudentGroup(this.state.idDelete)
-        this.setState({ idDelete: null })
-        this.togleConfirmModal();
+        const data = await this.props.deleteStudentGroup(this.state.idDelete)
 
-        this.props.showSuccess(`Course successfully deleted.`)
-        this.props.fetchStudentGroupList();
+        this.setState({ idDelete: null })
+        this.toggleConfirmModal();
+
+        if (!data.errors) {
+            this.props.showSuccess(`Course successfully deleted.`)
+            this.props.fetchStudentGroupList();
+        }
     }
 
     // Open or close the modal
-    togleModal = () => {
+    toggleModal = () => {
         this.resetForm();
         this.setState({ modalOpen: !this.state.modalOpen })
     };
 
     openEditModal = ({ _id, name, description }) => {
-        this.togleModal();
+        this.toggleModal();
         this.setState({ _id, name, description, isEditing: true });
     };
 
@@ -186,11 +189,14 @@ class StudentGroups extends Component {
 
         // Prepare data to be sent to backend
         var { name, description, _id } = this.state
-        await this.props.createStudentGroup({ name, description, _id: _id })
+        const data = await this.props.createStudentGroup({ name, description, _id: _id })
 
-        this.props.showSuccess(`${name} successfully saved.`)
-        this.togleModal();
-        this.resetForm();
+        if (!data.errors) {
+            this.props.showSuccess(`${name} successfully saved.`)
+            this.props.fetchStudentGroupList();
+            this.toggleModal();
+            this.resetForm();
+        }
     }
 
     handleChangeDate = (selectedDates) => {
@@ -231,27 +237,30 @@ class StudentGroups extends Component {
         this.setState({ errors, [name]: value });
     }
 
-    togleModalMessage = () => this.setState({ modalMessageOpen: !this.state.modalMessageOpen });
+    toggleModalMessage = () => this.setState({ modalMessageOpen: !this.state.modalMessageOpen });
 
     render() {
-        const { error, loading, studentGroupList } = this.props; // TODO change studentGroupList to enrollments
+        const { error, loading, courseList } = this.props; // TODO change courseList to enrollments
+
         const { modalOpen, name, description, isEditing,
             confirmOpen, isListStudentsModalOpen, groupSelected } = this.state;
+
         const { datetime, receivers, modalMessageOpen, isSendNow,
             errors /*  <= Error validation */ } = this.state;
 
-        if (error) { return <div>Error! {error.message}</div> }
-        if (errors.message) return <AlertBox error={errors} />
 
         if (loading) { return <SpinnerModal /> }
 
         return (
+
             <Container >
+                {error && <AlertBox error={error} />}
+
                 <h1>Courses </h1>
 
                 <GroupFormModal handleSubmit={this.handleFormSubmit}
                     handleChange={this.handleInputChange}
-                    handleToggleModal={this.togleModal}
+                    handleToggleModal={this.toggleModal}
                     isOpen={modalOpen}
                     name={name}
                     description={description}
@@ -260,14 +269,14 @@ class StudentGroups extends Component {
 
                 <ListStudentsModal course={groupSelected.description}
                     isOpen={isListStudentsModalOpen}
-                    handleToggleModal={this.togleListStudentsModal}
+                    handleToggleModal={this.toggleListStudentsModal}
                     studentList={groupSelected.enrollments} />
 
                 <ConfirmModal
                     isOpen={confirmOpen}
                     title="Confirm"
                     text="Are you sure you want to delete this group?"
-                    handleToggleModal={this.togleConfirmModal}
+                    handleToggleModal={this.toggleConfirmModal}
                     handleConfirm={this.handleConfirmDelete}
                 />
 
@@ -276,8 +285,8 @@ class StudentGroups extends Component {
                     isOpen={modalMessageOpen}
                     isSendNow={isSendNow}
                     handleSubmit={this.handleMessageSubmit}
-                    handleCancel={this.togleModalMessage}
-                    groupList={studentGroupList}
+                    handleCancel={this.toggleModalMessage}
+                    groupList={courseList}
                     receivers={receivers}
                     handleInputChange={this.handleInputChange}
                     handleChangeDate={this.handleChangeDate}
@@ -286,14 +295,14 @@ class StudentGroups extends Component {
                 />
 
                 <Paper elevation={1} style={{ padding: 1 + 'em' }} >
-                    <StudentGroupsList list={studentGroupList}
+                    <StudentGroupsList list={courseList}
                         openModalMessage={this.openModalMessage}
                         openEditModal={this.openEditModal}
                         openConfirmModal={this.openConfirmModal}
                         openListStudentsModal={this.openListStudentsModal} />
 
                     <div style={{ textAlign: 'right', marginRight: 19 }} >
-                        <Button color="primary" onClick={this.togleModal}>New</Button>
+                        <Button color="primary" onClick={this.toggleModal}>New</Button>
                     </div>
 
                 </Paper>
