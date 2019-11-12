@@ -8,6 +8,8 @@ import profileIcon from '../../user_icon.png';
 
 import { Delete } from '@material-ui/icons';
 
+import SpinnerModal from '../../../../components/SpinnerModal';
+
 import { fetchStudentById, makeEnrollment, deleteEnrollment } from "../../actions";
 import { Link } from 'react-router-dom'
 
@@ -26,54 +28,61 @@ class StudentsForm extends Component {
       fullname: "",
       phone: "",
       email: "",
-      group: "",
+      course: "",
 
       isConfirmModalOpened: false,
-      idGroupDelete: null,
+      idEnrollDelete: null,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  async componentDidMount() {
-    await this.fetchStudent()
+  async componentWillMount() {
+    const studentDetails = await this.fetchStudent();
     await this.props.fetchStudentGroupList();
 
-    const { studentDetails } = this.props
-    const { id, fullname, email, phone } = studentDetails
-
-    const group = studentDetails.studentGroups && studentDetails.studentGroups.length > 0 ? studentDetails.studentGroups[0].id : ""
+    //const { studentDetails } = this.props
+    const { _id, fullname, email, phone } = studentDetails
+    const course = studentDetails.enrollments && studentDetails.enrollments.length > 0 ? studentDetails.enrollments[0].course : ""
 
     this.setState({
-      id, fullname, email, phone, group
+      id: _id, fullname, email, phone, course
     })
   }
 
 
   fetchStudent = async () => {
     const studentId = this.props.match.params.studentId;
-    await this.props.fetchStudentById(studentId);
+    return await this.props.fetchStudentById(studentId);
   }
 
   handleSubmit = async () => {
-    const { id, group } = this.state
+    const { id, course } = this.state
 
-    var student = { id }
-    var studentGroup = { id: group }
+    try {
 
-    await this.props.makeEnrollment(student, studentGroup);
-    this.props.showSuccess(`Enrollment successfully created.`)
-    this.fetchStudent();
+      if (!course) {
+        this.props.showWarning(`A course should be selected.`)
+        return
+      }
 
-    this.setState({
-      group: "",
-    })
+      var student = { _id: id }
+
+      await this.props.makeEnrollment(student, { _id: course });
+      await this.fetchStudent();
+      this.props.showSuccess(`Enrollment successfully created.`)
+
+    } catch (error) {
+      this.props.showError(error)
+    } finally {
+      this.setState({ course: "" })
+    }
   }
 
   handleInputChange = (e) => {
     const target = e.target;
-    const { studentGroupList = [] } = this.props
+    const { courseList = [] } = this.props
 
     let value;
     switch (target.type) {
@@ -81,7 +90,11 @@ class StudentsForm extends Component {
         value = target.checked
         break;
       case 'select-one':
-        value = studentGroupList.find(s => s.id === target.value).id
+
+        const course = courseList.find(s => s._id === target.value)
+
+        if (course)
+          value = course._id
         break;
       default:
         value = target.value
@@ -92,27 +105,34 @@ class StudentsForm extends Component {
   }
 
   handleConfirmDelete = async () => {
-    await this.props.deleteEnrollment(this.state.idGroupDelete, this.state.id)
-    this.props.showSuccess(`Enrollment successfully removed.`)
-    this.setState({ idGroupDelete: null })
-    this.togleConfirmModal();
 
-    this.fetchStudent();
+    try {
+      this.toggleConfirmModal();
+      await this.props.deleteEnrollment(this.state.idEnrollDelete);
+      await this.fetchStudent();
+      this.props.showSuccess(`Enrollment successfully removed.`)
+
+    } catch (error) {
+      this.props.showError(error)
+    } finally {
+      this.setState({ idEnrollDelete: null })
+    }
+
   }
 
-  openConfirmModal = (group) => {
-    this.setState({ idGroupDelete: group.id })
-    this.togleConfirmModal();
+  openConfirmModal = (_id) => {
+    this.setState({ idEnrollDelete: _id })
+    this.toggleConfirmModal();
   }
 
-  togleConfirmModal = () => {
+  toggleConfirmModal = () => {
     this.setState({ isConfirmModalOpened: !this.state.isConfirmModalOpened })
   }
 
   render() {
-    const { studentDetails, studentGroupList = [] } = this.props
-    const { fullname, email, phone, group, isConfirmModalOpened } = this.state
-    const { studentGroups } = studentDetails;
+    const { loading, studentDetails, courseList = [] } = this.props
+    const { fullname, email, phone, course, isConfirmModalOpened } = this.state
+    const { enrollments } = studentDetails;
 
     var groupsFiltered = []
     let groupTable;
@@ -120,34 +140,36 @@ class StudentsForm extends Component {
     const groupList = [];
     groupList.push(<option key="firstOpt" value=""> - SELECT - </option>)
 
-    if (studentGroups && studentGroups.length > 0) {
-      groupTable = studentGroups.map((g) =>
-        <Row key={g.id}>
+    if (enrollments && enrollments.length > 0) {
+      groupTable = enrollments.map((enroll) =>
+        <Row key={enroll.course._id}>
           <Col xs="10">
-            {g.name}
+            {enroll.course.name}
           </Col>
           <Col>
-            <Delete style={{ cursor: 'pointer', marginLeft: 10 }} onClick={() => this.openConfirmModal(g)} />
+            <Delete style={{ cursor: 'pointer', marginLeft: 10 }} onClick={() => this.openConfirmModal(enroll._id)} />
           </Col>
         </Row>
       );
 
-      groupsFiltered = studentGroupList.filter(groupList => studentGroups.find(groupStudent => groupStudent.id === groupList.id) == null);
-      groupsFiltered.forEach(gf => groupList.push(<option key={gf.id} value={gf.id}>{gf.name}</option>));
+      groupsFiltered = courseList.filter(groupList => enrollments.find(e => e.course._id === groupList._id) == null);
+      groupsFiltered.forEach(gf => groupList.push(<option key={gf._id} value={gf._id}>{gf.name}</option>));
 
     } else {
-
-      studentGroupList.forEach(gf => groupList.push(<option key={gf.id} value={gf.id}>{gf.name}</option>));
+      courseList.forEach(gf => groupList.push(<option key={gf._id} value={gf._id}>{gf.name}</option>));
     }
 
     return (
+
       <Container >
+
+        {loading && <SpinnerModal />}
 
         <ConfirmModal
           isOpen={isConfirmModalOpened}
           title="Confirm"
           text="Are you sure you want to remove this course?"
-          handleToggleModal={this.togleConfirmModal}
+          handleToggleModal={this.toggleConfirmModal}
           handleConfirm={this.handleConfirmDelete}
         />
 
@@ -164,7 +186,7 @@ class StudentsForm extends Component {
                 <fieldset>
                   <div className="form-group">
                     <label className="control-label" htmlFor="txtName">Name</label>
-                    < div >
+                    <div>
                       <input id="txtName" name="fullname" type="text" placeholder="" className="form-control input-md"
                         value={fullname} readOnly />
                     </div>
@@ -192,7 +214,7 @@ class StudentsForm extends Component {
 
                       <Row>
                         <Col xs="10" >
-                          <Input type="select" name="group" id="sltGroup" onChange={this.handleInputChange} value={group}>
+                          <Input type="select" name="course" id="sltGroup" onChange={this.handleInputChange} value={course}>
                             {groupList}
                           </Input>
                         </Col>
@@ -232,7 +254,7 @@ class StudentsForm extends Component {
 }
 
 //Redux configuration
-const mapStateToProps = state => ({ ...state.studentReducer, studentGroupList: state.studentGroupReducer.studentGroupList });
+const mapStateToProps = state => ({ ...state.studentReducer, courseList: state.studentGroupReducer.courseList });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchStudentById, makeEnrollment, deleteEnrollment, fetchStudentGroupList,

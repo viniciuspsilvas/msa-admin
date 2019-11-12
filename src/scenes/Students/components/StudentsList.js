@@ -51,7 +51,7 @@ const columns = (props) => [{
 
         <span style={{ marginLeft: 5 }}>
           <Tooltip title="Details">
-            <Link to={"/students/" + row.id} style={{ cursor: 'pointer' }}>
+            <Link to={"/students/" + row._id} style={{ cursor: 'pointer' }}>
               <Visibility />
             </Link>
           </Tooltip>
@@ -59,7 +59,7 @@ const columns = (props) => [{
 
         <span style={{ marginLeft: 5 }}>
           <Tooltip title="Active">
-            <Link to={"/students/" + row.id} style={{ cursor: 'pointer' }}>
+            <Link to={"/students/" + row._id} style={{ cursor: 'pointer' }}>
               {row.isActive ? <ToggleOn /> : <ToggleOff />}
             </Link>
           </Tooltip>
@@ -93,7 +93,7 @@ actionsList.push(<option key="INACTIVE_STUDENTS" value="INACTIVE_STUDENTS">Inact
 const StudentList = props =>
   <Paper elevation={1} style={{ padding: 1 + 'em' }} >
     <ToolkitProvider
-      keyField="id"
+      keyField="_id"
       data={props.studentList}
       columns={columns(props)}
       search>

@@ -63,14 +63,14 @@ const columns = (props) => [{
 ];
 
 const defaultSorted = [{
-  dataField: 'id',
+  dataField: '_id',
   order: 'asc'
 }];
 
 export default props =>
   (
     <ToolkitProvider
-      keyField="id"
+      keyField="_id"
       data={props.list}
       columns={columns(props)}
       search>

@@ -74,12 +74,10 @@ const GET_COURSES = {
     `
 }
 
-
 // Action creator
 export function fetchStudentGroupList() {
     return dispatch => {
         dispatch(fetchStudentGroupsBegin());
-
 
         return apiClient.post("/graphql", GET_COURSES)
             .then(({ data }) => {
@@ -95,9 +93,6 @@ export function createStudentGroup(studentGroup) {
     return async dispatch => {
         try {
             dispatch(createStudentGroupBegin());
-
-
-            console.log("+> studentGroup", studentGroup)
 
             // fetch data from a url endpoint
             var data

@@ -157,19 +157,20 @@ class Students extends Component {
     }
 
     handleOnSelect = (row, isSelect) => {
+
         if (isSelect) {
             this.setState(() => ({
-                listSelectedStudents: [...this.state.listSelectedStudents, row.id]
+                listSelectedStudents: [...this.state.listSelectedStudents, row._id]
             }));
         } else {
             this.setState(() => ({
-                listSelectedStudents: this.state.listSelectedStudents.filter(x => x !== row.id)
+                listSelectedStudents: this.state.listSelectedStudents.filter(x => x !== row._id)
             }));
         }
     }
 
     handleOnSelectAll = (isSelect, rows) => {
-        const ids = rows.map(r => r.id);
+        const ids = rows.map(r => r._id);
         if (isSelect) {
             this.setState(() => ({
                 listSelectedStudents: ids
