@@ -40,7 +40,7 @@ const columns = (props) => [{
       <div>
         <span  >
 
-          {row.advices.length > 0 ? (
+          {row.device ? (
             <Tooltip title="Send notification">
               <Email style={{ cursor: 'pointer' }} onClick={() => props.openModalMessage(row)} />
             </Tooltip>

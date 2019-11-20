@@ -12,11 +12,6 @@ import PropTypes from 'prop-types';
 import './style.css'
 
 const columns = (handleSendNotif) => [{
-  dataField: 'id',
-  text: '',
-  sort: true,
-  classes: 'idColumn'
-}, {
   dataField: 'student',
   text: 'To',
   sort: true,

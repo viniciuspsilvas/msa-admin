@@ -40,9 +40,9 @@ export default function studentGroupReducer(state = initialState, action) {
         case CREATE_STUDENTS_GROUP:
             return { ...state, loading: true }
         case CREATE_STUDENTS_GROUP_SUCCESS:
-            return { ...state, studentGroup: payload.data, error: null, loading: false }
+            return { ...state, studentGroup: payload, error: null, loading: false }
         case CREATE_STUDENTS_GROUP_FAILURE:
-            error = payload || { message: payload.message };//2nd one is network or server down errors
+            error = payload || { message: payload };//2nd one is network or server down errors
             return { ...state, studentGroup: null, error: error, loading: false }
         
         case RESET_NEW_STUDENTS_GROUP:

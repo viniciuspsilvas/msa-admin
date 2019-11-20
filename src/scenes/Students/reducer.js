@@ -3,6 +3,7 @@ import {
     FETCH_STUDENTS_SUCCESS,
     FETCH_STUDENTS_FAILURE,
     FETCH_STUDENT_DETAIL_SUCCESS,
+    SEND_NOTIFICATION_SUCCESS
 } from './actions';
 
 const initialState = {
@@ -65,6 +66,13 @@ export default function studentReducer(state = initialState, action) {
             return {
                 ...state, loading: false, studentDetails: payload
             };
+
+        case SEND_NOTIFICATION_SUCCESS:
+
+            return {
+                ...state,
+                loading: false
+            }
 
         default:
             // ALWAYS have a default case in a reducer

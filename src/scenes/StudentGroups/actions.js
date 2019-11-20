@@ -64,7 +64,10 @@ const GET_COURSES = {
                 description
                 enrollments {
                     student {
+                        _id
                         fullname
+                        firstname
+                        lastname
                         phone
                         email
                     }
@@ -95,20 +98,20 @@ export function createStudentGroup(studentGroup) {
             dispatch(createStudentGroupBegin());
 
             // fetch data from a url endpoint
-            var data
+            var resp
             if (studentGroup._id) {
-                data = await apiClient
-                .post("/graphql", {
-                    query: UPDATE_COURSE,
-                    variables: {
-                        id: studentGroup._id,
-                        name: studentGroup.name,
-                        description: studentGroup.description
-                    },
-                })
+                resp = await apiClient
+                    .post("/graphql", {
+                        query: UPDATE_COURSE,
+                        variables: {
+                            id: studentGroup._id,
+                            name: studentGroup.name,
+                            description: studentGroup.description
+                        },
+                    })
 
             } else {
-                data = await apiClient
+                resp = await apiClient
                     .post("/graphql", {
                         query: CREATE_COURSE,
                         variables: {
@@ -117,8 +120,8 @@ export function createStudentGroup(studentGroup) {
                     })
             }
 
-            dispatch(createStudentGroupSuccess(data));
-            return data;
+            dispatch(createStudentGroupSuccess(resp.data.data.createCourse));
+            return resp.data;
 
         } catch (error) {
             dispatch(createStudentGroupFailure(error))
@@ -131,9 +134,9 @@ export function deleteStudentGroup(id) {
     return async dispatch => {
         try {
             dispatch(createStudentGroupBegin());
-            
+
             // fetch data from a url endpoint
-            var {data} = await apiClient
+            var { data } = await apiClient
                 .post("/graphql", {
                     query: DELETE_COURSE,
                     variables: {
@@ -142,13 +145,12 @@ export function deleteStudentGroup(id) {
                 })
 
             /// tratar erro
-            if (data.errors){
+            if (data.errors) {
                 dispatch(createStudentGroupFailure(data.errors[0].message))
             } else {
 
                 dispatch({ type: DELETE_STUDENTS_GROUP_SUCCESS });
             }
-
 
             return data;
         } catch (error) {
@@ -181,21 +183,3 @@ export function resetStudentGroup() {
         type: RESET_NEW_STUDENTS_GROUP
     }
 };
-
-
-/* export function createStudentGroup(props, tokenFromStorage) {
-    const request = apiClient({
-      method: 'post',
-      data: props,
-      //url: `${ROOT_URL}/posts`,
-      headers: {
-        'Authorization': `Bearer ${tokenFromStorage}`
-      }
-    });
-
-    return {
-      type: CREATE_STUDENTS_GROUP,
-      payload: request
-    };
-  } */
-
