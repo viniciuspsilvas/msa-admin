@@ -6,6 +6,12 @@ jobs: # a collection of steps
       - image: circleci/node:12.9.1-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout # special step to check out source code to working directory
+      - run: 
+            name: "Setup custom environment variables"
+            command: |
+              echo 'REACT_APP_SERVER_URL='${BACKEND_URL} > .env
+              echo 'NODE_PATH=src' > .env
+              cat .env
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
