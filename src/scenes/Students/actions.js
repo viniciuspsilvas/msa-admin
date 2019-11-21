@@ -176,7 +176,7 @@ export function makeEnrollment(student, course) {
 
         } catch (error) {
             dispatch({ type: FETCH_STUDENTS_FAILURE, payload: error });
-            throw "Error making enrollment."
+            throw new Error("Error making enrollment.")
         }
     }
 }
@@ -203,7 +203,7 @@ export function deleteEnrollment(id) {
 
         } catch (error) {
             dispatch({ type: FETCH_STUDENTS_FAILURE, payload: error });
-            throw "Error deleting enrollment."
+            throw new Error("Error deleting enrollment.")
         }
     }
 }
