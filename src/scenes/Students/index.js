@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux'
 
 import { Container } from 'reactstrap';
 import { fetchStudentList, sendNotification } from "./actions";
 
-import StudentList from './components/StudentsList';
-import SpinnerModal from 'components/SpinnerModal';
-import ModalMessage from 'components/ModalMessage';
+import StudentList from './components/StudentsList'
+import ModalMessage from '../../components/ModalMessage'
+import SpinnerModal from '../../components/SpinnerModal';
 
-import { showError, showWarning, showInfo, showSuccess } from "components/AlertApp/actions";
+import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
 const initialState = {
     receivers: [],
@@ -71,7 +71,7 @@ class Students extends Component {
             this.props.showSuccess(`Message successfully sent.`)
             this.togleModalMessage();
             this.resetForm();
-
+            
         } else {
             alert('ATTENTION: \rRequired fields must be filled in.')
         }
