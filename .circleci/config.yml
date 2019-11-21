@@ -10,7 +10,6 @@ jobs: # a collection of steps
             name: "Setup custom environment variables"
             command: |
               echo 'REACT_APP_SERVER_URL='${BACKEND_URL} > .env
-              echo 'NODE_PATH=src' > .env
               cat .env
       - restore_cache:
           name: Restore Yarn Package Cache
@@ -25,4 +24,9 @@ jobs: # a collection of steps
           paths:
             - ~/.cache/yarn
       - run: yarn build
+
+      - run:
+          name: check files
+          command: |
+            pwd && ls -al
 #...
