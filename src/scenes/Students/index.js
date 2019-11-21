@@ -6,8 +6,8 @@ import { Container } from 'reactstrap';
 import { fetchStudentList, sendNotification } from "./actions";
 
 import StudentList from './components/StudentsList';
-import ModalMessage from '../../components/ModalMessage';
 import SpinnerModal from '../../components/SpinnerModal';
+import ModalMessage from '../../components/ModalMessage';
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions";
 
