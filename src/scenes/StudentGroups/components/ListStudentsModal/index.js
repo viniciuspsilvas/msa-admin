@@ -19,16 +19,15 @@ const ListStudentsModal = props => {
 
     } = props;
 
-
-    const listItems = studentList.map((student) =>
-        <div className="contain" key={student.id} >
-            <div className="headerList">{student.fullname}</div>
+    const listItems = studentList.map((enroll) =>
+        <div className="contain" key={enroll._id} >
+            <div className="headerList">{enroll.student.fullname}</div>
             <div className="bodyList">
                 <span style={{ display: '-webkit-inline-box', width: 300 }}>
-                    <Email fontSize='small' /> {student.email}
+                    <Email fontSize='small' /> {enroll.student.email}
                 </span>
                 <span >
-                    <Call fontSize='small' /> {student.phone}
+                    <Call fontSize='small' /> {enroll.student.phone}
                 </span>
             </div>
         </div>

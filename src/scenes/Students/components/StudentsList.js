@@ -7,7 +7,7 @@ import { Email, Visibility, ToggleOn, ToggleOff } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
 
-import { LinkContainer } from 'react-router-bootstrap'
+import { Link } from 'react-router-dom'
 
 import SearchBox from '../../../components/SearchBox'
 
@@ -40,7 +40,7 @@ const columns = (props) => [{
       <div>
         <span  >
 
-          {row.advices.length > 0 ? (
+          {row.device ? (
             <Tooltip title="Send notification">
               <Email style={{ cursor: 'pointer' }} onClick={() => props.openModalMessage(row)} />
             </Tooltip>
@@ -51,17 +51,17 @@ const columns = (props) => [{
 
         <span style={{ marginLeft: 5 }}>
           <Tooltip title="Details">
-            <LinkContainer to={"/students/" + row.id} style={{ cursor: 'pointer' }}>
+            <Link to={"/students/" + row._id} style={{ cursor: 'pointer' }}>
               <Visibility />
-            </LinkContainer>
+            </Link>
           </Tooltip>
         </span>
 
         <span style={{ marginLeft: 5 }}>
           <Tooltip title="Active">
-            <LinkContainer to={"/students/" + row.id} style={{ cursor: 'pointer' }}>
+            <Link to={"/students/" + row._id} style={{ cursor: 'pointer' }}>
               {row.isActive ? <ToggleOn /> : <ToggleOff />}
-            </LinkContainer>
+            </Link>
           </Tooltip>
         </span>
 
@@ -93,7 +93,7 @@ actionsList.push(<option key="INACTIVE_STUDENTS" value="INACTIVE_STUDENTS">Inact
 const StudentList = props =>
   <Paper elevation={1} style={{ padding: 1 + 'em' }} >
     <ToolkitProvider
-      keyField="id"
+      keyField="_id"
       data={props.studentList}
       columns={columns(props)}
       search>

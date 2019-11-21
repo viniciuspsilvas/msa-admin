@@ -12,13 +12,13 @@ import {
 
 const initialState = {
 
-    newStudentGroup: {
+    studentGroup: {
         name: '',
-        description: ''
+        description: '',
+        id: null
     },
 
-    studentGroupList: [],
-
+    courseList: [],
     loading: false,
     error: null,
 };
@@ -32,9 +32,9 @@ export default function studentGroupReducer(state = initialState, action) {
         case FETCH_STUDENTS_GROUP_BEGIN:
             return { ...state, loading: true, error: null };
         case FETCH_STUDENTS_GROUP_SUCCESS:
-            return { ...state, loading: false, studentGroupList: payload.studentGroups };
+            return { ...state, loading: false, courseList: payload.courses };
         case FETCH_STUDENTS_GROUP_FAILURE:
-            return { ...state, loading: false, error: payload.error, studentGroupList: [] };
+            return { ...state, loading: false, error: payload.error, courseList: [] };
 
 
         case CREATE_STUDENTS_GROUP:
@@ -42,10 +42,11 @@ export default function studentGroupReducer(state = initialState, action) {
         case CREATE_STUDENTS_GROUP_SUCCESS:
             return { ...state, studentGroup: payload, error: null, loading: false }
         case CREATE_STUDENTS_GROUP_FAILURE:
-            error = payload || { message: payload.message };//2nd one is network or server down errors
+            error = payload || { message: payload };//2nd one is network or server down errors
             return { ...state, studentGroup: null, error: error, loading: false }
+        
         case RESET_NEW_STUDENTS_GROUP:
-            return { ...state, studentGroup: null, error: null, loading: false }
+            return { ...state, studentGroup: initialState.studentGroup, error: null, loading: false }
 
         default:
             return state;

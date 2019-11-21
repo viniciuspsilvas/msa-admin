@@ -1,5 +1,4 @@
 import apiClient from '../../util/apiClient';
-import config from '../../config/config'
 
 export const FETCH_STUDENTS_GROUP_BEGIN = 'FETCH_STUDENTS_GROUP_BEGIN';
 export const FETCH_STUDENTS_GROUP_SUCCESS = 'FETCH_STUDENTS_GROUP_SUCCESS';
@@ -12,15 +11,16 @@ export const RESET_NEW_STUDENTS_GROUP = 'RESET_NEW_STUDENTS_GROUP';
 
 export const DELETE_STUDENTS_GROUP_SUCCESS = 'DELETE_STUDENTS_GROUP_SUCCESS';
 
+
 // Action
 export const fetchStudentGroupsBegin = () => ({
     type: FETCH_STUDENTS_GROUP_BEGIN
 });
 
 // Action
-export const fetchStudentGroupsSuccess = studentGroups => ({
+export const fetchStudentGroupsSuccess = courses => ({
     type: FETCH_STUDENTS_GROUP_SUCCESS,
-    payload: { studentGroups }
+    payload: { courses }
 });
 
 export const fetchStudentGroupsFailure = error => ({
@@ -28,34 +28,100 @@ export const fetchStudentGroupsFailure = error => ({
     payload: { error }
 });
 
+const CREATE_COURSE = `
+mutation createCourse($course:CourseInput!) {
+    createCourse(input:$course) { 
+    _id
+    name
+  }
+}
+`
+
+const DELETE_COURSE = `
+mutation deleteCourse($id:ID!) {
+    deleteCourse (_id : $id){
+      _id
+      name
+    }
+  }
+`
+
+const UPDATE_COURSE = `
+mutation deleteCourse($id:ID!, $name:String!, $description:String ) {
+    updateCourseNameDesc(_id:$id, name:$name, description : $description ) {
+      _id
+      name
+    }
+  }
+`
+
+const GET_COURSES = {
+    query: `
+        query getCourses {
+            courses {
+                _id
+                name
+                description
+                enrollments {
+                    student {
+                        _id
+                        fullname
+                        firstname
+                        lastname
+                        phone
+                        email
+                    }
+                }
+            }
+        }
+    `
+}
+
 // Action creator
 export function fetchStudentGroupList() {
     return dispatch => {
         dispatch(fetchStudentGroupsBegin());
-        return apiClient.get(config.backend.studentGroups, { params: { filter: { include: 'students' } } })
+
+        return apiClient.post("/graphql", GET_COURSES)
             .then(({ data }) => {
-                dispatch(fetchStudentGroupsSuccess(data));
-                return data;
+                dispatch(fetchStudentGroupsSuccess(data.data.courses));
+                return data.data.courses;
             })
             .catch(error => dispatch(fetchStudentGroupsFailure(error)));
     };
 }
 
-export function createStudentGroup(newStudentGroup) {
+
+export function createStudentGroup(studentGroup) {
     return async dispatch => {
         try {
             dispatch(createStudentGroupBegin());
 
             // fetch data from a url endpoint
-            var data
-            if (newStudentGroup.id) {
-                data = await apiClient.put(config.backend.studentGroups, newStudentGroup);
+            var resp
+            if (studentGroup._id) {
+                resp = await apiClient
+                    .post("/graphql", {
+                        query: UPDATE_COURSE,
+                        variables: {
+                            id: studentGroup._id,
+                            name: studentGroup.name,
+                            description: studentGroup.description
+                        },
+                    })
+
             } else {
-                data = await apiClient.post(config.backend.studentGroups, newStudentGroup);
+                resp = await apiClient
+                    .post("/graphql", {
+                        query: CREATE_COURSE,
+                        variables: {
+                            course: studentGroup
+                        },
+                    })
             }
 
-            dispatch(createStudentGroupSuccess(data));
-            return data;
+            dispatch(createStudentGroupSuccess(resp.data.data.createCourse));
+            return resp.data;
 
         } catch (error) {
             dispatch(createStudentGroupFailure(error))
@@ -70,8 +136,21 @@ export function deleteStudentGroup(id) {
             dispatch(createStudentGroupBegin());
 
             // fetch data from a url endpoint
-            var data = await apiClient.delete(config.backend.studentGroups + "/" + id);
-            dispatch({ type: DELETE_STUDENTS_GROUP_SUCCESS });
+            var { data } = await apiClient
+                .post("/graphql", {
+                    query: DELETE_COURSE,
+                    variables: {
+                        id: id
+                    },
+                })
+
+            /// tratar erro
+            if (data.errors) {
+                dispatch(createStudentGroupFailure(data.errors[0].message))
+            } else {
+
+                dispatch({ type: DELETE_STUDENTS_GROUP_SUCCESS });
+            }
 
             return data;
         } catch (error) {
@@ -99,26 +178,8 @@ export function createStudentGroupFailure(error) {
     };
 }
 
-export function resetNewStudentGroup() {
+export function resetStudentGroup() {
     return {
         type: RESET_NEW_STUDENTS_GROUP
     }
 };
-
-
-/* export function createStudentGroup(props, tokenFromStorage) {
-    const request = apiClient({
-      method: 'post',
-      data: props,
-      //url: `${ROOT_URL}/posts`,
-      headers: {
-        'Authorization': `Bearer ${tokenFromStorage}`
-      }
-    });
-
-    return {
-      type: CREATE_STUDENTS_GROUP,
-      payload: request
-    };
-  } */
-

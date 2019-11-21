@@ -57,7 +57,7 @@ class Students extends Component {
     togleModalMessage = () => this.setState({ modalOpen: !this.state.modalOpen });
 
     // Handle of Send button
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
 
         if (this.validateForm(this.state.errors)) {
@@ -65,17 +65,32 @@ class Students extends Component {
             var { title, body, receivers, datetime, isSendNow } = this.state
 
             if (isSendNow) datetime = null; // Don't send datetime
-            let data = { title, body, receivers, datetime }
+            let message = { title, body, students: receivers, scheduledFor: datetime }
 
-            this.props.sendNotification(data);
-
+            await this.props.sendNotification(message);
             this.props.showSuccess(`Message successfully sent.`)
             this.togleModalMessage();
             this.resetForm();
+            
         } else {
             alert('ATTENTION: \rRequired fields must be filled in.')
         }
 
+    }
+
+    handleFormSubmit = async (e) => {
+        e.preventDefault();
+
+        // Prepare data to be sent to backend
+        var { name, description, _id } = this.state
+        const data = await this.props.createStudentGroup({ name, description, _id: _id })
+
+        if (!data.errors) {
+            this.props.showSuccess(`${name} successfully saved.`)
+            this.props.fetchStudentGroupList();
+            this.toggleModal();
+            this.resetForm();
+        }
     }
 
     validateForm = (errors) => {
@@ -130,6 +145,7 @@ class Students extends Component {
     }
 
     handleSelectActionChange = (event) => {
+
         switch (event.target.value) {
             case "MAKE_ENROLLMENT":
                 this.makeEnrollment();
@@ -138,6 +154,8 @@ class Students extends Component {
             case "INACTIVE_STUDENTS":
                 this.toggleStudentsActive();
                 break;
+            default:
+                return;
         }
     }
 
@@ -154,19 +172,20 @@ class Students extends Component {
     }
 
     handleOnSelect = (row, isSelect) => {
+
         if (isSelect) {
             this.setState(() => ({
-                listSelectedStudents: [...this.state.listSelectedStudents, row.id]
+                listSelectedStudents: [...this.state.listSelectedStudents, row._id]
             }));
         } else {
             this.setState(() => ({
-                listSelectedStudents: this.state.listSelectedStudents.filter(x => x !== row.id)
+                listSelectedStudents: this.state.listSelectedStudents.filter(x => x !== row._id)
             }));
         }
     }
 
     handleOnSelectAll = (isSelect, rows) => {
-        const ids = rows.map(r => r.id);
+        const ids = rows.map(r => r._id);
         if (isSelect) {
             this.setState(() => ({
                 listSelectedStudents: ids
@@ -207,7 +226,7 @@ class Students extends Component {
                     isSendNow={isSendNow}
                     handleSubmit={this.handleSubmit}
                     handleCancel={this.togleModalMessage}
-                    studentList={studentList.filter(s => s.advices.length > 0)}
+                    studentList={studentList.filter(s => s.device != null)}
                     receivers={receivers}
                     handleInputChange={this.handleInputChange}
                     handleChangeDate={this.handleChangeDate}

@@ -28,7 +28,7 @@ class AlertBox extends React.Component {
                     className="box"
                     isOpen={this.state.visible} 
                     toggle={this.onDismiss}>
-                    {error.message}
+                    {error}
                 </Alert>
             );
         } else {

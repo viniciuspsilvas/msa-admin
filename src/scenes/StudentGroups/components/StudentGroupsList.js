@@ -12,10 +12,6 @@ import SearchBox from '../../../components/SearchBox'
 import '../style.css';
 
 const columns = (props) => [{
-  dataField: 'id',
-  text: 'ID',
-  sort: true
-}, {
   dataField: 'name',
   text: 'Name',
   sort: true,
@@ -31,28 +27,34 @@ const columns = (props) => [{
   align: 'center',
 
   formatter: (cellContent, row) => {
+
     return (
-      <div>
-        <span className="iconColumn">
+      <div className="iconColumn">
+        <span >
           <Tooltip title="List students">
             <SupervisorAccount style={{ cursor: 'pointer' }} onClick={() => props.openListStudentsModal(row)} />
           </Tooltip>
         </span>
-        <span className="iconColumn">
+        <span >
           <Tooltip title="Send notification">
             <Email style={{ cursor: 'pointer' }} onClick={() => props.openModalMessage(row)} />
           </Tooltip>
         </span>
-        <span className="iconColumn">
+        <span >
           <Tooltip title="Edit">
             <Edit style={{ cursor: 'pointer' }} onClick={() => props.openEditModal(row)} />
           </Tooltip>
         </span>
-        <span className="iconColumn">
-          <Tooltip title="Delete">
-            <Delete style={{ cursor: 'pointer' }} onClick={() => props.openConfirmModal(row)} />
-          </Tooltip>
-        </span>
+
+        {!row.enrollments || row.enrollments.length === 0 ? (
+          <span >
+            <Tooltip title="Delete">
+              <Delete style={{ cursor: 'pointer' }} onClick={() => props.openConfirmModal(row)} />
+            </Tooltip>
+          </span>
+      ) : (
+        <div style={{width:130, float: 'left'}} >  </div>
+      )}
 
       </div>
     );
@@ -61,14 +63,14 @@ const columns = (props) => [{
 ];
 
 const defaultSorted = [{
-  dataField: 'id',
+  dataField: '_id',
   order: 'asc'
 }];
 
 export default props =>
   (
     <ToolkitProvider
-      keyField="id"
+      keyField="_id"
       data={props.list}
       columns={columns(props)}
       search>
