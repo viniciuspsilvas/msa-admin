@@ -13,8 +13,8 @@ import AlertBox from '../../components/AlertBox'
 import StudentGroupsList from './components/StudentGroupsList'
 import GroupFormModal from './components/GroupFormModal'
 import ConfirmModal from '../../components/ConfirmModal'
-import ModalMessage from '../../components/ModalMessage'
 import ListStudentsModal from './components/ListStudentsModal'
+import ModalMessage from '../../components/ModalMessage'
 
 import Paper from '@material-ui/core/Paper';
 
