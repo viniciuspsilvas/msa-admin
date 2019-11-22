@@ -62,7 +62,7 @@ jobs: # a collection of steps
             ssh $SSH_USER@$SSH_HOST "rm -f precache-manifest*.*"  &&
             scp -rCpv ~/msa-admin/build/* $SSH_USER@$SSH_HOST:~/public_html/
 
-    tag:
+    tagging:
       steps:
         - add_ssh_keys:
             fingerprints:
@@ -86,7 +86,7 @@ workflows:
           filters:
             branches:
               only: master
-      - tag:
+      - tagging:
           requires:
             - deploy
           filters:
