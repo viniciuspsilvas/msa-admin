@@ -23,6 +23,13 @@ jobs: # a collection of steps
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - run:
+          name: bump package version
+          command: |
+            npm version prerelease --preid=alpha -m "Bumped version number to %s [ci skip]"
+            git config user.name $CIRCLE_USERNAME
+            git push origin master
+            git push --tags
       - run: yarn build
 
       - persist_to_workspace:
@@ -37,6 +44,7 @@ jobs: # a collection of steps
   deploy:
     machine:
       enabled: true
+    working_directory: ~/msa-admin # directory where steps will run
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -55,13 +63,7 @@ jobs: # a collection of steps
             ssh $SSH_USER@$SSH_HOST "rm -f precache-manifest*.*"  &&
             scp -rCpv ~/msa-admin/build/* $SSH_USER@$SSH_HOST:~/public_html/
 
-      - run:
-          name: bump package version
-          command: |
-            npm version prerelease --preid=alpha -m "Bumped version number to %s [ci skip]"
-            git config user.name $CIRCLE_USERNAME
-            git push origin master
-            git push --tags
+
 workflows:
   version: 2
   build-and-deploy:
