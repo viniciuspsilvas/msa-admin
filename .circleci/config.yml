@@ -31,7 +31,7 @@ jobs: # a collection of steps
           name: bump package version
           command: |
             npm version prerelease --preid=alpha -m "Bumped version number to %s [ci skip]"
-            git config user.name $CIRCLE_USERNAME
+            git config --global user.name $CIRCLE_USERNAME
             git push origin master
             git push --tags
       - run: yarn build
