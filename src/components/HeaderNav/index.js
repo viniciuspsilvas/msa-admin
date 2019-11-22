@@ -28,6 +28,7 @@ const HeaderNav = (props) => {
                     <NavLink className="nav-link" activeClassName="active" to="/students">Students</NavLink>
                     <NavLink className="nav-link" activeClassName="active" to="/courses">Courses</NavLink>
                     <NavLink className="nav-link" activeClassName="active" to="/about">About</NavLink>
+                    <NavLink className="nav-link" activeClassName="active" to="/settings">Settings</NavLink>
 
                     <Nav className="ml-auto navbar-right" navbar >
                         <LogoutButton />

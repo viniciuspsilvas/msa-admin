@@ -15,7 +15,7 @@ import Home from './scenes/Home/'
 import About from './scenes/About/'
 import Messages from './scenes/Messages'
 import Login from './scenes/Login'
-//import Settings from './scenes/Settings'
+import Settings from './scenes/Settings'
 import PrivateRoute from './components/PrivateRoute';
 
 const NoMatch = () => (<div><h2>Error 404 </h2></div>)
@@ -41,6 +41,7 @@ const NoMatch = () => (<div><h2>Error 404 </h2></div>)
                         <PrivateRoute path="/students/:studentId" component={StudentsForm} />
                         <PrivateRoute exact path="/courses" component={Groups} />
                         <PrivateRoute path="/about" component={About} />
+                        <PrivateRoute path="/settings" component={Settings} />
 
                         <Route component={NoMatch} />
                     </Switch>
