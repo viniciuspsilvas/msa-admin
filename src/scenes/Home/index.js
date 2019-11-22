@@ -24,7 +24,8 @@ class HomeContainer extends Component {
             <Container >
                 <Paper elevation={1} style={{ padding: 1 + 'em' }} >
                 <img src={logo} alt='Mindroom Student App' className="rounded mx-auto d-block" />
-                        <p className="lead blockquote text-center">Mindroom Student APP - Administration</p>
+                <p className="lead blockquote text-center">Mindroom Student APP - Administration</p>
+                    <p className="lead blockquote text-center">Version : 0.1</p>
                         <hr className="my-2" />
                         <p className="blockquote text-center"> Here you can work on maintenance of students, class schedule, notifications and more.</p>
 
