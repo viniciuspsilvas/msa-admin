@@ -53,7 +53,7 @@ jobs: # a collection of steps
           command: |
             ssh $SSH_USER@$SSH_HOST "cd $SSH_PATH; rm -f precache-manifest*.*"  &&
             scp -rCpv ~/msa-admin/build/* $SSH_USER@$SSH_HOST:$SSH_PATH
-
+ 
 workflows:
   version: 2
   build-and-deploy:
