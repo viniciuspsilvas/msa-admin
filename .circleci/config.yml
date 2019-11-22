@@ -52,7 +52,7 @@ jobs: # a collection of steps
           name: Deploy Over SSH 
           command: |
             ssh $SSH_USER@$SSH_HOST "rm -f precache-manifest*.*"  &&
-            scp -rCpv ~/msa-admin/build/* $SSH_USER@$SSH_HOST
+            scp -rCpv ~/msa-admin/build/* $SSH_USER@$SSH_HOST:~/
 workflows:
   version: 2
   build-and-deploy:
