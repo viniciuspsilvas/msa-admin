@@ -4,6 +4,8 @@ import {  Container } from 'reactstrap';
 import Paper from '@material-ui/core/Paper';
 import { connect } from "react-redux";
 
+import {version} from '../../../package.json';
+
 class HomeContainer extends Component {
 
     /*
@@ -25,7 +27,7 @@ class HomeContainer extends Component {
                 <Paper elevation={1} style={{ padding: 1 + 'em' }} >
                 <img src={logo} alt='Mindroom Student App' className="rounded mx-auto d-block" />
                 <p className="lead blockquote text-center">Mindroom Student APP - Administration</p>
-                    <p className="lead blockquote text-center">Version : 0.1</p>
+                    <p className="lead blockquote text-center">Version : {version}</p>
                         <hr className="my-2" />
                         <p className="blockquote text-center"> Here you can work on maintenance of students, class schedule, notifications and more.</p>
 
