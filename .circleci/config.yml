@@ -63,6 +63,7 @@ jobs: # a collection of steps
             scp -rCpv ~/msa-admin/build/* $SSH_USER@$SSH_HOST:~/public_html/
 
     tagging:
+      working_directory: ~/msa-admin # directory where steps will run
       steps:
         - add_ssh_keys:
             fingerprints:
