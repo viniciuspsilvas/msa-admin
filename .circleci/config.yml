@@ -6,7 +6,7 @@ jobs: # a collection of steps
       - image: circleci/node:12.9.1-browsers # ...with this image as the primary container; this is where all `steps` will run
     steps: # a collection of executable commands
       - checkout # special step to check out source code to working directory
-       - add_ssh_keys:
+      - add_ssh_keys:
           fingerprints:
             - "0a:bf:14:0d:56:3b:9f:6f:de:4e:28:51:c4:02:72:01"
       - run: 
