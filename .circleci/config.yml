@@ -24,11 +24,7 @@ jobs: # a collection of steps
           paths:
             - ~/.cache/yarn
 
-      - run: # test what branch we're on.
-          name: "What branch am I on?"
-          command: echo ${CIRCLE_USERNAME}
       - run: yarn build
-
 
       - persist_to_workspace:
           root: ~/msa-admin
