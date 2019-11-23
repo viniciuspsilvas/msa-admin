@@ -20,7 +20,7 @@ class Settings extends Component {
         return (
             <Container >
                 <h1>Settings</h1>
-
+                Configurations
             </Container>
         );
     }
