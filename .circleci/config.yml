@@ -30,14 +30,8 @@ jobs: # a collection of steps
       - run: # test what branch we're on.
           name: "What branch am I on?"
           command: echo ${CIRCLE_USERNAME}
-      - run:
-          name: bump package version
-          command: |
-            git config --global user.name $CIRCLE_USERNAME 
-            npm version prerelease --preid=alpha -m "Bumped version number to %s [ci skip]"
-            git push origin master
-            git push --tags
       - run: yarn build
+
 
       - persist_to_workspace:
           root: ~/msa-admin
@@ -69,6 +63,14 @@ jobs: # a collection of steps
             pwd && ls -al  &&
             ssh $SSH_USER@$SSH_HOST "rm -f precache-manifest*.*"  &&
             scp -rCpv ~/msa-admin/build/* $SSH_USER@$SSH_HOST:~/public_html/
+
+      - run:
+          name: bump package version
+          command: |
+            git config --global user.name $CIRCLE_USERNAME 
+            npm version prerelease --preid=alpha -m "Bumped version number to %s [ci skip]"
+            git push origin master
+            git push --tags
 
 
 workflows:
