@@ -38,7 +38,7 @@ class Students extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
-        this.togleModalMessage = this.togleModalMessage.bind(this);
+        this.toggleModalMessage = this.toggleModalMessage.bind(this);
         this.openModalMessage = this.openModalMessage.bind(this);
         this.handleSelectActionChange = this.handleSelectActionChange.bind(this);
     }
@@ -51,11 +51,11 @@ class Students extends Component {
     openModalMessage = (studentSelected) => {
         // Create a new array with the param studentSelected as the unique element.
         this.setState({ receivers: [studentSelected] })
-        this.togleModalMessage();
+        this.toggleModalMessage();
     }
 
     // Open or close the modal
-    togleModalMessage = () => this.setState({ modalOpen: !this.state.modalOpen });
+    toggleModalMessage = () => this.setState({ modalOpen: !this.state.modalOpen });
 
     // Handle of Send button
     handleSubmit = async (e) => {
@@ -70,7 +70,7 @@ class Students extends Component {
 
             await this.props.sendNotification(message);
             this.props.showSuccess(`Message successfully sent.`)
-            this.togleModalMessage();
+            this.toggleModalMessage();
             this.resetForm();
             
         } else {
@@ -226,7 +226,7 @@ class Students extends Component {
                     isOpen={modalOpen}
                     isSendNow={isSendNow}
                     handleSubmit={this.handleSubmit}
-                    handleCancel={this.togleModalMessage}
+                    handleCancel={this.toggleModalMessage}
                     studentList={studentList.filter(s => s.device != null)}
                     receivers={receivers}
                     handleInputChange={this.handleInputChange}
