@@ -8,6 +8,7 @@ import { fetchStudentList, sendNotification } from "./actions";
 import StudentList from './components/StudentsList'
 import ModalMessage from '../../components/ModalMessage'
 import SpinnerModal from '../../components/SpinnerModal';
+import AlertBox from '../../components/AlertBox'
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
@@ -205,8 +206,8 @@ class Students extends Component {
         const { error, loading, studentList } = this.props;
         const { receivers, modalOpen, isSendNow, errors, datetime } = this.state;
 
-        if (error) { return <div>Error! {error.message}</div> }
         if (loading) { return <SpinnerModal /> }
+        if (error) { return <AlertBox error={error} /> }
 
         return (
             <Container >

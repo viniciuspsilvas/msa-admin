@@ -1,5 +1,4 @@
-//import apiClient from '../../util/apiClient';
-//import config from '../../config/config'
+import apiClient from '../../util/apiClient';
 
 export const FETCH_LOGIN_BEGIN = 'FETCH_LOGIN_BEGIN';
 export const FETCH_LOGIN_SUCCESS = 'FETCH_LOGIN_SUCCESS';
@@ -7,41 +6,50 @@ export const FETCH_LOGIN_FAILURE = 'FETCH_LOGIN_FAILURE';
 
 export const LOGOUT = 'LOGOUT';
 
-export const login = (userDetails) => (dispatch) => {
-    dispatch({ type: FETCH_LOGIN_BEGIN })
-
-    const token = "TOKEN DEFAULT";
-    dispatch(
-
-        // TODO Send the userDetail from the action. ATM I`m not sure in this ACTION is the best
-        // place to do it.
-        {
-            type: FETCH_LOGIN_SUCCESS,
-            payload: {
-                userDetails: userDetails,
-                token: { token }
+const LOGIN_USER = `
+        query loginUser($loginUserInput: LoginUserInput!) {
+            loginUser (loginUserInput: $loginUserInput ){
+            token
+            user{
+                    _id
+                    username
+                    isActive
+                    isAdmin
+                }
             }
         }
-    )
+    `
 
-/*     apiClient.post(config.backend.login, userDetails)
-        .then(resp => {
+export const login = userDetails => async dispatch => {
+    dispatch({ type: FETCH_LOGIN_BEGIN });
 
-            const token = resp.data;
-            dispatch(
-
-                // TODO Send the userDetail from the action. ATM I`m not sure in this ACTION is the best
-                // place to do it.
-                {
-                    type: FETCH_LOGIN_SUCCESS,
-                    payload: {
-                        userDetails: userDetails,
-                        token: { token }
-                    }
+    try {
+        const { data } = await apiClient.post("/graphql", {
+            query: LOGIN_USER,
+            variables: {
+                loginUserInput: {
+                    username: userDetails.username,
+                    password: userDetails.password
                 }
-            )
+            }
         })
-        .catch(error => dispatch({ type: FETCH_LOGIN_FAILURE, payload: error.response })) */
+
+        if (data.errors) throw new Error(data.errors[0].message)
+
+        const { token, user } = data.data.loginUser
+        localStorage.setItem('authToken', token);
+
+        dispatch({
+            type: FETCH_LOGIN_SUCCESS,
+            payload: { ...user, token }
+        })
+
+    } catch (e) {
+        dispatch({ type: FETCH_LOGIN_FAILURE, payload: e.message });
+    }
 }
 
-export const logout = () => (dispatch) => { dispatch({ type: LOGOUT }) }
+export const logout = () => dispatch => {
+    localStorage.clear();
+    dispatch({ type: LOGOUT })
+}

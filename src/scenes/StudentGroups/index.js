@@ -248,14 +248,12 @@ class StudentGroups extends Component {
         const { datetime, receivers, modalMessageOpen, isSendNow,
             errors /*  <= Error validation */ } = this.state;
 
-
         if (loading) { return <SpinnerModal /> }
+        if (error) { return <AlertBox error={error} /> }
 
         return (
 
             <Container >
-                {error && <AlertBox error={error} />}
-
                 <h1>Courses </h1>
 
                 <GroupFormModal handleSubmit={this.handleFormSubmit}

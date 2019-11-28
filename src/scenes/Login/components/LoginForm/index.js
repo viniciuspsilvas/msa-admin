@@ -20,7 +20,7 @@ const LoginForm = ({ handleSubmit, handleChange, value, /* pristine, reset, */ s
             <Form style={{ margin: 20 }} onSubmit={handleSubmit} >
                 <Field
                     required
-                    name="email"
+                    name="username"
                     label="Email"
                     component={InputLabeled}
                     validate={[required, email]}
