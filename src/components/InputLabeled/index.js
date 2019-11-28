@@ -10,7 +10,7 @@ const InputLabeled = ({ input, label, required, meta: { touched, error }, ...cus
 
     return (
         <div>
-            <Form.Group controlId="formBasicEmail">
+            <Form.Group >
                 <Form.Label className={styleLabel}>{label}{required && '*'}</Form.Label>
                
                 <Form.Control

@@ -12,22 +12,6 @@ export const RESET_NEW_STUDENTS_GROUP = 'RESET_NEW_STUDENTS_GROUP';
 export const DELETE_STUDENTS_GROUP_SUCCESS = 'DELETE_STUDENTS_GROUP_SUCCESS';
 
 
-// Action
-export const fetchStudentGroupsBegin = () => ({
-    type: FETCH_STUDENTS_GROUP_BEGIN
-});
-
-// Action
-export const fetchStudentGroupsSuccess = courses => ({
-    type: FETCH_STUDENTS_GROUP_SUCCESS,
-    payload: { courses }
-});
-
-export const fetchStudentGroupsFailure = error => ({
-    type: FETCH_STUDENTS_GROUP_FAILURE,
-    payload: { error }
-});
-
 const CREATE_COURSE = `
 mutation createCourse($course:CourseInput!) {
     createCourse(input:$course) { 
@@ -78,17 +62,19 @@ const GET_COURSES = {
 }
 
 // Action creator
-export function fetchStudentGroupList() {
-    return dispatch => {
-        dispatch(fetchStudentGroupsBegin());
+export const fetchStudentGroupList = () => async dispatch => {
+    try {
+        dispatch({ type: FETCH_STUDENTS_GROUP_BEGIN });
+        const { data } = await apiClient.post("/graphql", GET_COURSES);
 
-        return apiClient.post("/graphql", GET_COURSES)
-            .then(({ data }) => {
-                dispatch(fetchStudentGroupsSuccess(data.data.courses));
-                return data.data.courses;
-            })
-            .catch(error => dispatch(fetchStudentGroupsFailure(error)));
-    };
+        if (data.errors) throw new Error(data.errors[0].message);
+
+        dispatch({ type: FETCH_STUDENTS_GROUP_SUCCESS, payload: data.data.courses });
+        return data.data.courses;
+
+    } catch (error) {
+        dispatch({ type: FETCH_STUDENTS_GROUP_FAILURE, payload: error.message });
+    }
 }
 
 

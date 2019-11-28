@@ -31,7 +31,7 @@ export default function loginReducer(state = initialState, action) {
                 error: null
             };
         case FETCH_LOGIN_FAILURE:
-            return { ...state, isFetching: false, error: payload.error, userDetails: {} };
+            return { ...state, isFetching: false, error: payload, isAuthenticated: false,userDetails: {} };
 
         case LOGOUT:
             return {

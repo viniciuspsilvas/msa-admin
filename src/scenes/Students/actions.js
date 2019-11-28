@@ -85,17 +85,19 @@ const fetchStudentsSuccess = students => ({
 });
 
 // Action creator
-export function fetchStudentList() {
-    return dispatch => {
+export const fetchStudentList = () => async dispatch => {
+    try {
         dispatch({ type: FETCH_STUDENTS_BEGIN });
+        const { data } = await apiClient.post("/graphql", GET_STUDENTS);
 
-        return apiClient.post("/graphql", GET_STUDENTS)
-            .then(({ data }) => {
-                dispatch(fetchStudentsSuccess(data.data.students));
-                return data.data.students;
-            })
-            .catch(error => dispatch({ type: FETCH_STUDENTS_FAILURE, payload: { error } }));
-    };
+        if (data.errors)   throw new Error(data.errors[0].message);
+
+        dispatch(fetchStudentsSuccess(data.data.students));
+        return data.data.students;
+
+    } catch (error) {
+        dispatch({ type: FETCH_STUDENTS_FAILURE, payload: error.message });
+    }
 }
 
 // Action creator

@@ -25,16 +25,15 @@ const initialState = {
 
 export default function studentGroupReducer(state = initialState, action) {
     const { type, payload } = action;
-    let error;
 
     switch (type) {
 
         case FETCH_STUDENTS_GROUP_BEGIN:
             return { ...state, loading: true, error: null };
         case FETCH_STUDENTS_GROUP_SUCCESS:
-            return { ...state, loading: false, courseList: payload.courses };
+            return { ...state, loading: false, courseList: payload };
         case FETCH_STUDENTS_GROUP_FAILURE:
-            return { ...state, loading: false, error: payload.error, courseList: [] };
+            return { ...state, loading: false, error: payload, courseList: [] };
 
 
         case CREATE_STUDENTS_GROUP:
@@ -42,8 +41,7 @@ export default function studentGroupReducer(state = initialState, action) {
         case CREATE_STUDENTS_GROUP_SUCCESS:
             return { ...state, studentGroup: payload, error: null, loading: false }
         case CREATE_STUDENTS_GROUP_FAILURE:
-            error = payload || { message: payload };//2nd one is network or server down errors
-            return { ...state, studentGroup: null, error: error, loading: false }
+            return { ...state, studentGroup: null, error: payload, loading: false }
         
         case RESET_NEW_STUDENTS_GROUP:
             return { ...state, studentGroup: initialState.studentGroup, error: null, loading: false }
