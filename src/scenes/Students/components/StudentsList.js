@@ -58,11 +58,15 @@ const columns = (props) => [{
         </span>
 
         <span style={{ marginLeft: 5 }}>
-          <Tooltip title="Active">
-            <Link to={"/students/" + row._id} style={{ cursor: 'pointer' }}>
-              {row.isActive ? <ToggleOn /> : <ToggleOff />}
-            </Link>
-          </Tooltip>
+          {row.isActive ?
+            <Tooltip title="Active">
+              <ToggleOn style={{ cursor: 'pointer' }} onClick={() => props.handleToggleStudentActive(row)} />
+            </Tooltip>
+            :
+            <Tooltip title="Inactive">
+              <ToggleOff style={{ cursor: 'pointer' }} onClick={() => props.handleToggleStudentActive(row)} />
+            </Tooltip>
+          }
         </span>
 
       </div>
