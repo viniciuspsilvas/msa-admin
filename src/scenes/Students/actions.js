@@ -4,10 +4,11 @@ export const FETCH_STUDENTS_BEGIN = 'FETCH_STUDENTS_BEGIN';
 export const FETCH_STUDENTS_SUCCESS = 'FETCH_STUDENTS_SUCCESS';
 export const FETCH_STUDENTS_FAILURE = 'FETCH_STUDENTS_FAILURE';
 
-export const SEND_NOTIFICATION_SUCCESS = 'SEND_NOTIFICATION_SUCCESS';
+export const FETCH_SUCCESS = 'FETCH_SUCCESS';
 export const FETCH_STUDENT_DETAIL_SUCCESS = 'FETCH_STUDENT_DETAIL_SUCCESS';
 export const UPDATE_STUDENT_DETAIL_SUCCESS = 'UPDATE_STUDENT_DETAIL_SUCCESS';
 export const ENROLLMENT_DELETED_SUCCESS = 'ENROLLMENT_DELETED_SUCCESS'
+
 
 const CREATE_ENROLL = `
     mutation createEnrollment($enroll:EnrollmentInput!) {
@@ -35,6 +36,7 @@ const GET_STUDENTS = {
                 lastname
                 email
                 phone
+                isActive
                 device {
                     _id
                     description
@@ -78,6 +80,15 @@ const SEND_MESSAGE_BATCH = `
     }
 `
 
+const ACTIVE_STUDENT = `
+    mutation activeStudent($_id:ID!, $isActive:Boolean!) {
+        activeStudent(_id:$_id, isActive:$isActive) {
+            _id
+            isActive
+        }
+    }
+`
+
 // Action
 const fetchStudentsSuccess = students => ({
     type: FETCH_STUDENTS_SUCCESS,
@@ -90,7 +101,7 @@ export const fetchStudentList = () => async dispatch => {
         dispatch({ type: FETCH_STUDENTS_BEGIN });
         const { data } = await apiClient.post("/graphql", GET_STUDENTS);
 
-        if (data.errors)   throw new Error(data.errors[0].message);
+        if (data.errors) throw new Error(data.errors[0].message);
 
         dispatch(fetchStudentsSuccess(data.data.students));
         return data.data.students;
@@ -145,7 +156,7 @@ export const sendNotification = message => async dispatch => {
         if (data.errors) {
             throw data.errors[0].message;
         } else {
-            dispatch({ type: SEND_NOTIFICATION_SUCCESS, payload: data.data.sendMessageBatch })
+            dispatch({ type: FETCH_SUCCESS, payload: data.data.sendMessageBatch })
         }
 
         return data.data;
@@ -207,5 +218,27 @@ export function deleteEnrollment(id) {
             dispatch({ type: FETCH_STUDENTS_FAILURE, payload: error });
             throw new Error("Error deleting enrollment.")
         }
+    }
+}
+
+export const activeStudent = (id, isActive) => async dispatch => {
+    try {
+        dispatch({ type: FETCH_STUDENTS_BEGIN });
+
+        // fetch data from a url endpoint
+        var { data } = await apiClient.post("/graphql", {
+            query: ACTIVE_STUDENT,
+            variables: { _id:id, isActive }
+        })
+
+        if (data.errors) throw new Error(data.errors[0].message)
+
+        const { activeStudent } = await data.data;
+        dispatch({ type: FETCH_SUCCESS });
+        return  activeStudent;
+
+    } catch (error) {
+        dispatch({ type: FETCH_STUDENTS_FAILURE, payload: error.message });
+        throw new Error("Error updating student.")
     }
 }

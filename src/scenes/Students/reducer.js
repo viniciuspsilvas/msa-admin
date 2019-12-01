@@ -3,7 +3,7 @@ import {
     FETCH_STUDENTS_SUCCESS,
     FETCH_STUDENTS_FAILURE,
     FETCH_STUDENT_DETAIL_SUCCESS,
-    SEND_NOTIFICATION_SUCCESS
+    FETCH_SUCCESS,
 } from './actions';
 
 const initialState = {
@@ -67,7 +67,7 @@ export default function studentReducer(state = initialState, action) {
                 ...state, loading: false, studentDetails: payload
             };
 
-        case SEND_NOTIFICATION_SUCCESS:
+        case FETCH_SUCCESS:
 
             return {
                 ...state,

@@ -3,12 +3,13 @@ import { connect } from "react-redux";
 import { bindActionCreators } from 'redux'
 
 import { Container } from 'reactstrap';
-import { fetchStudentList, sendNotification } from "./actions";
+import { fetchStudentList, sendNotification, activeStudent } from "./actions";
 
 import StudentList from './components/StudentsList'
 import ModalMessage from '../../components/ModalMessage'
 import SpinnerModal from '../../components/SpinnerModal';
 import AlertBox from '../../components/AlertBox'
+import ConfirmModal from '../../components/ConfirmModal'
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
@@ -24,7 +25,10 @@ const initialState = {
         title: 'Required!',
         body: 'Required!',
         receivers: ''
-    }
+    },
+
+    student: {},
+    isOpenActiveStudentConfirmModal: false,
 }
 
 class Students extends Component {
@@ -38,7 +42,7 @@ class Students extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
-        this.togleModalMessage = this.togleModalMessage.bind(this);
+        this.toggleModalMessage = this.toggleModalMessage.bind(this);
         this.openModalMessage = this.openModalMessage.bind(this);
         this.handleSelectActionChange = this.handleSelectActionChange.bind(this);
     }
@@ -51,11 +55,11 @@ class Students extends Component {
     openModalMessage = (studentSelected) => {
         // Create a new array with the param studentSelected as the unique element.
         this.setState({ receivers: [studentSelected] })
-        this.togleModalMessage();
+        this.toggleModalMessage();
     }
 
     // Open or close the modal
-    togleModalMessage = () => this.setState({ modalOpen: !this.state.modalOpen });
+    toggleModalMessage = () => this.setState({ modalOpen: !this.state.modalOpen });
 
     // Handle of Send button
     handleSubmit = async (e) => {
@@ -70,9 +74,8 @@ class Students extends Component {
 
             await this.props.sendNotification(message);
             this.props.showSuccess(`Message successfully sent.`)
-            this.togleModalMessage();
+            this.toggleModalMessage();
             this.resetForm();
-            
         } else {
             alert('ATTENTION: \rRequired fields must be filled in.')
         }
@@ -172,6 +175,18 @@ class Students extends Component {
         // TODO continuar aqui - Exibir popup de confirmacao
     }
 
+
+    confirmToggleStudentActive = async () => {
+        const { _id, isActive } = this.state.student
+        this.toggleActiveStudentConfirmModal();
+        const resp = await this.props.activeStudent(_id, !isActive);
+
+        if (_id === resp._id && !isActive === resp.isActive){
+            await this.props.fe4tchStudentList();
+            this.props.showSuccess(`Student successfully updated.`)
+        }
+    }
+
     handleOnSelect = (row, isSelect) => {
 
         if (isSelect) {
@@ -198,13 +213,20 @@ class Students extends Component {
         }
     }
 
-    resetForm = () => {
-        this.setState(initialState);
+    resetForm = () => { this.setState(initialState); }
+
+    openActiveStudentConfirmModal = (row) => {
+        this.setState({ student: row });
+        this.toggleActiveStudentConfirmModal();
+    }
+
+    toggleActiveStudentConfirmModal = () => {
+        this.setState({ isOpenActiveStudentConfirmModal: !this.state.isOpenActiveStudentConfirmModal })
     }
 
     render() {
         const { error, loading, studentList } = this.props;
-        const { receivers, modalOpen, isSendNow, errors, datetime } = this.state;
+        const { receivers, modalOpen, isSendNow, errors, datetime, isOpenActiveStudentConfirmModal } = this.state;
 
         if (loading) { return <SpinnerModal /> }
         if (error) { return <AlertBox error={error} /> }
@@ -219,6 +241,7 @@ class Students extends Component {
                     handleOnSelect={this.handleOnSelect}
                     listSelectedStudents={this.state.listSelectedStudents}
                     handleOnSelectAll={this.handleOnSelectAll}
+                    handleToggleStudentActive={this.openActiveStudentConfirmModal}
                 />
 
                 <ModalMessage
@@ -226,7 +249,7 @@ class Students extends Component {
                     isOpen={modalOpen}
                     isSendNow={isSendNow}
                     handleSubmit={this.handleSubmit}
-                    handleCancel={this.togleModalMessage}
+                    handleCancel={this.toggleModalMessage}
                     studentList={studentList.filter(s => s.device != null)}
                     receivers={receivers}
                     handleInputChange={this.handleInputChange}
@@ -235,20 +258,24 @@ class Students extends Component {
                     errors={errors}
                 />
 
+                <ConfirmModal
+                    isOpen={isOpenActiveStudentConfirmModal}
+                    title="Confirm"
+                    text="Confirm this operation?"
+                    handleToggleModal={this.toggleActiveStudentConfirmModal}
+                    handleConfirm={this.confirmToggleStudentActive}
+                />
+
             </Container>
         )
     }
 }
 
 //Redux configuration
-const mapStateToProps = state => {
-    return ({
-        ...state.studentReducer,
-    });
-};
+const mapStateToProps = state => ({ ...state.studentReducer });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    fetchStudentList, sendNotification,
+    fetchStudentList, sendNotification, activeStudent,
     showError, showWarning, showInfo, showSuccess
 }, dispatch)
 
