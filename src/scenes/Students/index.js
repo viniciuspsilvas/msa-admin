@@ -182,7 +182,7 @@ class Students extends Component {
         const resp = await this.props.activeStudent(_id, !isActive);
 
         if (_id === resp._id && !isActive === resp.isActive){
-            await this.props.fe4tchStudentList();
+            await this.props.fetchStudentList();
             this.props.showSuccess(`Student successfully updated.`)
         }
     }
