@@ -78,18 +78,11 @@ class StudentGroups extends Component {
         this.props.fetchStudentGroupList();
     }
 
-    /*     componentDidUpdate(prevProps, prevState) {
-            if (this.props.error === null && this.props.studentGroup._id !== null) {
-                this.props.fetchStudentGroupList();
-                this.props.resetStudentGroup();
-            }
-        } */
-
     resetForm = () => {
         this.setState(INITIAL_STATE);
     }
 
-    handleMessageSubmit = (e) => {
+    handleMessageSubmit = async (e) => {
         e.preventDefault();
 
         if (this.validateForm(this.state.errors)) {
@@ -99,23 +92,22 @@ class StudentGroups extends Component {
             var studentsList = []
             receivers.forEach(group => {
                 if (group.enrollments.length > 0) {
-                    studentsList = studentsList.concat(group.enrollments.map(s => s))
+                    studentsList = studentsList.concat(group.enrollments.map(s => { return s.isActive ? s : null }))
                 }
             });
 
             if (isSendNow) datetime = null; // Don't send datetime
             let data = { title, body, severity, receivers: studentsList, datetime }
 
-            this.setState({ errors: { message: '' } })
             if (studentsList && studentsList.length > 0) {
-                this.props.sendNotification(data);
+                await this.props.sendNotification(data);
                 this.props.showSuccess(`Message successfully sent.`)
+                this.toggleModalMessage();
+                this.resetForm();
             } else {
-                this.setState({ errors: { message: "There is no student in this group." } })
+                this.props.showWarning(`There is no student in the selected group(s).`)
             }
 
-            this.toggleModalMessage();
-            this.resetForm();
         } else {
             alert('ATTENTION: \rRequired fields must be filled in.')
         }
@@ -200,7 +192,6 @@ class StudentGroups extends Component {
     }
 
     handleChangeDate = (selectedDates) => {
-
         this.setState({ datetime: selectedDates });
     }
 
@@ -302,21 +293,14 @@ class StudentGroups extends Component {
                     <div style={{ textAlign: 'right', marginRight: 19 }} >
                         <Button color="primary" onClick={this.toggleModal}>New</Button>
                     </div>
-
                 </Paper>
-
             </Container>
         );
     }
 }
 
-
 //Redux configuration
-const mapStateToProps = state => {
-    return {
-        ...state.studentGroupReducer,
-    };
-};
+const mapStateToProps = state => ({ ...state.studentGroupReducer });
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     fetchStudentGroupList, createStudentGroup, deleteStudentGroup, sendNotification,

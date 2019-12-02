@@ -47,6 +47,7 @@ const GET_COURSES = {
                 name
                 description
                 enrollments {
+                    _id
                     student {
                         _id
                         fullname
