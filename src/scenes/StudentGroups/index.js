@@ -259,7 +259,7 @@ class StudentGroups extends Component {
                 <ListStudentsModal course={groupSelected.description}
                     isOpen={isListStudentsModalOpen}
                     handleToggleModal={this.toggleListStudentsModal}
-                    studentList={groupSelected.enrollments} />
+                    enrollments={groupSelected.enrollments} />
 
                 <ConfirmModal
                     isOpen={confirmOpen}

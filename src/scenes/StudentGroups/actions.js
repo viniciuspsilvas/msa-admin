@@ -55,6 +55,7 @@ const GET_COURSES = {
                         lastname
                         phone
                         email
+                        isActive
                     }
                 }
             }

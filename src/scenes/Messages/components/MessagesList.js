@@ -122,7 +122,7 @@ const MessagesList = props => {
 
   return (
     <Paper elevation={1} style={{ padding: 1 + 'em' }} >
-      <BootstrapTable keyField='id'
+      <BootstrapTable keyField='_id'
         classes='table-sm table-responsive-lg'
         data={list}
         columns={columns(handleSendNotif)}

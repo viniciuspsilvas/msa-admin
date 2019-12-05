@@ -21,13 +21,14 @@ const initialState = {
     isSendNow: true,
     datetime: Date.now(),
     listSelectedStudents: [],
+    activeSelectedStudents: false,
+
     errors: {
         title: 'Required!',
         body: 'Required!',
         receivers: ''
     },
 
-    student: {},
     isOpenActiveStudentConfirmModal: false,
 }
 
@@ -155,8 +156,13 @@ class Students extends Component {
                 this.makeEnrollment();
                 break;
             case "ACTIVE_STUDENTS":
+                this.setState({ activeSelectedStudents: true });
+                this.toggleActiveStudentConfirmModal();
+                break;
             case "INACTIVE_STUDENTS":
-                this.toggleStudentsActive();
+
+                this.setState({ activeSelectedStudents: false });
+                this.toggleActiveStudentConfirmModal();
                 break;
             default:
                 return;
@@ -169,22 +175,14 @@ class Students extends Component {
         // TODO continuar aqui - Exibir popup de confirmacao e selecao do curso.
     }
 
-    toggleStudentsActive = () => {
-        console.log("toggleStudentsActive total: ", this.state.listSelectedStudents.length);
-
-        // TODO continuar aqui - Exibir popup de confirmacao
-    }
-
-
     confirmToggleStudentActive = async () => {
-        const { _id, isActive } = this.state.student
-        this.toggleActiveStudentConfirmModal();
-        const resp = await this.props.activeStudent(_id, !isActive);
+        const { activeSelectedStudents, listSelectedStudents } = this.state;
 
-        if (_id === resp._id && !isActive === resp.isActive){
-            await this.props.fetchStudentList();
-            this.props.showSuccess(`Student successfully updated.`)
-        }
+        this.toggleActiveStudentConfirmModal();
+        await this.props.activeStudent(listSelectedStudents, activeSelectedStudents);
+        await this.props.fetchStudentList();
+        this.resetForm();
+        this.props.showSuccess(`Student successfully updated.`)
     }
 
     handleOnSelect = (row, isSelect) => {
@@ -215,11 +213,6 @@ class Students extends Component {
 
     resetForm = () => { this.setState(initialState); }
 
-    openActiveStudentConfirmModal = (row) => {
-        this.setState({ student: row });
-        this.toggleActiveStudentConfirmModal();
-    }
-
     toggleActiveStudentConfirmModal = () => {
         this.setState({ isOpenActiveStudentConfirmModal: !this.state.isOpenActiveStudentConfirmModal })
     }
@@ -241,7 +234,6 @@ class Students extends Component {
                     handleOnSelect={this.handleOnSelect}
                     listSelectedStudents={this.state.listSelectedStudents}
                     handleOnSelectAll={this.handleOnSelectAll}
-                    handleToggleStudentActive={this.openActiveStudentConfirmModal}
                 />
 
                 <ModalMessage

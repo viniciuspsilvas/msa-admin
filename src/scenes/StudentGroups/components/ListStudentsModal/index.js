@@ -5,7 +5,6 @@ import {
     Button
 } from 'reactstrap';
 
-
 import { Email, Call } from '@material-ui/icons';
 
 import './style.css';
@@ -15,11 +14,13 @@ const ListStudentsModal = props => {
         isOpen = true,
         handleToggleModal,
         course,
-        studentList
+        enrollments
 
     } = props;
 
-    const listItems = studentList.map((enroll) =>
+    const enrollmentsActive = enrollments.filter(enroll => enroll.student.isActive)
+
+    const listItems = enrollmentsActive.map((enroll) =>
         <div className="contain" key={enroll._id} >
             <div className="headerList">{enroll.student.fullname}</div>
             <div className="bodyList">
@@ -39,12 +40,12 @@ const ListStudentsModal = props => {
                 <ModalHeader>Enrolled - {course}</ModalHeader>
                 <ModalBody>
 
-                    {studentList.length > 0 ? listItems : <div className='noEnrollFound'>No enrollment found.</div>}
+                    {enrollmentsActive.length > 0 ? listItems : <div className='noEnrollFound'>No enrollment found.</div>}
 
                 </ModalBody>
                 <ModalFooter>
 
-                    {studentList.length > 0 && <span className='totalText'>Total: {studentList.length}</span>}
+                    {enrollmentsActive.length > 0 && <span className='totalText'>Total: {enrollmentsActive.length}</span>}
 
                     <Button color="primary" className="float-right" onClick={handleToggleModal}>Close</Button>
                 </ModalFooter>
@@ -56,6 +57,6 @@ const ListStudentsModal = props => {
 export default ListStudentsModal;
 
 ListStudentsModal.propTypes = {
-    studentList: PropTypes.array.isRequired,
+    enrollments: PropTypes.array.isRequired,
     course: PropTypes.string.isRequired
 };
