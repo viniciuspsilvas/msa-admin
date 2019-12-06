@@ -47,6 +47,7 @@ const GET_COURSES = {
                 name
                 description
                 enrollments {
+                    _id
                     student {
                         _id
                         fullname
@@ -54,6 +55,7 @@ const GET_COURSES = {
                         lastname
                         phone
                         email
+                        isActive
                     }
                 }
             }

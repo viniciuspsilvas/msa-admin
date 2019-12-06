@@ -9,12 +9,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import './style.css';
 
-import Slide from '@material-ui/core/Slide';
-
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
-
 const ModalMessage = props => {
     const {
         title, text, handleToggleModal, handleConfirm,
@@ -25,7 +19,6 @@ const ModalMessage = props => {
     return (
         <Dialog
             open={isOpen}
-            TransitionComponent={Transition}
             keepMounted
             onClose={handleToggleModal}
             aria-labelledby="alert-dialog-slide-title"

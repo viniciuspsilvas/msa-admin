@@ -81,11 +81,8 @@ const SEND_MESSAGE_BATCH = `
 `
 
 const ACTIVE_STUDENT = `
-    mutation activeStudent($_id:ID!, $isActive:Boolean!) {
-        activeStudent(_id:$_id, isActive:$isActive) {
-            _id
-            isActive
-        }
+    mutation activeStudent($_ids:[ID!]!, $isActive:Boolean!) {
+        activeStudent(_ids:$_ids, isActive:$isActive)
     }
 `
 
@@ -221,21 +218,21 @@ export function deleteEnrollment(id) {
     }
 }
 
-export const activeStudent = (id, isActive) => async dispatch => {
+export const activeStudent = (ids, isActive) => async dispatch => {
     try {
         dispatch({ type: FETCH_STUDENTS_BEGIN });
 
         // fetch data from a url endpoint
         var { data } = await apiClient.post("/graphql", {
             query: ACTIVE_STUDENT,
-            variables: { _id:id, isActive }
+            variables: { _ids: ids, isActive }
         })
 
         if (data.errors) throw new Error(data.errors[0].message)
 
         const { activeStudent } = await data.data;
         dispatch({ type: FETCH_SUCCESS });
-        return  activeStudent;
+        return activeStudent;
 
     } catch (error) {
         dispatch({ type: FETCH_STUDENTS_FAILURE, payload: error.message });
