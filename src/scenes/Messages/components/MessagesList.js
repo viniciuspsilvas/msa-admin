@@ -7,11 +7,14 @@ import Drafts from '@material-ui/icons/Drafts';
 import Mail from '@material-ui/icons/Mail';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
+import { Delete } from '@material-ui/icons';
+import Tooltip from '@material-ui/core/Tooltip';
+
 import PropTypes from 'prop-types';
 
 import './style.css'
 
-const columns = (handleSendNotif) => [{
+const columns = (openConfirmDeleteModal) => [{
   dataField: 'student',
   text: 'To',
   sort: true,
@@ -32,7 +35,7 @@ const columns = (handleSendNotif) => [{
   headerAlign: 'center',
   align: 'center'
 }
-, {
+  , {
   dataField: 'sentAt',
   text: 'Sent',
   sort: true,
@@ -41,7 +44,7 @@ const columns = (handleSendNotif) => [{
   headerAlign: 'center',
   align: 'center'
 }
-, {
+  , {
   dataField: 'scheduledFor',
   text: 'Scheduled',
   sort: true,
@@ -49,9 +52,23 @@ const columns = (handleSendNotif) => [{
   classes: 'dateColumn',
   headerAlign: 'center',
   align: 'center'
-}];
+}, {
+  dataField: '',
+  text: '',
+  align: 'center',
 
+  formatter: (cellContent, row) => {
 
+    return (
+      <div className="col-1">
+        <Tooltip title="Delete">
+          <Delete style={{ cursor: 'pointer' }} onClick={() => openConfirmDeleteModal(row)} />
+        </Tooltip>
+      </div>
+    );
+  }
+}
+];
 
 function toFormatter(row) {
   return (
@@ -60,7 +77,6 @@ function toFormatter(row) {
     </span>
   );
 }
-
 
 function bodyFormatter(cell, row) {
   return (
@@ -80,44 +96,23 @@ function bodyFormatter(cell, row) {
 
 function dataFormatter(cell) {
   return (
-    <span>
-
+    <div className='col-2'>
       {cell &&
-
         <Moment titleFormat="LLLL" withTitle format="DD/MM/YY HH:mm">
           {cell}
         </Moment>
-
       }
-
-
-    </span>
+    </div>
   );
 }
-/* 
-function readIconFormatter(cell, row) {
-  //row.done
-  return (
-    <span>
-      <Send titleAccess='Send again' style={{ cursor: 'pointer' }} />
-    </span>
-  );
-} */
-
 
 const defaultSorted = [{
   dataField: 'title',
   order: 'asc'
 }];
 
-/* const selectRow = {
-  mode: 'checkbox',
-  classes: 'selectColumn'
-};
- */
 const MessagesList = props => {
-  const { list, handleSendNotif } = props;
-
+  const { list, openConfirmDeleteModal } = props;
   const indication = "There is no message created.";
 
   return (
@@ -125,7 +120,7 @@ const MessagesList = props => {
       <BootstrapTable keyField='_id'
         classes='table-sm table-responsive-lg'
         data={list}
-        columns={columns(handleSendNotif)}
+        columns={columns(openConfirmDeleteModal)}
 
         noDataIndication={indication}
         striped

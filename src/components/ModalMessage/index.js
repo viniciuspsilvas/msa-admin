@@ -76,7 +76,10 @@ const ModalMessage = props => {
                                                 value={datetime}
                                                 onChange={handleChangeDate}
                                                 options={{
-                                                    dateFormat: 'd/m/Y H:i',
+                                                    minuteIncrement: 1,
+                                                    altInput: true,
+                                                    dateFormat: 'F',
+                                                    altFormat: 'd/m/Y H:i',
                                                 }}
                                             />
                                         )}
