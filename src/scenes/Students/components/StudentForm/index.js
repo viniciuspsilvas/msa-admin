@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 
 import Paper from '@material-ui/core/Paper';
 import { Container, Row, Col, Input, Button, Form } from 'reactstrap';
-import profileIcon from '../../user_icon.png';
+import profileIcon from '../../../../images/user_icon.png';
 
 import { Delete } from '@material-ui/icons';
 
