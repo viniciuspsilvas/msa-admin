@@ -70,8 +70,8 @@ class Students extends Component {
             // Prepare data to be sent to backend
             var { title, body, receivers, datetime, isSendNow } = this.state
 
-            if (isSendNow) datetime = null; // Don't send datetime
-            let message = { title, body, students: receivers, scheduledFor: new Date(datetime).toISOString() }
+            const scheduledFor = isSendNow ? null : new Date(datetime).toISOString()
+            let message = { title, body, students: receivers, scheduledFor }
 
             await this.props.sendNotification(message);
             this.props.showSuccess(`Message successfully sent.`)

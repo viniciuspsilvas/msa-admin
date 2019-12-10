@@ -87,20 +87,22 @@ class StudentGroups extends Component {
 
         if (this.validateForm(this.state.errors)) {
             // Prepare data to be sent to backend
-            var { title, body, severity, receivers, datetime, isSendNow } = this.state
+            var { title, body, receivers, datetime, isSendNow } = this.state
 
-            var studentsList = []
+            var students = []
             receivers.forEach(group => {
-                if (group.enrollments.length > 0) {
-                    studentsList = studentsList.concat(group.enrollments.map(s => { return s.isActive ? s : null }))
+
+                const enrollmentsActive = group.enrollments.filter(enroll => enroll.student.isActive);
+                if (enrollmentsActive.length > 0) {
+                    students = students.concat(enrollmentsActive.map(enroll => enroll.student))
                 }
             });
 
-            if (isSendNow) datetime = null; // Don't send datetime
-            let data = { title, body, severity, receivers: studentsList, datetime }
+            const scheduledFor = isSendNow ? null : new Date(datetime).toISOString()
+            let message = { title, body, students, scheduledFor }
 
-            if (studentsList && studentsList.length > 0) {
-                await this.props.sendNotification(data);
+            if (students && students.length > 0) {
+                await this.props.sendNotification(message);
                 this.props.showSuccess(`Message successfully sent.`)
                 this.toggleModalMessage();
                 this.resetForm();
