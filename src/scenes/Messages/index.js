@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { fetchMessageList } from "./actions";
+import { bindActionCreators } from 'redux'
+import { fetchMessageList, deleteMessage } from "./actions";
 import { Container } from 'reactstrap';
 
 import MessagesList from "./components/MessagesList"
 import ConfirmModal from '../../components/ConfirmModal'
 import SpinnerModal from '../../components/SpinnerModal';
+
+import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
 class Messages extends Component {
 
@@ -14,32 +17,36 @@ class Messages extends Component {
 
         this.state = {
             isOpen: false,
-            msgResend: {}
+            idMessageRemove: ""
         }
-
-        //this.handleToggleModal = this.handleToggleModal.bind(this);
-        //this.handleConfirm = this.handleConfirm.bind(this);
     }
 
     componentDidMount() {
         this.props.fetchMessageList();
     }
 
-    handleSendNotif = (msg) => {
+    openConfirmDeleteModal = (msg) => {
         this.handleToggleModal();
-        this.setState({ msgResend: msg })
+        this.setState({ idMessageRemove: msg._id })
     }
 
     handleToggleModal = () => {
-        this.setState({ 
-            isOpen: !this.state.isOpen ,
-            msgResend: {}
+        this.setState({
+            isOpen: !this.state.isOpen,
+            idMessageRemove: ""
         })
     }
 
-    handleConfirm = () => {
-        window.alert("handleConfirm" + this.state.msgResend.id)
+    handleConfirm = async () => {
+        const data = await this.props.deleteMessage(this.state.idMessageRemove)
+
+        this.setState({ idMessageRemove: null })
         this.handleToggleModal();
+
+        if (!data.errors) {
+            this.props.showSuccess(`Message successfully deleted.`)
+            this.props.fetchMessageList();
+        }
     }
 
     render() {
@@ -53,12 +60,12 @@ class Messages extends Component {
         return (
             <Container >
                 <h1>Messages</h1>
-                <MessagesList list={messageList} handleSendNotif={(msg) => this.handleSendNotif(msg)} />
-               
+                <MessagesList list={messageList} openConfirmDeleteModal={(row) => this.openConfirmDeleteModal(row)} />
+
                 <ConfirmModal
                     isOpen={isOpen}
                     title="Confirm"
-                    text="Are you sure you want to resend this notification?"
+                    text="Are you sure you want to remove this message?"
                     handleToggleModal={this.handleToggleModal}
                     handleConfirm={this.handleConfirm}
                 />
@@ -68,18 +75,12 @@ class Messages extends Component {
     }
 }
 
-
 //Redux configuration
-const mapStateToProps = state => {
-    return {
-        ...state.messagesReducer,
-    };
-};
+const mapStateToProps = state => ({ ...state.messagesReducer });
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchMessageList: () => dispatch(fetchMessageList()),
-    }
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+    fetchMessageList, deleteMessage,
+    showError, showWarning, showInfo, showSuccess
+}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Messages);
