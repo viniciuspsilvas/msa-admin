@@ -71,7 +71,7 @@ class Students extends Component {
             var { title, body, receivers, datetime, isSendNow } = this.state
 
             if (isSendNow) datetime = null; // Don't send datetime
-            let message = { title, body, students: receivers, scheduledFor: datetime }
+            let message = { title, body, students: receivers, scheduledFor: new Date(datetime).toISOString() }
 
             await this.props.sendNotification(message);
             this.props.showSuccess(`Message successfully sent.`)
@@ -152,9 +152,6 @@ class Students extends Component {
     handleSelectActionChange = (event) => {
 
         switch (event.target.value) {
-            case "MAKE_ENROLLMENT":
-                this.makeEnrollment();
-                break;
             case "ACTIVE_STUDENTS":
                 this.setState({ activeSelectedStudents: true });
                 this.toggleActiveStudentConfirmModal();
@@ -167,12 +164,6 @@ class Students extends Component {
             default:
                 return;
         }
-    }
-
-    makeEnrollment = () => {
-        console.log("makeEnrollment total: ", this.state.listSelectedStudents.length);
-
-        // TODO continuar aqui - Exibir popup de confirmacao e selecao do curso.
     }
 
     confirmToggleStudentActive = async () => {

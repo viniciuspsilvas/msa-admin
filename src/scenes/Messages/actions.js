@@ -10,6 +10,7 @@ const GET_MESSAGES = {
         query getMessages {
             messages {
                 _id
+                title
                 body
                 createdAt
                 sentAt
