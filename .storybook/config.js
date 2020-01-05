@@ -2,24 +2,13 @@ import React from 'react';
 
 import { configure, addDecorator } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info'
-import store from '../src/redux/configureStore'
+import { store } from '../src/redux/configureStore'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Provider } from "react-redux";
+import StoryRouter from 'storybook-react-router';
 
 addDecorator((story, context) => withInfo(context.kind)(story)(context))
-
-/* const store = {
-  getState: () => {
-    return {
-      loginReducer: {
-        loading: false
-      }
-    };
-  },
-  subscribe: () => 0,
-  dispatch: action('dispatch'),
-};
- */
+addDecorator(StoryRouter());
 
 /**
  * Add support to Redux
@@ -37,7 +26,6 @@ const withProvider = (story) => (
 const styles = { margin: 10 };
 const CenterDecorator = storyFn => <div style={styles}>{storyFn()}</div>;
 addDecorator(CenterDecorator);
-
 
 
 /**

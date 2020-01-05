@@ -5,6 +5,8 @@ import { fetchConfigList } from "./actions";
 import { Container } from 'reactstrap';
 import SpinnerModal from '../../components/SpinnerModal';
 
+import Users from '../../scenes/Users';
+
 class Settings extends Component {
 
     componentDidMount() {
@@ -21,6 +23,8 @@ class Settings extends Component {
             <Container >
                 <h1>Settings</h1>
                 Configurations
+
+                <Users />
             </Container>
         );
     }
