@@ -3,14 +3,13 @@ import apiClient from '../../util/apiClient';
 export const FETCH_USERS_BEGIN = 'FETCH_USERS_BEGIN';
 export const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS';
 export const FETCH_USERS_FAILURE = 'FETCH_USERS_FAILURE';
-
+export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
 
 const GET_USERS = {
     query: `
         query users {
             users {
                 _id
-                username
                 password
                 email
                 firstname
@@ -21,6 +20,20 @@ const GET_USERS = {
         }
     `
 }
+
+const SAVE_USER = `
+mutation saveUser($user:UserInput!) {
+    saveUser(userInput:$user) { 
+        _id
+        email
+        password
+        firstname
+        lastname
+        isActive
+        isAdmin
+  }
+}
+`
 
 // Action creator
 export const fetchUserList = () => async dispatch => {
@@ -41,5 +54,33 @@ export const fetchUserList = () => async dispatch => {
 
     } catch (error) {
         dispatch({ type: FETCH_USERS_FAILURE, payload: error.message });
+    }
+}
+
+
+export function saveUser(user) {
+    return async dispatch => {
+        try {
+            dispatch({ type: FETCH_USERS_BEGIN });
+
+            // fetch data from a url endpoint
+            const resp = await apiClient
+                .post("/graphql", {
+                    query: SAVE_USER,
+                    variables: {
+                        user
+                    },
+                })
+
+            dispatch({
+                type: CREATE_USER_SUCCESS,
+                payload: resp.data.data.saveUser
+            });
+
+            return resp.data;
+
+        } catch (error) {
+            dispatch({ type: FETCH_USERS_FAILURE, payload: error.message });
+        }
     }
 }

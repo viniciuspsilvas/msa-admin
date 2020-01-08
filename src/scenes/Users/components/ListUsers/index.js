@@ -1,45 +1,44 @@
-import React from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+import React, { useState, useEffect } from 'react';
 
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import Tooltip from '@material-ui/core/Tooltip';
-import { Link } from 'react-router-dom'
+
+import SpinnerModal from '../../../../components/SpinnerModal';
+import AlertBox from '../../../../components/AlertBox'
+
+import { Button } from 'reactstrap';
+
+import { fetchUserList } from "../../actions";
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Edit } from '@material-ui/icons';
+
+import { Link, useRouteMatch } from "react-router-dom";
 
 import './style.css';
 
 const columns = (props) => [{
     dataField: 'firstname',
     text: 'First name',
-    sort: true,
-    align: 'left',
-    class: 'col-4'
 }, {
     dataField: 'lastname',
     text: 'Last name',
-    sort: true,
-    align: 'left',
-    class: 'col-4',
 }, {
-    dataField: 'username',
-    text: 'Username',
-    sort: true,
-    align: 'left',
-    class: 'col-3',
+    dataField: 'email',
+    text: 'Email',
 }, {
     dataField: '',
     text: '',
     align: 'center',
-    class: 'col-1',
+    style: { width: '1%' },
 
     formatter: (cellContent, row) => (
-        <div className="iconColumn">
+        <div >
             <span >
                 <Tooltip title="Edit">
-                    <Link to={"/users/" + row._id} style={{ cursor: 'pointer' }}>
-                        <Edit />
+                    <Link to={`/settings/users/newUser/${row._id}`}>
+                        <Edit style={{ cursor: 'pointer' }} color="action" />
                     </Link>
                 </Tooltip>
             </span>
@@ -49,31 +48,52 @@ const columns = (props) => [{
 ];
 
 const defaultSorted = [{
-    dataField: '_id',
+    dataField: 'firstname',
     order: 'asc'
 }];
 
-export default props =>
-    (
-        <ToolkitProvider
-            keyField="_id"
-            data={props.list}
-            columns={columns(props)}
-        >
-            {
-                props => (
-                    <BootstrapTable
-                        {...props.baseProps}
-                        striped
-                        hover
-                        condensed
-                        bootstrap4
-                        noDataIndication="There is no users created."
-                        defaultSorted={defaultSorted}
-                        pagination={paginationFactory()}
-                        headerClasses="header-class"
-                    />
-                )
-            }
-        </ToolkitProvider>
-    )
+
+export default function ListUsers(props) {
+
+    const dispatch = useDispatch();
+    const [list, setList] = useState([{}]);
+
+    let { path, url } = useRouteMatch();
+
+    const { loading, error } = useSelector(state => state.userReducer);
+
+    useEffect(() => {
+        dispatch(fetchUserList())
+            .then(result => {
+                setList(result);
+            })
+    }, []);
+
+    if (loading) { return <SpinnerModal /> }
+    if (error) { return <AlertBox error={error} /> }
+
+    if (!list || list.length === 0) { return <span >There is no users created.</span> }
+
+    return (
+        <>
+            <BootstrapTable
+                keyField='_id'
+                data={list}
+                columns={columns(props)}
+                striped
+                hover
+                condensed
+                bootstrap4
+                noDataIndication="There is no users created."
+                defaultSorted={defaultSorted}
+                pagination={paginationFactory()}
+            />
+
+            <div style={{ textAlign: 'right' }} >
+                <Link to={`${url}/newUser`}>
+                    <Button color="primary"  >New</Button>
+                </Link>
+            </div>
+        </>)
+
+}

@@ -12,7 +12,7 @@ const LOGIN_USER = `
             token
             user{
                     _id
-                    username
+                    email
                     isActive
                     isAdmin
                 }
@@ -28,7 +28,7 @@ export const login = userDetails => async dispatch => {
             query: LOGIN_USER,
             variables: {
                 loginUserInput: {
-                    username: userDetails.username,
+                    email: userDetails.email,
                     password: userDetails.password
                 }
             }
