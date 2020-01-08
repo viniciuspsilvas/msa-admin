@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import SpinnerModal from '../../../../components/SpinnerModal';
 import AlertBox from '../../../../components/AlertBox'
 
-import { showError, showWarning, showInfo, showSuccess } from "../../../../components/AlertApp/actions"
+import { showSuccess } from "../../../../components/AlertApp/actions"
 
 export default function UserForm() {
     const dispatch = useDispatch();
@@ -79,7 +79,7 @@ export default function UserForm() {
             <Row className="align-items-center">
                 <Col xs="6" style={{ textAlign: "center" }}>
                     <Icon >
-                        <img src={adminIcon} height={300} width={300} />
+                        <img src={adminIcon} height={300} width={300} alt='Admin' />
                     </Icon>
                 </Col>
 

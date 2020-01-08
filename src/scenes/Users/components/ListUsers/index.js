@@ -58,7 +58,7 @@ export default function ListUsers(props) {
     const dispatch = useDispatch();
     const [list, setList] = useState([{}]);
 
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     const { loading, error } = useSelector(state => state.userReducer);
 

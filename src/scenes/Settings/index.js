@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Col, Row } from 'reactstrap';
+import { Container } from 'reactstrap';
 import SpinnerModal from '../../components/SpinnerModal';
 
 import Paper from '@material-ui/core/Paper';
@@ -7,7 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import {
     Switch,
     Route,
-    Link, NavLink,
+    NavLink,
     useRouteMatch
 } from "react-router-dom";
 
