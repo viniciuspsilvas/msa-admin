@@ -1,36 +1,65 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { bindActionCreators } from 'redux'
-import { fetchConfigList } from "./actions";
+import React from 'react';
 import { Container } from 'reactstrap';
 import SpinnerModal from '../../components/SpinnerModal';
 
-class Settings extends Component {
+import Paper from '@material-ui/core/Paper';
 
-    componentDidMount() {
-        // this.props.fetchConfigList();
-    }
+import {
+    Switch,
+    Route,
+    NavLink,
+    useRouteMatch
+} from "react-router-dom";
 
-    render() {
-        const { error, loading } = this.props;
+import Users from '../../scenes/Users/components/UserForm';
+import ListUsers from '../../scenes/Users/components/ListUsers';
 
-        if (error) { return <div>Error! {error.message}</div> }
-        if (loading) { return <SpinnerModal /> }
+export default function Settings() {
 
-        return (
-            <Container >
-                <h1>Settings</h1>
-                Configurations
-            </Container>
-        );
-    }
+    let { path, url } = useRouteMatch();
+
+    const { error, loading } = {}//this.props;
+
+    if (error) { return <div>Error! {error.message}</div> }
+    if (loading) { return <SpinnerModal /> }
+
+    return (
+        <Container >
+            <h1>Settings</h1>
+            <Paper elevation={1} style={{ padding: 1 + 'em' }} >
+
+                <div className="row">
+                    <div className="col-3">
+                        <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <NavLink to={`${url}/rendering`}>Moodle</NavLink>
+                            <NavLink to={`${url}/users`}>Users</NavLink>
+                        </div>
+                    </div>
+
+                    <div className="col-9">
+                        <div className="tab-content" id="v-pills-tabContent">
+                            <Switch>
+                                <Route exact path={path}>
+                                    <span>Please select a setting.</span>
+                                </Route>
+
+                                <Route exact path={`${path}/users`}>
+                                    <ListUsers />
+                                </Route>
+
+                                <Route path={`${path}/users/newUser/:id`}>
+                                    <Users />
+                                </Route>
+
+                                <Route path={`${path}/users/newUser`}>
+                                    <Users />
+                                </Route>
+                            </Switch>
+                        </div>
+                    </div>
+                </div>
+
+            </Paper>
+        </Container >
+    );
 }
-
-
-//Redux configuration
-const mapStateToProps = state => ({ ...state.settingsReducer, ...state.loginReducer });
-
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchConfigList }, dispatch)
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
-

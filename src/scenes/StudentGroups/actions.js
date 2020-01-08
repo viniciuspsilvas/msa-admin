@@ -31,7 +31,7 @@ mutation deleteCourse($id:ID!) {
 `
 
 const UPDATE_COURSE = `
-mutation deleteCourse($id:ID!, $name:String!, $description:String ) {
+mutation updateCourseNameDesc($id:ID!, $name:String!, $description:String ) {
     updateCourseNameDesc(_id:$id, name:$name, description : $description ) {
       _id
       name
