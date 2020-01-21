@@ -27,6 +27,13 @@ const columns = (openConfirmDeleteModal) => [{
   formatter: bodyFormatter,
   classes: 'bodyColumn'
 }, {
+  dataField: 'student.email',
+  text: 'Email',
+  sort: true,
+  headerAlign: 'center',
+  align: 'center'
+}
+, {
   dataField: 'createdAt',
   text: 'Created',
   sort: true,
