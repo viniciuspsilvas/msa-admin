@@ -12,6 +12,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import PropTypes from 'prop-types';
 
+import { UncontrolledCollapse, Button } from 'reactstrap';
+
 import './style.css'
 
 const columns = (openConfirmDeleteModal) => [{
@@ -33,7 +35,7 @@ const columns = (openConfirmDeleteModal) => [{
   headerAlign: 'center',
   align: 'center'
 }
-, {
+  , {
   dataField: 'createdAt',
   text: 'Created',
   sort: true,
@@ -88,15 +90,18 @@ function toFormatter(row) {
 function bodyFormatter(cell, row) {
   return (
     <div>
+      <Button outline color="link" size="sm" id={`toggler_${row._id}`}>+</Button>
       <span>
         {row.isRead ? <Drafts className='bodyTextTable' titleAccess='Read' /> : <Mail titleAccess='Unread' />}
         {'  '}
         {row.title}
       </span>
-      {' - '}
-      <span className='bodyTextTable'>
-        {cell.substring(0, 45).concat("... ")}
-      </span>
+
+      <UncontrolledCollapse toggler={`#toggler_${row._id}`}>
+        <span className='bodyTextTable'>
+          {cell}
+        </span>
+      </UncontrolledCollapse>
     </div>
   );
 }
@@ -134,16 +139,11 @@ const MessagesList = props => {
         hover
         condensed
         defaultSorted={defaultSorted}
-
         pagination={paginationFactory()}
       />
     </Paper>
   )
 }
 
-MessagesList.propTypes = {
-  list: PropTypes.array.isRequired,
-  handleSendNotif: PropTypes.func,
-};
 
 export default MessagesList
