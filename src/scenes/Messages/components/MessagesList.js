@@ -9,9 +9,6 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 
 import { Delete } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
-
-import PropTypes from 'prop-types';
-
 import { UncontrolledCollapse, Button } from 'reactstrap';
 
 import './style.css'
