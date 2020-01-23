@@ -20,6 +20,7 @@ const GET_MESSAGES = {
                     fullname
                     firstname
                     lastname
+                    email
                 }
             }
         }
