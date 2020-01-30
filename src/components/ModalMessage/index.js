@@ -80,6 +80,13 @@ const ModalMessage = props => {
                                                     altInput: true,
                                                     dateFormat: 'F',
                                                     altFormat: 'd/m/Y H:i',
+                                                    disable: [
+                                                        function (date) {
+                                                            var today = new Date();
+                                                            today.setMinutes(today.getMinutes() - 3)
+                                                            return (date < today);
+                                                        }
+                                                    ]
                                                 }}
                                             />
                                         )}
