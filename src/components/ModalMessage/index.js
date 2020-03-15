@@ -58,7 +58,7 @@ const ModalMessage = props => {
                                     placeholder="Choose a receiver..." />
                             }
 
-                            {errors.receivers.length > 0 &&
+                            {errors && errors.receivers && errors.receivers.length > 0 &&
                                 <span className='error'>{errors.receivers}</span>}
                         </FormGroup>
 
