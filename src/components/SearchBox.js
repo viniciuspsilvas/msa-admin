@@ -12,12 +12,15 @@ const SearchBox = (props) => {
       <Col >
         <input
           className="form-control"
+          placeholder="Search..."
           ref={n => input = n}
           type="text"
         />
       </Col>
       <Col sm="2">
-        <button className="btn btn-info" onClick={handleClick}>Search</button>
+        <div style={{ textAlign: 'right' }} >
+          <button className="btn btn-info" onClick={handleClick}>Search</button>
+        </div>
       </Col>
     </Row>
   );
