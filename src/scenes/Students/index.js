@@ -139,8 +139,7 @@ class Students extends Component {
                 <ModalMessage
                     isOpen={modalOpen}
                     toggle={this.toggleModalMessage}
-                    onSend={this.onSend}
-                    isLoading={loading}
+                    to="Student"
                 />
 
                 { loading && <SpinnerModal /> }

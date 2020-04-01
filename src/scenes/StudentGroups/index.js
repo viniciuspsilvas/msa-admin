@@ -7,21 +7,19 @@ import { sendNotification } from "../Students/actions";
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
-import { Container } from 'reactstrap';
+import { Container, Button, Row, Column} from 'reactstrap';
 
 import AlertBox from '../../components/AlertBox'
 import StudentGroupsList from './components/StudentGroupsList'
 import GroupFormModal from './components/GroupFormModal'
 import ConfirmModal from '../../components/ConfirmModal'
 import ListStudentsModal from './components/ListStudentsModal'
-import ModalMessage from '../../components/ModalMessage'
+import ModalMessage from '../../components/ModalMessage_NEW'
 
 import Paper from '@material-ui/core/Paper';
-
 import SpinnerModal from '../../components/SpinnerModal';
 
 import './style.css';
-import { Button } from 'reactstrap';
 
 const INITIAL_STATE = {
     id: null,
@@ -33,11 +31,6 @@ const INITIAL_STATE = {
 
     modalMessageOpen: false,
     receivers: [],
-    title: '',
-    body: '',
-    severity: '',
-    isSendNow: true,
-    datetime: Date.now(),
     isEditing: false,
 
     groupSelected: {
@@ -68,9 +61,7 @@ class StudentGroups extends Component {
         this.toggleModal = this.toggleModal.bind(this);
         this.openEditModal = this.openEditModal.bind(this);
         this.openConfirmModal = this.openConfirmModal.bind(this);
-        this.handleChangeDate = this.handleChangeDate.bind(this);
         this.openModalMessage = this.openModalMessage.bind(this);
-        this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this.openListStudentsModal = this.openListStudentsModal.bind(this);
     }
 
@@ -82,52 +73,6 @@ class StudentGroups extends Component {
         this.setState(INITIAL_STATE);
     }
 
-    handleMessageSubmit = async (e) => {
-        e.preventDefault();
-
-        if (this.validateForm(this.state.errors)) {
-            // Prepare data to be sent to backend
-            var { title, body, receivers, datetime, isSendNow } = this.state
-
-            var students = []
-            receivers.forEach(group => {
-
-                const enrollmentsActive = group.enrollments.filter(enroll => enroll.student.isActive);
-                if (enrollmentsActive.length > 0) {
-                    students = students.concat(enrollmentsActive.map(enroll => enroll.student))
-                }
-            });
-
-            const scheduledFor = isSendNow ? null : new Date(datetime).toISOString()
-            let message = { title, body, students, scheduledFor }
-
-            if (students && students.length > 0) {
-                await this.props.sendNotification(message);
-                this.props.showSuccess(`Message successfully sent.`)
-                this.toggleModalMessage();
-                this.resetForm();
-            } else {
-                this.props.showWarning(`There is no student in the selected group(s).`)
-            }
-
-        } else {
-            alert('ATTENTION: \rRequired fields must be filled in.')
-        }
-    }
-
-    validateForm = (errors) => {
-        let valid = true;
-        errors.receivers =
-            this.state.receivers.length === 0
-                ? 'At least one receiver must be selected.'
-                : '';
-
-        Object.values(errors).forEach(
-            // if we have an error string set valid to false
-            (val) => val.length > 0 && (valid = false)
-        );
-        return valid;
-    }
 
     openConfirmModal = ({ _id }) => {
         this.setState({ idDelete: _id })
@@ -193,14 +138,6 @@ class StudentGroups extends Component {
         }
     }
 
-    handleChangeDate = (selectedDates) => {
-        this.setState({ datetime: selectedDates });
-    }
-
-    handleChangeReceiver = (selected) => {
-        this.setState({ receivers: selected });
-    }
-
     handleInputChange = (event) => {
         event.preventDefault();
 
@@ -236,10 +173,8 @@ class StudentGroups extends Component {
         const { error, loading, courseList } = this.props; // TODO change courseList to enrollments
 
         const { modalOpen, name, description, isEditing,
-            confirmOpen, isListStudentsModalOpen, groupSelected } = this.state;
-
-        const { datetime, receivers, modalMessageOpen, isSendNow,
-            errors /*  <= Error validation */ } = this.state;
+            confirmOpen, isListStudentsModalOpen, groupSelected ,
+            modalMessageOpen} = this.state;
 
         if (loading) { return <SpinnerModal /> }
         if (error) { return <AlertBox error={error} /> }
@@ -247,7 +182,7 @@ class StudentGroups extends Component {
         return (
 
             <Container >
-                <h1>Courses </h1>
+                
 
                 <GroupFormModal handleSubmit={this.handleFormSubmit}
                     handleChange={this.handleInputChange}
@@ -272,29 +207,24 @@ class StudentGroups extends Component {
                 />
 
                 <ModalMessage
-                    datetime={datetime}
                     isOpen={modalMessageOpen}
-                    isSendNow={isSendNow}
-                    handleSubmit={this.handleMessageSubmit}
-                    handleCancel={this.toggleModalMessage}
-                    groupList={courseList}
-                    receivers={receivers}
-                    handleInputChange={this.handleInputChange}
-                    handleChangeDate={this.handleChangeDate}
-                    handleChangeReceiver={this.handleChangeReceiver}
-                    errors={errors}
+                    toggle={this.toggleModalMessage}
+                    to="Course"
                 />
 
                 <Paper elevation={1} style={{ padding: 1 + 'em' }} >
+                    <h1>Courses </h1>
+
+                    <div style={{ textAlign: 'right', marginRight: 19 }} >
+                        <Button color="primary" onClick={this.toggleModal}>New</Button>
+                    </div>
+
                     <StudentGroupsList list={courseList}
                         openModalMessage={this.openModalMessage}
                         openEditModal={this.openEditModal}
                         openConfirmModal={this.openConfirmModal}
                         openListStudentsModal={this.openListStudentsModal} />
 
-                    <div style={{ textAlign: 'right', marginRight: 19 }} >
-                        <Button color="primary" onClick={this.toggleModal}>New</Button>
-                    </div>
                 </Paper>
             </Container>
         );

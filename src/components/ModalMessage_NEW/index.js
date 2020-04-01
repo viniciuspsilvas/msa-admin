@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, Row, Col, Container, Button } from 'reactstrap';
 
-import SpinnerModal from '../SpinnerModal';
 import { showSuccess } from "../AlertApp/actions"
 
 // Import as a module in your JS
@@ -19,16 +18,14 @@ import { fetchStudentList, sendNotification } from "../../scenes/Students/action
 import './style.css';
 import 'flatpickr/dist/themes/material_blue.css'
 
-export default function ModalMessage({ isOpen, toggle }) {
+export default function ModalMessage({ isOpen, toggle, to }) {
     const { register, handleSubmit, errors, reset, control } = useForm();
-    const dispatch = useDispatch();
 
-    const [isToStudents, setIsToStudents] = useState(true)
+    const [isToStudents, setIsToStudents] = useState(to === 'Student')
     const [isSendNow, setIsSendNow] = useState(true)
-    const [isLoading, setIsLoading] = useState(false)
     const [listReceivers, setListReceivers] = useState([])
 
-    const [receiverType, setReceiverType] = useState('Students')
+    const dispatch = useDispatch();
 
     const courseList = useSelector(state => state.studentGroupReducer.courseList);
     const studentList = useSelector(state => state.studentReducer.studentList);
@@ -158,43 +155,43 @@ export default function ModalMessage({ isOpen, toggle }) {
                                 <Label for="isSendNow">Now</Label>
                             </Col>
                         </Row>
+                        {to == null &&
+                            <Row style={{ marginBottom: 15 }}>
+                                <Col md={3}>
+                                    <div className="form-check">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="toRadio"
+                                            id="studentRadio"
+                                            checked={isToStudents}
+                                            onChange={radioChangeHandler}
+                                            value="Students"
+                                        />
 
-                        <Row style={{ marginBottom: 15 }}>
-                            <Col md={3}>
-                                <div className="form-check">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="toRadio"
-                                        id="studentRadio"
-                                        checked={isToStudents}
-                                        onChange={radioChangeHandler}
-                                        value="Students"
-                                    />
-
-                                    <label className="form-check-label" htmlFor="studentRadio">
-                                        Students
+                                        <label className="form-check-label" htmlFor="studentRadio">
+                                            Students
                                     </label>
-                                </div>
-                            </Col>
-                            <Col md={3}>
-                                <div className="form-check">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="toRadio"
-                                        id="courseRadio"
-                                        checked={!isToStudents}
-                                        onChange={radioChangeHandler}
-                                        value="Courses"
-                                    />
-                                    <label className="form-check-label" htmlFor="courseRadio">
-                                        Courses
+                                    </div>
+                                </Col>
+                                <Col md={3}>
+                                    <div className="form-check">
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            name="toRadio"
+                                            id="courseRadio"
+                                            checked={!isToStudents}
+                                            onChange={radioChangeHandler}
+                                            value="Courses"
+                                        />
+                                        <label className="form-check-label" htmlFor="courseRadio">
+                                            Courses
                                     </label>
-                                </div>
-                            </Col>
-                        </Row>
-
+                                    </div>
+                                </Col>
+                            </Row>
+                        }
                         <Label for="toIpt">To <small>  {isToStudents ? '(Students)' : '(Courses)'} </small></Label>
 
                         <FormGroup>
