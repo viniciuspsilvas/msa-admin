@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux'
 
+import Paper from '@material-ui/core/Paper';
 import { Container } from 'reactstrap';
 import { fetchStudentList, activeStudent } from "./actions";
 
@@ -10,6 +11,8 @@ import ModalMessage from '../../components/ModalMessage'
 import SpinnerModal from '../../components/SpinnerModal';
 import AlertBox from '../../components/AlertBox'
 import ConfirmModal from '../../components/ConfirmModal'
+
+import TitleAction from '../../components/TitleAction'
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
@@ -25,10 +28,8 @@ class Students extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = initialState;
 
-        //Binds
         this.toggleModalMessage = this.toggleModalMessage.bind(this);
         this.openModalMessage = this.openModalMessage.bind(this);
         this.handleSelectActionChange = this.handleSelectActionChange.bind(this);
@@ -128,30 +129,14 @@ class Students extends Component {
         const { error, loading, studentList } = this.props;
         const { modalOpen, isOpenActiveStudentConfirmModal } = this.state;
 
-        
         if (error) { return <AlertBox error={error} /> }
-        
         return (
             <Container >
-                
-                <h1>Students</h1>
-
                 <ModalMessage
                     isOpen={modalOpen}
                     toggle={this.toggleModalMessage}
                     to="Student"
                 />
-
-                { loading && <SpinnerModal /> }
-
-                <StudentList studentList={studentList}
-                    openModalMessage={this.openModalMessage}
-                    handleSelectActionChange={this.handleSelectActionChange}
-                    handleOnSelect={this.handleOnSelect}
-                    listSelectedStudents={this.state.listSelectedStudents}
-                    handleOnSelectAll={this.handleOnSelectAll}
-                />
-
                 <ConfirmModal
                     isOpen={isOpenActiveStudentConfirmModal}
                     title="Confirm"
@@ -160,6 +145,18 @@ class Students extends Component {
                     handleConfirm={this.confirmToggleStudentActive}
                 />
 
+                {loading && <SpinnerModal />}
+
+                <Paper elevation={1} style={{ padding: 1 + 'em' }} >
+                    <TitleAction title="Students" />
+                    <StudentList studentList={studentList}
+                        openModalMessage={this.openModalMessage}
+                        handleSelectActionChange={this.handleSelectActionChange}
+                        handleOnSelect={this.handleOnSelect}
+                        listSelectedStudents={this.state.listSelectedStudents}
+                        handleOnSelectAll={this.handleOnSelectAll}
+                    />
+                </Paper>
             </Container>
         )
     }
