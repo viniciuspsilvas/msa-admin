@@ -128,12 +128,22 @@ class Students extends Component {
         const { error, loading, studentList } = this.props;
         const { modalOpen, isOpenActiveStudentConfirmModal } = this.state;
 
-        if (loading) { return <SpinnerModal /> }
+        
         if (error) { return <AlertBox error={error} /> }
-
+        
         return (
             <Container >
+                
                 <h1>Students</h1>
+
+                <ModalMessage
+                    isOpen={modalOpen}
+                    toggle={this.toggleModalMessage}
+                    onSend={this.onSend}
+                    isLoading={loading}
+                />
+
+                { loading && <SpinnerModal /> }
 
                 <StudentList studentList={studentList}
                     openModalMessage={this.openModalMessage}
@@ -141,13 +151,6 @@ class Students extends Component {
                     handleOnSelect={this.handleOnSelect}
                     listSelectedStudents={this.state.listSelectedStudents}
                     handleOnSelectAll={this.handleOnSelectAll}
-                />
-
-                <ModalMessage
-                    isOpen={modalOpen}
-                    toggle={this.toggleModalMessage}
-                    onSend={this.onSend}
-                    isLoading={loading}
                 />
 
                 <ConfirmModal

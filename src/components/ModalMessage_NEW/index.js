@@ -19,25 +19,28 @@ import { fetchStudentList, sendNotification } from "../../scenes/Students/action
 import './style.css';
 import 'flatpickr/dist/themes/material_blue.css'
 
-export default function ModalMessage({ isLoading, isOpen, toggle }) {
-    const [isToStudents, setIsToStudents] = useState(true)
-    const [isSendNow, setIsSendNow] = useState(true)
-    const [listReceivers, setListReceivers] = useState([])
-
+export default function ModalMessage({ isOpen, toggle }) {
     const { register, handleSubmit, errors, reset, control } = useForm();
     const dispatch = useDispatch();
+
+    const [isToStudents, setIsToStudents] = useState(true)
+    const [isSendNow, setIsSendNow] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
+    const [listReceivers, setListReceivers] = useState([])
+
+    const [receiverType, setReceiverType] = useState('Students')
 
     const courseList = useSelector(state => state.studentGroupReducer.courseList);
     const studentList = useSelector(state => state.studentReducer.studentList);
 
     const onSubmit = (data) => {
-        const { receivers, datetime, title, body } = data;
+        const { datetime, title, body } = data;
 
         var students = []
         if (isToStudents) {
-            students = receivers
+            students = listReceivers
         } else {
-            receivers.forEach(group => {
+            listReceivers.forEach(group => {
                 const enrollmentsActive = group.enrollments.filter(enroll => enroll.student.isActive);
                 if (enrollmentsActive.length > 0) {
                     students = students.concat(enrollmentsActive.map(enroll => enroll.student))
@@ -52,24 +55,27 @@ export default function ModalMessage({ isLoading, isOpen, toggle }) {
         close();
     };
 
+    const radioChangeHandler = (event) => {
+        const { value } = event.target
+        setIsToStudents(value === 'Students')
+        setListReceivers([])
+
+        if (value === 'Students') {
+            dispatch(fetchStudentList())
+
+        } else if (value === 'Courses') {
+            dispatch(fetchStudentGroupList())
+
+        } else {
+            throw new Error(`Radio value ${value} invalid.`)
+        }
+
+    }
+
     const close = () => {
         reset();
         toggle();
     }
-    /* 
-        useEffect(() => {
-            if (isToStudents) {
-                dispatch(fetchStudentList())
-            } else {
-                dispatch(fetchStudentGroupList())
-            }
-        }, []); */
-
-    var  optsReceivers = isToStudents ? { labelKey: "fullname", options: studentList } : { labelKey: "name", options: courseList };
-    useEffect(() => {
-        setListReceivers([])
-        optsReceivers = isToStudents ? { labelKey: "fullname", options: studentList } : { labelKey: "name", options: courseList };
-    }, [isToStudents])
 
     const InvalidFeedback = ({ field }) => {
         if (errors[field]) {
@@ -79,7 +85,26 @@ export default function ModalMessage({ isLoading, isOpen, toggle }) {
         }
     }
 
-    if (isLoading) return <SpinnerModal />
+    const ReceiversDropDown = () => {
+        var optsReceivers = isToStudents ? { labelKey: "fullname", options: studentList } : { labelKey: "name", options: courseList };
+
+        return <Controller
+            as={<Typeahead id='receivers' />}
+            control={control}
+            name="receivers"
+            rules={{ validate: value => (value && value.length > 0 || 'Field required.') }}
+            multiple
+            selected={listReceivers}
+            defaultValues={[]}
+            onChange={([selected]) => {
+                setListReceivers(selected)
+                return { value: selected };
+            }}
+            placeholder="Choose a receiver..."
+            {...optsReceivers}
+        >
+        </Controller>
+    }
 
     return (
         <Container>
@@ -137,9 +162,16 @@ export default function ModalMessage({ isLoading, isOpen, toggle }) {
                         <Row style={{ marginBottom: 15 }}>
                             <Col md={3}>
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="toRadio" id="studentRadio"
+                                    <input
+                                        className="form-check-input"
+                                        type="radio"
+                                        name="toRadio"
+                                        id="studentRadio"
                                         checked={isToStudents}
-                                        onChange={() => setIsToStudents(!isToStudents)} />
+                                        onChange={radioChangeHandler}
+                                        value="Students"
+                                    />
+
                                     <label className="form-check-label" htmlFor="studentRadio">
                                         Students
                                     </label>
@@ -147,9 +179,15 @@ export default function ModalMessage({ isLoading, isOpen, toggle }) {
                             </Col>
                             <Col md={3}>
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="toRadio" id="courseRadio"
+                                    <input
+                                        className="form-check-input"
+                                        type="radio"
+                                        name="toRadio"
+                                        id="courseRadio"
                                         checked={!isToStudents}
-                                        onChange={() => setIsToStudents(!isToStudents)} />
+                                        onChange={radioChangeHandler}
+                                        value="Courses"
+                                    />
                                     <label className="form-check-label" htmlFor="courseRadio">
                                         Courses
                                     </label>
@@ -160,22 +198,7 @@ export default function ModalMessage({ isLoading, isOpen, toggle }) {
                         <Label for="toIpt">To <small>  {isToStudents ? '(Students)' : '(Courses)'} </small></Label>
 
                         <FormGroup>
-                            <Controller
-                                as={<Typeahead id='receivers' />}
-                                control={control}
-                                name="receivers"
-                                rules={{ validate: value => (value && value.length > 0 || 'Field required.') }}
-                                multiple
-                                selected={listReceivers}
-                                defaultValues={[]}
-                                onChange={([selected]) => {
-                                    setListReceivers(selected)
-                                    return { value: selected };
-                                }}
-                                placeholder="Choose a receiver..."
-                                {...optsReceivers}
-                            >
-                            </Controller>
+                            <ReceiversDropDown />
                             <InvalidFeedback field='receivers' />
                         </FormGroup>
 
