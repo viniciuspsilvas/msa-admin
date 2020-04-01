@@ -2,27 +2,34 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux'
 import { fetchMessageList, deleteMessage } from "./actions";
-import { Container } from 'reactstrap';
+import Paper from '@material-ui/core/Paper';
+import { Container, Button } from 'reactstrap';
 
+import ModalMessage from '../../components/ModalMessage'
 import MessagesList from "./components/MessagesList"
 import ConfirmModal from '../../components/ConfirmModal'
 import SpinnerModal from '../../components/SpinnerModal';
+import TitleAction from '../../components/TitleAction'
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
 class Messages extends Component {
-
     constructor(props) {
         super(props)
 
         this.state = {
             isOpen: false,
-            idMessageRemove: ""
+            idMessageRemove: "",
+            modalMessageOpen: false,
         }
     }
 
     componentDidMount() {
         this.props.fetchMessageList();
+    }
+
+    componentDidUpdate() {
+      //  this.props.fetchMessageList();
     }
 
     openConfirmDeleteModal = (msg) => {
@@ -49,19 +56,16 @@ class Messages extends Component {
         }
     }
 
+    toggleModalMessage = () => this.setState({ modalMessageOpen: !this.state.modalMessageOpen });
+
     render() {
         const { error, loading, messageList } = this.props;
-        const { isOpen } = this.state;
+        const { isOpen, modalMessageOpen } = this.state;
 
         if (error) { return <div>Error! {error.message}</div> }
-
-        if (loading) { return <SpinnerModal /> }
-
         return (
-            <Container >
-                <h1>Messages</h1>
-                <MessagesList list={messageList} openConfirmDeleteModal={(row) => this.openConfirmDeleteModal(row)} />
-
+            <>
+                { loading && <SpinnerModal /> }
                 <ConfirmModal
                     isOpen={isOpen}
                     title="Confirm"
@@ -70,7 +74,22 @@ class Messages extends Component {
                     handleConfirm={this.handleConfirm}
                 />
 
-            </Container>
+                <ModalMessage
+                    isOpen={modalMessageOpen}
+                    toggle={this.toggleModalMessage}
+                    callback={this.props.fetchMessageList}
+                />
+
+                <Container >
+                    <Paper elevation={1} style={{ padding: 1 + 'em' }} >
+                        <TitleAction title="Messages">
+                            <Button color="primary" onClick={this.toggleModalMessage}>New</Button>
+                        </TitleAction>
+
+                        <MessagesList list={messageList} openConfirmDeleteModal={(row) => this.openConfirmDeleteModal(row)} />
+                    </Paper>
+                </Container>
+            </>
         );
     }
 }

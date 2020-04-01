@@ -2,7 +2,7 @@ import React from 'react';
 import Moment from 'react-moment';
 
 import BootstrapTable from 'react-bootstrap-table-next';
-import Paper from '@material-ui/core/Paper';
+
 import Drafts from '@material-ui/icons/Drafts';
 import Mail from '@material-ui/icons/Mail';
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -125,20 +125,18 @@ const MessagesList = props => {
   const indication = "There is no message created.";
 
   return (
-    <Paper elevation={1} style={{ padding: 1 + 'em' }} >
-      <BootstrapTable keyField='_id'
-        classes='table-sm table-responsive-lg'
-        data={list}
-        columns={columns(openConfirmDeleteModal)}
+    <BootstrapTable keyField='_id'
+      classes='table-sm table-responsive-lg'
+      data={list}
+      columns={columns(openConfirmDeleteModal)}
 
-        noDataIndication={indication}
-        striped
-        hover
-        condensed
-        defaultSorted={defaultSorted}
-        pagination={paginationFactory()}
-      />
-    </Paper>
+      noDataIndication={indication}
+      striped
+      hover
+      condensed
+      defaultSorted={defaultSorted}
+      pagination={paginationFactory()}
+    />
   )
 }
 

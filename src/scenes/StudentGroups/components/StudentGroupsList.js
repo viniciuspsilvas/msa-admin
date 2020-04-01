@@ -77,7 +77,7 @@ export default props =>
 
       {
         props => (
-          <Container>
+          <>
             <SearchBox {...props.searchProps} placeholder="Search student groups" />
             <Row style={{ marginTop: 1 + 'em' }} >
               <Col>
@@ -94,7 +94,7 @@ export default props =>
                 />
               </Col>
             </Row>
-          </Container>
+          </>
         )
       }
     </ToolkitProvider>)
