@@ -106,7 +106,7 @@ export default function ModalMessage({ isOpen, toggle, to, callback }) {
             as={<Typeahead id='receivers' />}
             control={control}
             name="receivers"
-            rules={{ validate: value => (value && value.length > 0 || 'Field required.') }}
+            rules={{ validate: value => ((value && value.length > 0) || 'Field required.') }}
             multiple
             selected={listReceivers}
             defaultValues={[]}
