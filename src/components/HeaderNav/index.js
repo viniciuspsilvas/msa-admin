@@ -18,7 +18,7 @@ const HeaderNav = (props) => {
 
     const { isAuthenticated } = props;
     return (
-        <Navbar color="light" light expand="md">
+        <Navbar color="light" light expand="md" style={{marginBottom:'30px'}}>
             <NavbarBrand href="/">
                 <img src={logo} alt='Mindroom Student App' />
             </NavbarBrand>

@@ -2,7 +2,7 @@ import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import { Container, Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import { Edit, Delete, Email, SupervisorAccount } from '@material-ui/icons';
@@ -52,9 +52,9 @@ const columns = (props) => [{
               <Delete style={{ cursor: 'pointer' }} onClick={() => props.openConfirmModal(row)} />
             </Tooltip>
           </span>
-      ) : (
-        <div style={{width:130, float: 'left'}} >  </div>
-      )}
+        ) : (
+            <div style={{ width: 130, float: 'left' }} >  </div>
+          )}
 
       </div>
     );
@@ -77,7 +77,7 @@ export default props =>
 
       {
         props => (
-          <Container>
+          <>
             <SearchBox {...props.searchProps} placeholder="Search student groups" />
             <Row style={{ marginTop: 1 + 'em' }} >
               <Col>
@@ -94,7 +94,7 @@ export default props =>
                 />
               </Col>
             </Row>
-          </Container>
+          </>
         )
       }
     </ToolkitProvider>)

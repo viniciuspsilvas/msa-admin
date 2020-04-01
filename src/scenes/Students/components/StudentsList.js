@@ -10,8 +10,6 @@ import paginationFactory, {
 import { Container, Row, Col, Input } from 'reactstrap';
 import { Email, Visibility, ToggleOn, ToggleOff } from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
-import Paper from '@material-ui/core/Paper';
-
 import { Link } from 'react-router-dom'
 
 import SearchBox from '../../../components/SearchBox'
@@ -106,7 +104,7 @@ const StudentList = props => {
     totalSize: props.studentList.length
   };
 
-  return (<Paper elevation={1} style={{ padding: 1 + 'em' }} >
+  return (
     <ToolkitProvider
       keyField="_id"
       data={props.studentList}
@@ -145,7 +143,7 @@ const StudentList = props => {
                       </Row>
 
                       <Row>
-                        <Col  sm="3">
+                        <Col sm="3">
                           <Input type="select" onChange={props.handleSelectActionChange} >
                             {actionsList}
                           </Input>
@@ -165,7 +163,6 @@ const StudentList = props => {
         )
       }
     </ToolkitProvider>
-  </Paper>
   )
 }
 export default StudentList;
