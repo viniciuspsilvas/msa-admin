@@ -7,14 +7,15 @@ import { sendNotification } from "../Students/actions";
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
-import { Container, Button, Row, Column} from 'reactstrap';
+import { Container, Button } from 'reactstrap';
 
 import AlertBox from '../../components/AlertBox'
 import StudentGroupsList from './components/StudentGroupsList'
 import GroupFormModal from './components/GroupFormModal'
 import ConfirmModal from '../../components/ConfirmModal'
 import ListStudentsModal from './components/ListStudentsModal'
-import ModalMessage from '../../components/ModalMessage_NEW'
+import ModalMessage from '../../components/ModalMessage'
+import TitleAction from '../../components/TitleAction'
 
 import Paper from '@material-ui/core/Paper';
 import SpinnerModal from '../../components/SpinnerModal';
@@ -173,17 +174,14 @@ class StudentGroups extends Component {
         const { error, loading, courseList } = this.props; // TODO change courseList to enrollments
 
         const { modalOpen, name, description, isEditing,
-            confirmOpen, isListStudentsModalOpen, groupSelected ,
-            modalMessageOpen} = this.state;
+            confirmOpen, isListStudentsModalOpen, groupSelected,
+            modalMessageOpen } = this.state;
 
         if (loading) { return <SpinnerModal /> }
         if (error) { return <AlertBox error={error} /> }
 
         return (
-
-            <Container >
-                
-
+            <>
                 <GroupFormModal handleSubmit={this.handleFormSubmit}
                     handleChange={this.handleInputChange}
                     handleToggleModal={this.toggleModal}
@@ -212,21 +210,22 @@ class StudentGroups extends Component {
                     to="Course"
                 />
 
-                <Paper elevation={1} style={{ padding: 1 + 'em' }} >
-                    <h1>Courses </h1>
+                <Container >
 
-                    <div style={{ textAlign: 'right', marginRight: 19 }} >
-                        <Button color="primary" onClick={this.toggleModal}>New</Button>
-                    </div>
+                    <Paper elevation={1} style={{ padding: 1 + 'em' }} >
+                        <TitleAction title="Courses">
+                            <Button color="primary" onClick={this.toggleModal}>New</Button>
+                        </TitleAction>
 
-                    <StudentGroupsList list={courseList}
-                        openModalMessage={this.openModalMessage}
-                        openEditModal={this.openEditModal}
-                        openConfirmModal={this.openConfirmModal}
-                        openListStudentsModal={this.openListStudentsModal} />
+                        <StudentGroupsList list={courseList}
+                            openModalMessage={this.openModalMessage}
+                            openEditModal={this.openEditModal}
+                            openConfirmModal={this.openConfirmModal}
+                            openListStudentsModal={this.openListStudentsModal} />
 
-                </Paper>
-            </Container>
+                    </Paper>
+                </Container>
+            </>
         );
     }
 }

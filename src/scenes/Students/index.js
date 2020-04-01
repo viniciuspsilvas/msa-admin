@@ -6,7 +6,7 @@ import { Container } from 'reactstrap';
 import { fetchStudentList, activeStudent } from "./actions";
 
 import StudentList from './components/StudentsList'
-import ModalMessage from '../../components/ModalMessage_NEW'
+import ModalMessage from '../../components/ModalMessage'
 import SpinnerModal from '../../components/SpinnerModal';
 import AlertBox from '../../components/AlertBox'
 import ConfirmModal from '../../components/ConfirmModal'
