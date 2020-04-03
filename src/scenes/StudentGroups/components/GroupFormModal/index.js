@@ -40,11 +40,12 @@ const GroupFormModal = props => {
                         </FormGroup>
 
                         <FormGroup >
-                            <Label>Active:</Label>
                             <input name="active" id="active"
                                 onChange={handleChange}
                                 type="checkbox"
                                 checked={active} />
+                                {"  "}
+                            <Label>Active</Label>
                         </FormGroup>
                     </ModalBody>
                     <ModalFooter>
