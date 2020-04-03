@@ -31,8 +31,8 @@ export default function Settings() {
                 <div className="row">
                     <div className="col-3">
                         <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                            <NavLink to={`${url}/rendering`}>Moodle</NavLink>
                             <NavLink to={`${url}/users`}>Users</NavLink>
+                            <NavLink to={`${url}/rendering`}>Moodle</NavLink>
                         </div>
                     </div>
 
