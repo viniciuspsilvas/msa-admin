@@ -100,7 +100,7 @@ export default function ModalMessage({ isOpen, toggle, to, callback }) {
     }
 
     const ReceiversDropDown = () => {
-        var optsReceivers = isToStudents ? { labelKey: "fullname", options: studentList } : { labelKey: "name", options: courseList };
+        var optsReceivers = isToStudents ? { labelKey: "fullname", options: studentList } : { labelKey: "name", options: courseList.filter(c => c.active) };
 
         return <Controller
             as={<Typeahead id='receivers' />}
