@@ -11,10 +11,12 @@ const GroupFormModal = props => {
         isOpen = true,
         handleSubmit, pristine, submitting,
         handleChange, handleToggleModal,
-        name,
-        description,
+        course,
         isEditing = false
     } = props;
+
+
+    const { name, description, active } = course
 
     return (
         <Container>
@@ -36,6 +38,15 @@ const GroupFormModal = props => {
                                 type="textarea"
                                 value={description} />
                         </FormGroup>
+
+                        <FormGroup >
+                            <input name="active" id="active"
+                                onChange={handleChange}
+                                type="checkbox"
+                                checked={active} />
+                                {"  "}
+                            <Label>Active</Label>
+                        </FormGroup>
                     </ModalBody>
                     <ModalFooter>
                         <Button type="button" onClick={handleToggleModal}>Clear</Button>{' '}
@@ -48,12 +59,3 @@ const GroupFormModal = props => {
 }
 
 export default GroupFormModal;
-/*
-
-GroupFormModal.propTypes = {
-    studentList: PropTypes.array.isRequired
-};
-
-export default reduxForm({
-    form: 'GroupFormModal',// a unique identifier for this form
-})(GroupFormModal) */

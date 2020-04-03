@@ -7,6 +7,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import { Edit, Delete, Email, SupervisorAccount } from '@material-ui/icons';
 
+import NotInterestedIcon from '@material-ui/icons/NotInterested';
+
 import SearchBox from '../../../components/SearchBox'
 
 import '../style.css';
@@ -30,31 +32,42 @@ const columns = (props) => [{
 
     return (
       <div className="iconColumn">
-        <span >
-          <Tooltip title="List students">
-            <SupervisorAccount style={{ cursor: 'pointer' }} onClick={() => props.openListStudentsModal(row)} />
-          </Tooltip>
-        </span>
-        <span >
-          <Tooltip title="Send notification">
-            <Email style={{ cursor: 'pointer' }} onClick={() => props.openModalMessage(row)} />
-          </Tooltip>
-        </span>
+        {
+          !row.active &&
+          <span >
+            <Tooltip title="Activated">
+              <NotInterestedIcon style={{ cursor: 'pointer' }} />
+            </Tooltip>
+          </span>
+        }
+        {row.active &&
+          <>
+            <span >
+              <Tooltip title="List students">
+                <SupervisorAccount style={{ cursor: 'pointer' }} onClick={() => props.openListStudentsModal(row)} />
+              </Tooltip>
+            </span>
+            <span >
+              <Tooltip title="Send notification">
+                <Email style={{ cursor: 'pointer' }} onClick={() => props.openModalMessage(row)} />
+              </Tooltip>
+            </span>
+
+          </>
+        }
         <span >
           <Tooltip title="Edit">
             <Edit style={{ cursor: 'pointer' }} onClick={() => props.openEditModal(row)} />
           </Tooltip>
         </span>
 
-        {!row.enrollments || row.enrollments.length === 0 ? (
+        {row.enrollments.length === 0 &&
           <span >
             <Tooltip title="Delete">
               <Delete style={{ cursor: 'pointer' }} onClick={() => props.openConfirmModal(row)} />
             </Tooltip>
           </span>
-        ) : (
-            <div style={{ width: 130, float: 'left' }} >  </div>
-          )}
+        }
 
       </div>
     );

@@ -23,9 +23,13 @@ import SpinnerModal from '../../components/SpinnerModal';
 import './style.css';
 
 const INITIAL_STATE = {
-    id: null,
-    name: '',
-    description: '',
+    course: {
+        id: null,
+        name: '',
+        description: '',
+        active: null,
+    },
+
     modalOpen: false,
     confirmOpen: false,
     isListStudentsModalOpen: false,
@@ -119,21 +123,24 @@ class StudentGroups extends Component {
         this.setState({ modalOpen: !this.state.modalOpen })
     };
 
-    openEditModal = ({ _id, name, description }) => {
+    openEditModal = (course) => {
         this.toggleModal();
-        this.setState({ _id, name, description, isEditing: true });
+        this.setState({ course, isEditing: true });
     };
 
     handleFormSubmit = async (e) => {
         e.preventDefault();
+        var { course } = this.state
 
-        // Prepare data to be sent to backend
-        var { name, description, _id } = this.state
-        const data = await this.props.createStudentGroup({ name, description, _id: _id })
+        if (course._id == null) {
+            course.active = true
+        }
+
+        const data = await this.props.createStudentGroup(course)
 
         if (!data.errors) {
-            this.props.showSuccess(`${name} successfully saved.`)
-            this.props.fetchStudentGroupList();
+            await this.props.fetchStudentGroupList();
+            this.props.showSuccess(`${course.name} successfully saved.`)
             this.toggleModal();
             this.resetForm();
         }
@@ -165,7 +172,10 @@ class StudentGroups extends Component {
                 break;
         }
 
-        this.setState({ errors, [name]: value });
+        var { course } = this.state
+        course[name] = value;
+
+        this.setState({ errors, course });
     }
 
     toggleModalMessage = () => this.setState({ modalMessageOpen: !this.state.modalMessageOpen });
@@ -173,21 +183,20 @@ class StudentGroups extends Component {
     render() {
         const { error, loading, courseList } = this.props; // TODO change courseList to enrollments
 
-        const { modalOpen, name, description, isEditing,
+        const { modalOpen, course, isEditing,
             confirmOpen, isListStudentsModalOpen, groupSelected,
             modalMessageOpen } = this.state;
 
-        if (loading) { return <SpinnerModal /> }
         if (error) { return <AlertBox error={error} /> }
 
         return (
             <>
+                { loading &&  <SpinnerModal /> }
                 <GroupFormModal handleSubmit={this.handleFormSubmit}
                     handleChange={this.handleInputChange}
                     handleToggleModal={this.toggleModal}
                     isOpen={modalOpen}
-                    name={name}
-                    description={description}
+                    course={course}
                     isEditing={isEditing}
                 />
 

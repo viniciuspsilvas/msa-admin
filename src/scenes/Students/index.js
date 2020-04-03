@@ -53,11 +53,11 @@ class Students extends Component {
         e.preventDefault();
 
         // Prepare data to be sent to backend
-        var { name, description, _id } = this.state
-        const data = await this.props.createStudentGroup({ name, description, _id: _id })
+        var { course } = this.state
+        const data = await this.props.createStudentGroup(course)
 
         if (!data.errors) {
-            this.props.showSuccess(`${name} successfully saved.`)
+            this.props.showSuccess(`${course.name} successfully saved.`)
             this.props.fetchStudentGroupList();
             this.toggleModal();
             this.resetForm();

@@ -6,12 +6,12 @@ import { Col, Row } from 'reactstrap';
 export default function TitleAction({ title, children }) {
 
     return (
-        <Row class="row" style={{marginBottom: "30px"}}>
-            <Col xs="2"  >
+        <Row className="row" style={{marginBottom: "30px"}}>
+            <Col md="8"  >
                 <h2>{title} </h2>
             </Col>
 
-            <Col class="col-md-4">
+            <Col md="4">
                 <div style={{ textAlign: 'right' }} >
                     {children}
                 </div>

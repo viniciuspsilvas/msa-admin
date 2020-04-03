@@ -8,9 +8,7 @@ export const CREATE_STUDENTS_GROUP = 'CREATE_STUDENTS_GROUP';
 export const CREATE_STUDENTS_GROUP_SUCCESS = 'CREATE_STUDENTS_GROUP_SUCCESS';
 export const CREATE_STUDENTS_GROUP_FAILURE = 'CREATE_STUDENTS_GROUP_FAILURE';
 export const RESET_NEW_STUDENTS_GROUP = 'RESET_NEW_STUDENTS_GROUP';
-
 export const DELETE_STUDENTS_GROUP_SUCCESS = 'DELETE_STUDENTS_GROUP_SUCCESS';
-
 
 const CREATE_COURSE = `
 mutation createCourse($course:CourseInput!) {
@@ -31,8 +29,8 @@ mutation deleteCourse($id:ID!) {
 `
 
 const UPDATE_COURSE = `
-mutation updateCourseNameDesc($id:ID!, $name:String!, $description:String ) {
-    updateCourseNameDesc(_id:$id, name:$name, description : $description ) {
+mutation updateCourse($course:CourseInput!) {
+    updateCourse(input:$course ) {
       _id
       name
     }
@@ -46,6 +44,7 @@ const GET_COURSES = {
                 _id
                 name
                 description
+                active
                 enrollments {
                     _id
                     student {
@@ -80,22 +79,20 @@ export const fetchStudentGroupList = () => async dispatch => {
 }
 
 
-export function createStudentGroup(studentGroup) {
+export function createStudentGroup(course) {
     return async dispatch => {
         try {
             dispatch(createStudentGroupBegin());
 
             // fetch data from a url endpoint
             var resp
-            if (studentGroup._id) {
+            if (course._id) {
+
+                delete course.enrollments
                 resp = await apiClient
                     .post("/graphql", {
                         query: UPDATE_COURSE,
-                        variables: {
-                            id: studentGroup._id,
-                            name: studentGroup.name,
-                            description: studentGroup.description
-                        },
+                        variables: {course },
                     })
 
             } else {
@@ -103,7 +100,7 @@ export function createStudentGroup(studentGroup) {
                     .post("/graphql", {
                         query: CREATE_COURSE,
                         variables: {
-                            course: studentGroup
+                            course
                         },
                     })
             }
@@ -136,7 +133,6 @@ export function deleteStudentGroup(id) {
             if (data.errors) {
                 dispatch(createStudentGroupFailure(data.errors[0].message))
             } else {
-
                 dispatch({ type: DELETE_STUDENTS_GROUP_SUCCESS });
             }
 
