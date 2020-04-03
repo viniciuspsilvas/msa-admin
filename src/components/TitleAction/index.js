@@ -7,11 +7,11 @@ export default function TitleAction({ title, children }) {
 
     return (
         <Row className="row" style={{marginBottom: "30px"}}>
-            <Col xs="2"  >
+            <Col md="8"  >
                 <h2>{title} </h2>
             </Col>
 
-            <Col className="col-md-4">
+            <Col md="4">
                 <div style={{ textAlign: 'right' }} >
                     {children}
                 </div>
