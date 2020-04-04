@@ -33,7 +33,7 @@ const HeaderNav = (props) => {
                     <NavLink className="nav-link" activeClassName="active" to="/messages">Messages</NavLink>
                     <NavLink className="nav-link" activeClassName="active" to="/students">Students</NavLink>
                     <NavLink className="nav-link" activeClassName="active" to="/courses">Courses</NavLink>
-                    <NavLink className="nav-link" activeClassName="active" to="/settings">Settings</NavLink>
+                    <NavLink className="nav-link" activeClassName="active" to="/settings/users">Settings</NavLink>
 
                     <Nav className="ml-auto navbar-right" navbar >
                         <LogoutButton />

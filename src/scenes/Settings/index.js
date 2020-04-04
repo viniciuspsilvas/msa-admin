@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from 'reactstrap';
 import SpinnerModal from '../../components/SpinnerModal';
+import {version} from '../../../package.json';
 
 import Paper from '@material-ui/core/Paper';
 
@@ -31,8 +32,8 @@ export default function Settings() {
                 <div className="row">
                     <div className="col-3">
                         <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                            <NavLink to={`${url}/rendering`}>Moodle</NavLink>
                             <NavLink to={`${url}/users`}>Users</NavLink>
+                            <NavLink to={`${url}/rendering`}>Moodle</NavLink>
                         </div>
                     </div>
 
@@ -58,7 +59,7 @@ export default function Settings() {
                         </div>
                     </div>
                 </div>
-
+                <small class="text-muted">Version : {version}</small>
             </Paper>
         </Container >
     );
