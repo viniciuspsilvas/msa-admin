@@ -10,9 +10,7 @@ export default function  HomeContainer() {
                 <Paper elevation={1} style={{ padding: 1 + 'em' }} >
                 <img src={logo} alt='Mindroom Student App' className="rounded mx-auto d-block"  width='250' />
                 <p className="lead blockquote text-center">Mindroom Student APP - Admin</p>
-                    <p className="lead blockquote text-center">Version : {version}</p>
-                        <hr className="my-2" />
-                        <p className="blockquote text-center"> Here you can send important message to Mindroom students.</p>
+         
                 </Paper>
             </Container>
         );
