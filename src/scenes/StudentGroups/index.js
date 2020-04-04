@@ -7,7 +7,7 @@ import { sendNotification } from "../Students/actions";
 
 import { showError, showWarning, showInfo, showSuccess } from "../../components/AlertApp/actions"
 
-import { Container, Button } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import AlertBox from '../../components/AlertBox'
 import StudentGroupsList from './components/StudentGroupsList'
@@ -18,9 +18,6 @@ import GroupFormModal from './components/GroupFormModal'
 import ConfirmModal from '../../components/ConfirmModal'
 import ListStudentsModal from './components/ListStudentsModal'
 import ModalMessage from '../../components/ModalMessage'
-import TitleAction from '../../components/TitleAction'
-
-import Paper from '@material-ui/core/Paper';
 import SpinnerModal from '../../components/SpinnerModal';
 
 import './style.css';
