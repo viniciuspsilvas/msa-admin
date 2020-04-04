@@ -11,6 +11,9 @@ import { Container, Button } from 'reactstrap';
 
 import AlertBox from '../../components/AlertBox'
 import StudentGroupsList from './components/StudentGroupsList'
+
+import StudentGroupsListCopy from './components/StudentGroupsList copy'
+
 import GroupFormModal from './components/GroupFormModal'
 import ConfirmModal from '../../components/ConfirmModal'
 import ListStudentsModal from './components/ListStudentsModal'
@@ -124,6 +127,7 @@ class StudentGroups extends Component {
     };
 
     openEditModal = (course) => {
+        console.log("#### course", course)
         this.toggleModal();
         this.setState({ course, isEditing: true });
     };
@@ -191,7 +195,7 @@ class StudentGroups extends Component {
 
         return (
             <>
-                { loading &&  <SpinnerModal /> }
+                {loading && <SpinnerModal />}
                 <GroupFormModal handleSubmit={this.handleFormSubmit}
                     handleChange={this.handleInputChange}
                     handleToggleModal={this.toggleModal}
@@ -220,19 +224,23 @@ class StudentGroups extends Component {
                 />
 
                 <Container >
+                    <StudentGroupsList list={courseList}
+                        openModalMessage={this.openModalMessage}
+                        openEditModal={this.openEditModal}
+                        openConfirmModal={this.openConfirmModal}
+                        openListStudentsModal={this.openListStudentsModal} />
 
-                    <Paper elevation={1} style={{ padding: 1 + 'em' }} >
-                        <TitleAction title="Courses">
-                            <Button color="primary" onClick={this.toggleModal}>New</Button>
-                        </TitleAction>
 
-                        <StudentGroupsList list={courseList}
-                            openModalMessage={this.openModalMessage}
-                            openEditModal={this.openEditModal}
-                            openConfirmModal={this.openConfirmModal}
-                            openListStudentsModal={this.openListStudentsModal} />
+                    <StudentGroupsListCopy list={courseList}
+                        openModalMessage={this.openModalMessage}
+                        openEditModal={this.openEditModal}
+                        openConfirmModal={this.openConfirmModal}
+                        openListStudentsModal={this.openListStudentsModal} />
 
-                    </Paper>
+
+                    {
+                        courseList.map(c => <span key="{c.name}">{c.name} - {c.active + ""}</span>)
+                    }
                 </Container>
             </>
         );
