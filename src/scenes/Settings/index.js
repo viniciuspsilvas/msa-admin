@@ -60,7 +60,6 @@ export default function Settings() {
                     </div>
                 </div>
                 <small class="text-muted">Version : {version}</small>
-
             </Paper>
         </Container >
     );
