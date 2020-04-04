@@ -122,7 +122,7 @@ const defaultSorted = [{
 
 const MessagesList = props => {
   const { list, openConfirmDeleteModal } = props;
-  const indication = "There is no message created.";
+  const indication = "No messages to show.";
 
   return (
     <BootstrapTable keyField='_id'
