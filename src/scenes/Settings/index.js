@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from 'reactstrap';
 import SpinnerModal from '../../components/SpinnerModal';
+import {version} from '../../../package.json';
 
 import Paper from '@material-ui/core/Paper';
 
@@ -58,6 +59,7 @@ export default function Settings() {
                         </div>
                     </div>
                 </div>
+                <small class="text-muted">Version : {version}</small>
 
             </Paper>
         </Container >

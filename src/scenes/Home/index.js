@@ -2,7 +2,6 @@ import React from 'react';
 import logo from '../../images/Logo_vert.png';
 import {  Container } from 'reactstrap';
 import Paper from '@material-ui/core/Paper';
-import {version} from '../../../package.json';
 
 export default function  HomeContainer() {
         return (
