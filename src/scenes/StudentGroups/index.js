@@ -10,7 +10,7 @@ import { showError, showWarning, showInfo, showSuccess } from "../../components/
 import { Container, Button } from 'reactstrap';
 
 import AlertBox from '../../components/AlertBox'
-import StudentGroupsList from './components/StudentGroupsList copy'
+import StudentGroupsList from './components/StudentGroupsList copy' // TODO remover quando terminar de refatorar as tabelas
 import GroupFormModal from './components/GroupFormModal'
 import ConfirmModal from '../../components/ConfirmModal'
 import ListStudentsModal from './components/ListStudentsModal'

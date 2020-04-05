@@ -28,10 +28,6 @@ class Messages extends Component {
         this.props.fetchMessageList();
     }
 
-    componentDidUpdate() {
-      //  this.props.fetchMessageList();
-    }
-
     openConfirmDeleteModal = (msg) => {
         this.handleToggleModal();
         this.setState({ idMessageRemove: msg._id })
@@ -65,7 +61,7 @@ class Messages extends Component {
         if (error) { return <div>Error! {error.message}</div> }
         return (
             <>
-                { loading && <SpinnerModal /> }
+                {loading && <SpinnerModal />}
                 <ConfirmModal
                     isOpen={isOpen}
                     title="Confirm"
