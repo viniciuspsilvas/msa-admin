@@ -28,11 +28,17 @@ const GET_MESSAGES = {
 }
 
 const DELETE_MESSAGE = `
-mutation deleteMessage($id:ID!) {
-    deleteMessage (_id : $id){
-      _id
+    mutation deleteMessage($id:ID!) {
+        deleteMessage (_id : $id){
+        _id
+        }
     }
-  }
+`
+
+const DELETE_MESSAGES = `
+    mutation( $_ids:  [ID!]!){
+        deleteMessages (_ids: $_ids)
+    }
 `
 
 // Action creator
@@ -61,6 +67,27 @@ export const deleteMessage = id => async dispatch => {
             .post("/graphql", {
                 query: DELETE_MESSAGE,
                 variables: { id }
+            })
+
+        if (data.errors) {
+            dispatch({ type: FETCH_MESSAGE_FAILURE, payload: data.errors[0].message })
+        } else {
+            dispatch({ type: DELETE_MESSAGE_SUCCESS });
+        }
+
+        return data;
+    } catch (error) {
+        dispatch({ type: FETCH_MESSAGE_FAILURE, payload: error })
+    }
+}
+
+export const deleteMessages = ([_ids]) => async dispatch => {
+    try {
+        dispatch({ type: FETCH_MESSAGE_BEGIN });
+        var { data } = await apiClient
+            .post("/graphql", {
+                query: DELETE_MESSAGES,
+                variables: { _ids }
             })
 
         if (data.errors) {
